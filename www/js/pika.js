@@ -1,12 +1,12 @@
 
 var film = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, render: render });
 
-var scenes = [
+var scenes = [ 
+    {'title': 'chrome',
+     'url': 'video/chrome.webm'
+    },
     {'title': 'liquid',
      'url': 'video/liquid2.mp4'
-    }, 
-    {'title': 'skull',
-     'url': 'video/skull.mp4'
     },
     {'title': 'wormhole',
      'url': 'video/wormhole.mp4'
@@ -21,20 +21,23 @@ function preload() {
 
 }
 
-var video;
-var sprite;
+//var video;
+//var image;
+var speed = 5;
 var scene = 0;
 
 function create() {
-
-    video = film.add.video(scenes[scene].title);
-
-    video.onPlay.addOnce(start, this);
-
-    sprite = video.addToWorld(400, 300, 0.5, 0.5);
-
-    video.play(true);
-
+    
+    scenes.forEach(function(item,index,array) {
+        var video = film.add.video(item.title);
+        //video.onPlay.addOnce(start,this);
+        item.video = video;
+        item.image = video.addToWorld(400, 300, 0.5, 0.5);  
+        item.image.kill();
+    });
+    scenes[0].video.onPlay.addOnce(start,this);
+    scenes[0].image.revive();
+    scenes[0].video.play(true,speed);
 }
 
 function start() {
@@ -45,21 +48,25 @@ function start() {
 
 
 function changeSource() {
+    scenes[scene].video.stop();
+    scenes[scene].image.kill();
     
     scene++;
     if( scene > scenes.length - 1 ) {
         scene = 0;
     }
-    video.changeSource(scenes[scene].url);
+    scenes[scene].image.revive();
+    scenes[scene].video.play(true,speed);
+    
 
 }
 
 function render() {
 
-    film.debug.text("Video width: " + video.video.videoWidth, 600, 32);
-    film.debug.text("Video height: " + video.video.videoHeight, 600, 64);
+    film.debug.text("Video width: " + scenes[scene].video.video.videoWidth, 600, 32);
+    film.debug.text("Video height: " + scenes[scene].video.video.videoHeight, 600, 64);
 
-    film.debug.text("Video Time: " + video.currentTime, 32, 32);
-    film.debug.text("Video Duration: " + video.duration, 32, 64);
+    film.debug.text("Video Time: " + scenes[scene].video.currentTime, 32, 32);
+    film.debug.text("Video Duration: " + scenes[scene].video.duration, 32, 64);
 
 }
