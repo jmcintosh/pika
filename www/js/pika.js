@@ -1,23 +1,23 @@
 var film = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, render: render });
 
-var basicTextStyle = { font: "18px Arial", 
+var basicTextStyle = { font: "24px Arial", 
     fill: "black", 
     wordWrap: true, 
-    wordWrapWidth: window.innerWidth/5, 
-    align: "center" };
+    wordWrapWidth: window.innerWidth/4, 
+    align: "left" };
 
 var scenes = [ 
     {'title': 'chrome',
      'url': 'video/chrome.webm',
-     'text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id dolor commodo, laoreet dui in, interdum urna.'
+     'string': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id dolor commodo, laoreet dui in, interdum urna.'
     },
     {'title': 'liquid',
      'url': 'video/liquid2.mp4',
-     'text': 'There use to be a video of a flaming skull, but I found it tacky so I removed it.'
+     'string': 'There was a video of a flaming skull among these samples, but I found it tacky so I removed it.'
     },
     {'title': 'wormhole',
      'url': 'video/wormhole.mp4',
-     'text': "This video won't loop for some reason. Perhaps we will never know why."
+     'string': "This video won't loop for some reason. Perhaps we will never know why."
     }
 ];
 
@@ -48,18 +48,19 @@ function create() {
         var scaley = height/video.video.videoHeight;
         var scale = Math.min(scalex,scaley);
         item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
-        if( item.hasOwnProperty('text') ){
+        if( item.hasOwnProperty('string') ){
             console.log("adding text\n");
-            text = film.add.text(-100,50, item.text, basicTextStyle);
-            text.anchor.set(0.5);
-            item.image.addChild(text);
+            item.text = film.add.text(200,height-200,item.string,basicTextStyle);
+            item.text.anchor.set(0);
+            item.text.kill();
         }
         item.image.kill();
     });
     
-    scenes[0].video.onPlay.addOnce(start,this);
-    scenes[0].image.revive();
-    scenes[0].video.play(true,speed);
+    scenes[scene].video.onPlay.addOnce(start,this);
+    scenes[scene].image.revive();
+    scenes[scene].text.revive();
+    scenes[scene].video.play(true,speed);
 }
 
 function start() {
@@ -72,6 +73,7 @@ function start() {
 function changeSource() {
     scenes[scene].video.stop();
     scenes[scene].image.kill();
+    scenes[scene].text.kill();
     
     scene++;
     if( scene > scenes.length - 1 ) {
@@ -80,6 +82,9 @@ function changeSource() {
     scenes[scene].image.revive();
     scenes[scene].video.play(true,speed);
     
+    if( scenes[scene].hasOwnProperty('text') ){
+        scenes[scene].text.revive();
+    }
 }
 
 
