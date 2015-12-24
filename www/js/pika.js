@@ -1,10 +1,20 @@
-var film = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, render: render });
+var width = screen.width;
+var height = screen.height;
+
+var film = new Phaser.Game(
+        width, 
+        height, 
+        Phaser.AUTO, 
+        'pika-film', 
+        { preload: preload, create: create, update: update, render: render }
+);
 
 var basicTextStyle = { font: "24px Arial", 
-    fill: "black", 
+    fill: "#000000", 
     wordWrap: true, 
     wordWrapWidth: window.innerWidth/4, 
     align: "left" };
+
 
 var scenes = [ 
     {'title': 'chrome',
@@ -24,29 +34,40 @@ var scenes = [
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 
+var fullscreenKey;
+var blurKey;
+
 function preload() {
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.scale.pageAlignHorizontally = true;
-    this.scale.pageAlignVertically = true;
-    this.scale.forceOrientation(true,false);
+    
+    film.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    film.scale.pageAlignHorizontally = true;
+    film.scale.pageAlignVertically = true;
+    film.scale.forceOrientation(true,false);
     //film.scale.setScreenSize( true );
 
     scenes.forEach(function(item,index,array) {
         film.load.video(item.title,item.url);
     });
+    
+    film.load.script('filters', 'js/filters.js');
 
 }
 
 function create() {
-    var width = window.innerWidth;
-    var height = window.innerHeight;
     
+    film.stage.backgroundColor = "#FFFFFF";
+    
+    // Inputs
+    fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
+    blurKey = film.input.keyboard.addKey(Phaser.Keyboard.B);
+    
+    // Scenes
     scenes.forEach(function(item,index,array) {
         var video = film.add.video(item.title);
         item.video = video;
         var scalex = width/video.video.videoWidth;
         var scaley = height/video.video.videoHeight;
-        var scale = Math.min(scalex,scaley);
+        var scale = Math.max(scalex,scaley);
         item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
         if( item.hasOwnProperty('string') ){
             console.log("adding text\n");
@@ -57,18 +78,28 @@ function create() {
         item.image.kill();
     });
     
+    //filters
+    film.blurX = this.add.filter('BlurX');
+    film.blurY = this.add.filter('BlurY');
+    
     scenes[scene].video.onPlay.addOnce(start,this);
     scenes[scene].image.revive();
     scenes[scene].text.revive();
     scenes[scene].video.play(true,speed);
+    
+}
+
+function update() {
+    
 }
 
 function start() {
 
     //  This would swap on a mouse click
     film.input.onDown.add(changeSource, this);
+    fullscreenKey.onDown.add(goFull,this);
+    blurKey.onDown.add(addBlur,this);
 }
-
 
 function changeSource() {
     scenes[scene].video.stop();
@@ -87,7 +118,17 @@ function changeSource() {
     }
 }
 
+function goFull() {
+    if(film.scale.isFullScreen){
+        film.scale.stopFullScreen();
+    }else{
+        film.scale.startFullScreen(false);
+    }
+}
 
+function addBlur() {
+    scenes[scene].image.filters = [film.blurX, film.blurY];
+}
 
 function render() {
 
