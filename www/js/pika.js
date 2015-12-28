@@ -5,37 +5,42 @@ var film = new Phaser.Game(
         width, 
         height, 
         Phaser.AUTO, 
-        'pika-film', 
+        'body', 
         { preload: preload, create: create, update: update, render: render }
 );
+var filters = {};
+var keys = {};
+var audio = {};
 
 var basicTextStyle = { font: "24px Arial", 
     fill: "#000000", 
     wordWrap: true, 
     wordWrapWidth: window.innerWidth/4, 
-    align: "left" };
+    align: "left" 
+};
 
 
 var scenes = [ 
     {'title': 'chrome',
      'url': 'video/chrome.webm',
-     'string': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id dolor commodo, laoreet dui in, interdum urna.'
+     'string': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id dolor commodo, laoreet dui in, interdum urna.',
+     'textIsShown': false
     },
     {'title': 'liquid',
      'url': 'video/liquid2.mp4',
-     'string': 'There was a video of a flaming skull among these samples, but I found it tacky so I removed it.'
+     'string': 'There was a video of a flaming skull among these samples, but I found it tacky so I removed it.',
+     'textIsShown': false
     },
     {'title': 'wormhole',
      'url': 'video/wormhole.mp4',
-     'string': "This video won't loop for some reason. Perhaps we will never know why."
+     'string': "This video won't loop for some reason. Perhaps we will never know why.",
+     'textIsShown': false
     }
 ];
 
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 
-var fullscreenKey;
-var blurKey;
 
 function preload() {
     
@@ -43,7 +48,8 @@ function preload() {
     film.scale.pageAlignHorizontally = true;
     film.scale.pageAlignVertically = true;
     film.scale.forceOrientation(true,false);
-    //film.scale.setScreenSize( true );
+    
+    film.load.audio('background', 'audio/placeholder.mp3');
 
     scenes.forEach(function(item,index,array) {
         film.load.video(item.title,item.url);
@@ -58,8 +64,16 @@ function create() {
     film.stage.backgroundColor = "#FFFFFF";
     
     // Inputs
-    fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
-    blurKey = film.input.keyboard.addKey(Phaser.Keyboard.B);
+    keys.fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
+    keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
+    keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+    keys.left = film.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    keys.right = film.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    keys.w = film.input.keyboard.addKey(Phaser.Keyboard.W);
+    keys.a = film.input.keyboard.addKey(Phaser.Keyboard.A);
+    keys.s = film.input.keyboard.addKey(Phaser.Keyboard.S);
+    keys.d = film.input.keyboard.addKey(Phaser.Keyboard.D);
+    //keys.blurKey = film.input.keyboard.addKey(Phaser.Keyboard.B);
     
     // Scenes
     scenes.forEach(function(item,index,array) {
@@ -78,13 +92,16 @@ function create() {
         item.image.kill();
     });
     
+    // audio
+    audio.background = film.add.audio('background');
+    film.sound.setDecodedCallback(audio.background, startAudio, this);
+    
     //filters
-    film.blurX = this.add.filter('BlurX');
-    film.blurY = this.add.filter('BlurY');
+    filters.blurX = this.add.filter('BlurX');
+    filters.blurY = this.add.filter('BlurY');
     
     scenes[scene].video.onPlay.addOnce(start,this);
     scenes[scene].image.revive();
-    scenes[scene].text.revive();
     scenes[scene].video.play(true,speed);
     
 }
@@ -95,27 +112,77 @@ function update() {
 
 function start() {
 
-    //  This would swap on a mouse click
-    film.input.onDown.add(changeSource, this);
-    fullscreenKey.onDown.add(goFull,this);
-    blurKey.onDown.add(addBlur,this);
+    //  hot keys
+    film.input.onDown.add(nextScene, this);
+    keys.fullscreenKey.onDown.add(goFull,this);
+    
+    keys.up.onDown.add(prevScene, this);
+    keys.down.onDown.add(nextScene, this);
+    keys.left.onDown.add(prevScene, this);
+    keys.right.onDown.add(nextScene, this);
+    keys.w.onDown.add(prevScene, this);
+    keys.a.onDown.add(prevScene, this);
+    keys.s.onDown.add(nextScene, this);
+    keys.d.onDown.add(nextScene, this);
 }
 
-function changeSource() {
-    scenes[scene].video.stop();
-    scenes[scene].image.kill();
-    scenes[scene].text.kill();
-    
-    scene++;
-    if( scene > scenes.length - 1 ) {
-        scene = 0;
+function startAudio() {
+    audio.background.loopFull(1.0);
+}
+
+function nextScene() {
+    if(scenes[scene].textIsShown){
+        var curScene = scenes[scene];
+        curScene.text.kill();
+        fadeOut(scenes[scene].image, 500, function () {
+            curScene.image.kill();
+            curScene.video.stop();
+            curScene.textIsShown = false;
+            removeBlur(curScene.image);
+        });
+
+        scene++;
+        if( scene > scenes.length - 1 ) {
+            scene = 0;
+        }
+        
+        fadeIn(scenes[scene].image,500);
+        scenes[scene].video.play(true,speed);
+
+        
+    }else{ // show the text
+        disableControls(500);
+        if( scenes[scene].hasOwnProperty('text') ){
+            scenes[scene].text.revive();
+            scenes[scene].textIsShown = true;
+            addBlur(scenes[scene].image);
+        }
     }
-    scenes[scene].image.revive();
+}
+
+function prevScene() {
+    disableControls(500);
+    var curScene = scenes[scene];
+    curScene.text.kill();
+    fadeOut(scenes[scene].image, 500, function () {
+        curScene.image.kill();
+        curScene.video.stop();
+        curScene.textIsShown = false;
+        removeBlur(curScene.image);
+    });
+    
+    scene--;
+    if( scene < 0 ) {
+        scene = scenes.length-1;
+    }
+    
+    fadeIn(scenes[scene].image,500);
     scenes[scene].video.play(true,speed);
-    
-    if( scenes[scene].hasOwnProperty('text') ){
-        scenes[scene].text.revive();
-    }
+}
+
+function disableControls(time){
+    film.input.enabled = false;
+    setTimeout(function () {film.input.enabled = true},time);
 }
 
 function goFull() {
@@ -126,8 +193,23 @@ function goFull() {
     }
 }
 
-function addBlur() {
-    scenes[scene].image.filters = [film.blurX, film.blurY];
+function fadeIn(image, time) {
+    image.alpha = 0;
+    image.revive();
+    film.add.tween(image).to( {alpha: 1}, time, "Linear", true );
+}
+
+function fadeOut(image, time, callback) {
+    film.add.tween(image).to( {alpha: 0}, time, "Linear", true );
+    setTimeout(callback,time);
+}
+
+function addBlur(image) {
+    image.filters = [filters.blurX, filters.blurY];
+}
+
+function removeBlur(image) {
+    image.filters = null;
 }
 
 function render() {
