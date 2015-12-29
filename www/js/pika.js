@@ -40,6 +40,7 @@ var scenes = [
 
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
+var fadeTime = 500; // time for fades on scene transitions
 
 
 function preload() {
@@ -101,7 +102,7 @@ function create() {
     filters.blurY = this.add.filter('BlurY');
     
     scenes[scene].video.onPlay.addOnce(start,this);
-    scenes[scene].image.revive();
+    fadeIn(scenes[scene].image,fadeTime);
     scenes[scene].video.play(true,speed);
     
 }
@@ -113,8 +114,9 @@ function update() {
 function start() {
 
     //  hot keys
-    film.input.onDown.add(nextScene, this);
     keys.fullscreenKey.onDown.add(goFull,this);
+    
+    film.input.onDown.add(nextScene, this);
     
     keys.up.onDown.add(prevScene, this);
     keys.down.onDown.add(nextScene, this);
@@ -124,36 +126,40 @@ function start() {
     keys.a.onDown.add(prevScene, this);
     keys.s.onDown.add(nextScene, this);
     keys.d.onDown.add(nextScene, this);
+    
+    enableMousewheel();
 }
 
 function startAudio() {
-    audio.background.loopFull(1.0);
+    audio.background.loopFull(0.2);
 }
 
 function nextScene() {
     if(scenes[scene].textIsShown){
         var curScene = scenes[scene];
-        curScene.text.kill();
-        fadeOut(scenes[scene].image, 500, function () {
+        fadeOutText(curScene.text,fadeTime, function(){curScene.text.kill();});
+        fadeOut(curScene.image, fadeTime, function () {
             curScene.image.kill();
             curScene.video.stop();
             curScene.textIsShown = false;
             removeBlur(curScene.image);
         });
+        fadeOutVolumeOnVideo(curScene.video, fadeTime);
 
         scene++;
         if( scene > scenes.length - 1 ) {
             scene = 0;
         }
         
-        fadeIn(scenes[scene].image,500);
+        fadeIn(scenes[scene].image,fadeTime);
+        fadeInVolumeOnVideo(scenes[scene].video,fadeTime);
         scenes[scene].video.play(true,speed);
 
         
     }else{ // show the text
-        disableControls(500);
+        disableControls(fadeTime);
         if( scenes[scene].hasOwnProperty('text') ){
-            scenes[scene].text.revive();
+            fadeInText(scenes[scene].text,fadeTime);
             scenes[scene].textIsShown = true;
             addBlur(scenes[scene].image);
         }
@@ -161,28 +167,43 @@ function nextScene() {
 }
 
 function prevScene() {
-    disableControls(500);
+    disableControls(fadeTime);
     var curScene = scenes[scene];
-    curScene.text.kill();
-    fadeOut(scenes[scene].image, 500, function () {
+    fadeOutText(curScene.text,fadeTime, function(){curScene.text.kill();});
+    fadeOut(scenes[scene].image, fadeTime, function () {
         curScene.image.kill();
         curScene.video.stop();
         curScene.textIsShown = false;
         removeBlur(curScene.image);
     });
+    fadeOutVolumeOnVideo(curScene.video, fadeTime);
     
     scene--;
     if( scene < 0 ) {
         scene = scenes.length-1;
     }
     
-    fadeIn(scenes[scene].image,500);
+    fadeIn(scenes[scene].image,fadeTime);
+    fadeInVolumeOnVideo(scenes[scene].video,fadeTime);
     scenes[scene].video.play(true,speed);
 }
 
 function disableControls(time){
     film.input.enabled = false;
-    setTimeout(function () {film.input.enabled = true},time);
+    film.input.mouse.mouseWheelCallback = null;
+    setTimeout(function () {film.input.enabled = true;
+                            enableMousewheel();
+                            }, time);
+}
+
+function enableMousewheel(){
+    film.input.mouse.mouseWheelCallback = function(event) {
+        if( film.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP ){
+            prevScene();
+        }else{
+            nextScene();
+        }
+    };
 }
 
 function goFull() {
@@ -202,6 +223,32 @@ function fadeIn(image, time) {
 function fadeOut(image, time, callback) {
     film.add.tween(image).to( {alpha: 0}, time, "Linear", true );
     setTimeout(callback,time);
+}
+
+function fadeInText(image, time) {
+    image.anchor.x = 0;
+    image.anchor.y = 1;
+    image.x = 40;
+    image.y = height - 10;
+    film.add.tween(image).to({y: height - 30}, time, "Linear", true);
+    fadeIn(image, time);
+}
+
+function fadeOutText(image, time, callback) {
+    film.add.tween(image).to({y: height - 10}, time, "Linear", true);
+    fadeOut(image, time, callback);
+}
+
+function fadeInVolumeOnVideo(video, time, max){
+    if(max === undefined) max = 1;
+    video.volume = 0;
+    film.add.tween(video).to( {volume: max}, time, "Linear", true);
+    
+}
+
+function fadeOutVolumeOnVideo(video, time){
+    film.add.tween(video).to( {volume: 0}, time, "Linear", true);
+    
 }
 
 function addBlur(image) {
