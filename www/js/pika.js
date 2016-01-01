@@ -9,6 +9,7 @@ var film = new Phaser.Game(
         { preload: preload, create: create, update: update, render: render }
 );
 var filters = {};
+var fullscreenKey;
 var keys = {};
 var audio = {};
 
@@ -65,7 +66,7 @@ function create() {
     film.stage.backgroundColor = "#FFFFFF";
     
     // Inputs
-    keys.fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
+    fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
     keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     keys.left = film.input.keyboard.addKey(Phaser.Keyboard.LEFT);
@@ -114,20 +115,10 @@ function update() {
 function start() {
 
     //  hot keys
-    keys.fullscreenKey.onDown.add(goFull,this);
+    enableControls();
+    fullscreenKey.onDown.add(goFull,this);
     
-    film.input.onDown.add(nextScene, this);
-    
-    keys.up.onDown.add(prevScene, this);
-    keys.down.onDown.add(nextScene, this);
-    keys.left.onDown.add(prevScene, this);
-    keys.right.onDown.add(nextScene, this);
-    keys.w.onDown.add(prevScene, this);
-    keys.a.onDown.add(prevScene, this);
-    keys.s.onDown.add(nextScene, this);
-    keys.d.onDown.add(nextScene, this);
-    
-    enableMousewheel();
+
 }
 
 function startAudio() {
@@ -189,11 +180,35 @@ function prevScene() {
 }
 
 function disableControls(time){
-    film.input.enabled = false;
+    film.input.onDown.removeAll();
+    
+    keys.up.onDown.removeAll();
+    keys.down.onDown.removeAll();
+    keys.left.onDown.removeAll();
+    keys.right.onDown.removeAll();
+    keys.w.onDown.removeAll();
+    keys.a.onDown.removeAll();
+    keys.s.onDown.removeAll();
+    keys.d.onDown.removeAll();
+    
     film.input.mouse.mouseWheelCallback = null;
-    setTimeout(function () {film.input.enabled = true;
-                            enableMousewheel();
+    setTimeout(function () {enableControls();
                             }, time);
+}
+
+function enableControls(){
+    film.input.onDown.add(nextScene, this);
+    
+    keys.up.onDown.add(prevScene, this);
+    keys.down.onDown.add(nextScene, this);
+    keys.left.onDown.add(prevScene, this);
+    keys.right.onDown.add(nextScene, this);
+    keys.w.onDown.add(prevScene, this);
+    keys.a.onDown.add(prevScene, this);
+    keys.s.onDown.add(nextScene, this);
+    keys.d.onDown.add(nextScene, this);
+    
+    enableMousewheel();
 }
 
 function enableMousewheel(){
