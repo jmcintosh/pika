@@ -118,11 +118,12 @@ function start() {
     enableControls();
     fullscreenKey.onDown.add(goFull,this);
     
-
+    var piechart = new PieChart(film,width/2, height/2, height/4, 50,50 );
+    piechart.draw();
 }
 
 function startAudio() {
-    audio.background.loopFull(0.2);
+    audio.background.loopFull(0);
 }
 
 function nextScene() {
