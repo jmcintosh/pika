@@ -1,3 +1,4 @@
+"use strict";
 var width = screen.width;
 var height = screen.height;
 

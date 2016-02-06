@@ -8,7 +8,6 @@ var PieChart = function(game,x,y,radius,val1,val2) {
     
     var sum = this.values.reduce( (prev, curr) => prev + curr );
     this.normValues = this.values.map( val => val/sum );
-    console.log(this.normValues);
 };
 
 
@@ -19,10 +18,8 @@ PieChart.prototype.draw = function() {
     this.chart.drawCircle(this.x,this.y,2*this.radius);
     
     this.chart.beginFill(0xf30000);
-    var startAngle = Math.PI;
-    console.log(startAngle);
+    var startAngle = 0;
     var endAngle = startAngle + this.normValues[1]*2*Math.PI;
-    console.log(endAngle);
     this.chart.arc(this.x,this.y,this.radius,startAngle,endAngle,true);
     
     this.chart.endFill();
