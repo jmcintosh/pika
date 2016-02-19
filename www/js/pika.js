@@ -171,7 +171,6 @@ function startAudio() {
 }
 
 function toggleBackgroundAudio() {
-    console.log("clicked");
     var newState = !audio.background.mute;
     audio.background.mute = newState;
     return newState;

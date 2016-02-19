@@ -16,4 +16,8 @@ function readyFn(){
             $("#mute-button-icon").removeClass("glyphicon-volume-off").addClass("glyphicon-volume-up");
         }
     });
+    
+    $("#fullscreen-button").click(function(){
+        toggleFullScreen();
+    });
 }
