@@ -2,6 +2,21 @@
 var width = screen.width;
 var height = screen.height;
 
+
+// overriding setExactFit function to maintain aspect ratio
+Phaser.ScaleManager.prototype.setExactFit = function () {
+    var bounds = this.getParentBounds(this._tempBounds);
+    var width = bounds.width;
+    var height = bounds.height;
+
+    var multiplier;
+
+    multiplier = Math.max((height / this.game.height), (width / this.game.width));
+
+    this.width = Math.round(this.game.width * multiplier);
+    this.height = Math.round(this.game.height * multiplier);
+};
+
 var film = new Phaser.Game(
         width, 
         height, 
@@ -9,6 +24,7 @@ var film = new Phaser.Game(
         'body', 
         { preload: preload, create: create, update: update, render: render }
 );
+
 var filters = {};
 var fullscreenKey;
 var keys = {};
@@ -23,19 +39,39 @@ var basicTextStyle = { font: "24px Arial",
 
 
 var scenes = [ 
-    {'title': 'chrome',
-     'url': 'video/chrome.webm',
-     'string': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque id dolor commodo, laoreet dui in, interdum urna.',
+    {'title': 'bigtruckinsnow',
+     'url': 'video/BigTruckInSnow.mp4',
+     'string': 'A truck will drive by in a moment. Keep watching.',
      'textIsShown': false
     },
-    {'title': 'liquid',
-     'url': 'video/liquid2.mp4',
-     'string': 'There was a video of a flaming skull among these samples, but I found it tacky so I removed it.',
+    {'title': 'ennislake',
+     'url': 'video/EnnisLake.mp4',
+     'string': 'What a lovely lake. I\'ve never been here, believe it or not.',
      'textIsShown': false
     },
-    {'title': 'wormhole',
-     'url': 'video/wormhole.mp4',
-     'string': "This video won't loop for some reason. Perhaps we will never know why.",
+    {'title': 'madisonriver',
+     'url': 'video/MadisonRiver.mp4',
+     'string': "Looks cold. I would prefer to not go swimming.",
+     'textIsShown': false
+    },
+    {'title': 'pallisadefalls',
+     'url': 'video/PallisadeFalls.mp4',
+     'string': 'There are actually 11 pikas in this shot. Can you spot them all?',
+     'textIsShown': false
+    },
+    {'title': 'snowglitter',
+     'url': 'video/SnowGlitter.mp4',
+     'string': 'I noticed that the blur effect is way too abrupt. I should figure out how to blur it gradually.',
+     'textIsShown': false
+    },
+    {'title': 'sunsethyalite',
+     'url': 'video/SunsetHyalite.mp4',
+     'string': 'Something unnatural about the sky. Doesn\'t seem right some how.',
+     'textIsShown': false
+    },
+    {'title': 'woodlandsnowycreek',
+     'url': 'video/WoodlandSnowyCreek.mp4',
+     'string': 'None of the videos are looping. I need to figure out why.',
      'textIsShown': false
     }
 ];
@@ -46,10 +82,12 @@ var fadeTime = 500; // time for fades on scene transitions
 
 
 function preload() {
-    
-    film.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    film.scale.pageAlignHorizontally = true;
-    film.scale.pageAlignVertically = true;
+    film.stage.disableVisibilityChange = true;
+    film.stage.backgroundColor = "#FFFFFF";
+    film.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+
+    film.scale.pageAlignHorizontally = false;
+    film.scale.pageAlignVertically = false;
     film.scale.forceOrientation(true,false);
     
     film.load.audio('background', 'audio/placeholder.mp3');
@@ -59,13 +97,18 @@ function preload() {
     });
     
     film.load.script('filters', 'js/filters.js');
+    
+    
+    // keep it centered
+    window.onresize = function(event){
+        var x = (film.scale.width - window.innerWidth)/2;
+        var y = (film.scale.height - window.innerHeight)/2;
+        window.scrollTo(x,y);
+    };
 
 }
 
 function create() {
-    
-    film.stage.backgroundColor = "#FFFFFF";
-    
     // Inputs
     fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -87,7 +130,6 @@ function create() {
         var scale = Math.max(scalex,scaley);
         item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
         if( item.hasOwnProperty('string') ){
-            console.log("adding text\n");
             item.text = film.add.text(200,height-200,item.string,basicTextStyle);
             item.text.anchor.set(0);
             item.text.kill();
@@ -107,6 +149,7 @@ function create() {
     fadeIn(scenes[scene].image,fadeTime);
     scenes[scene].video.play(true,speed);
     
+    
 }
 
 function update() {
@@ -117,17 +160,26 @@ function start() {
 
     //  hot keys
     enableControls();
-    fullscreenKey.onDown.add(goFull,this);
+    fullscreenKey.onDown.add(toggleFullScreen,this);
     
-    var piechart = new PieChart(film,width/2, height/2, height/4, 50,50 );
-    piechart.draw();
+//    var piechart = new PieChart(film,width/2, height/2, height/4, 50,50 );
+//    piechart.draw();
 }
 
 function startAudio() {
-    audio.background.loopFull(0);
+    audio.background.loopFull(0.5);
 }
 
+function toggleBackgroundAudio() {
+    console.log("clicked");
+    var newState = !audio.background.mute;
+    audio.background.mute = newState;
+    return newState;
+};
+
+
 function nextScene() {
+    disableControls(fadeTime);
     if(scenes[scene].textIsShown){
         var curScene = scenes[scene];
         fadeOutText(curScene.text,fadeTime, function(){curScene.text.kill();});
@@ -150,10 +202,9 @@ function nextScene() {
 
         
     }else{ // show the text
-        disableControls(fadeTime);
         if( scenes[scene].hasOwnProperty('text') ){
-            fadeInText(scenes[scene].text,fadeTime);
             scenes[scene].textIsShown = true;
+            fadeInText(scenes[scene].text,fadeTime);
             addBlur(scenes[scene].image);
         }
     }
@@ -162,23 +213,33 @@ function nextScene() {
 function prevScene() {
     disableControls(fadeTime);
     var curScene = scenes[scene];
-    fadeOutText(curScene.text,fadeTime, function(){curScene.text.kill();});
-    fadeOut(scenes[scene].image, fadeTime, function () {
-        curScene.image.kill();
-        curScene.video.stop();
-        curScene.textIsShown = false;
-        removeBlur(curScene.image);
-    });
-    fadeOutVolumeOnVideo(curScene.video, fadeTime);
-    
-    scene--;
-    if( scene < 0 ) {
-        scene = scenes.length-1;
+    if(scenes[scene].textIsShown){
+        if( scenes[scene].hasOwnProperty('text') ){
+            curScene.textIsShown = false;
+            fadeOutText(curScene.text, fadeTime, function(){curScene.text.kill();});
+            removeBlur(curScene.image);
+        }
+    }else{
+        fadeOutText(curScene.text, fadeTime, function(){curScene.text.kill();});
+        fadeOut(scenes[scene].image, fadeTime, function () {
+            curScene.image.kill();
+            curScene.video.stop();
+            curScene.textIsShown = false;
+            removeBlur(curScene.image);
+        });
+        fadeOutVolumeOnVideo(curScene.video, fadeTime);
+
+        scene--;
+        if( scene < 0 ) {
+            scene = scenes.length-1;
+        }
+
+        fadeIn(scenes[scene].image,fadeTime);
+        fadeInVolumeOnVideo(scenes[scene].video,fadeTime);
+        scenes[scene].video.play(true,speed);
+        
     }
     
-    fadeIn(scenes[scene].image,fadeTime);
-    fadeInVolumeOnVideo(scenes[scene].video,fadeTime);
-    scenes[scene].video.play(true,speed);
 }
 
 function disableControls(time){
@@ -223,7 +284,7 @@ function enableMousewheel(){
     };
 }
 
-function goFull() {
+function toggleFullScreen() {
     if(film.scale.isFullScreen){
         film.scale.stopFullScreen();
     }else{
@@ -246,13 +307,13 @@ function fadeInText(image, time) {
     image.anchor.x = 0;
     image.anchor.y = 1;
     image.x = 40;
-    image.y = height - 10;
-    film.add.tween(image).to({y: height - 30}, time, "Linear", true);
+    image.y = window.innerHeight - 10;
+    film.add.tween(image).to({y: window.innerHeight - 30}, time, "Linear", true);
     fadeIn(image, time);
 }
 
 function fadeOutText(image, time, callback) {
-    film.add.tween(image).to({y: height - 10}, time, "Linear", true);
+    film.add.tween(image).to({y: image.y + 30}, time, "Linear", true);
     fadeOut(image, time, callback);
 }
 
@@ -269,11 +330,18 @@ function fadeOutVolumeOnVideo(video, time){
 }
 
 function addBlur(image) {
+    filters.blurX.uniforms.blur.value  = 0;
+    filters.blurY.uniforms.blur.value  = 0;
     image.filters = [filters.blurX, filters.blurY];
+    film.add.tween(filters.blurX.uniforms.blur).to({value: 1/512},fadeTime,"Linear",true);
+    film.add.tween(filters.blurY.uniforms.blur).to({value: 1/512},fadeTime,"Linear",true);
 }
 
 function removeBlur(image) {
-    image.filters = null;
+    film.add.tween(filters.blurX.uniforms.blur).to({value: 0},fadeTime,"Linear",true);
+    film.add.tween(filters.blurY.uniforms.blur).to({value: 0},fadeTime,"Linear",true);
+    
+    setTimeout(function(){image.filters = null;},fadeTime);
 }
 
 function render() {

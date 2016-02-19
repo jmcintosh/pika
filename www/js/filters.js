@@ -1,11 +1,13 @@
 /**
 * A horizontal blur filter by Mat Groves http://matgroves.com/ @Doormat23
 */
+BLUR_INTENSITY = 512;
+
 Phaser.Filter.BlurX = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.blur = { type: '1f', value: 1 / 512 };
+    this.uniforms.blur = { type: '1f', value: 1 / BLUR_INTENSITY };
 
     this.fragmentSrc = [
 
@@ -59,7 +61,7 @@ Phaser.Filter.BlurY = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.blur = { type: '1f', value: 1 / 512 };
+    this.uniforms.blur = { type: '1f', value: 1 / BLUR_INTENSITY };
 
     this.fragmentSrc = [
 

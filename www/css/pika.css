@@ -8,4 +8,9 @@ body {
     margin: 0px;
     padding: 0px;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+#mute-button {
+    /*position: fixed;*/
 }
