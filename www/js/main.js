@@ -10,10 +10,11 @@ function readyFn(){
     $("#mute-button").click(function(){
         var muted = toggleBackgroundAudio();
         if(muted){
-            $("#mute-button-icon").removeClass("glyphicon-volume-up").addClass("glyphicon-volume-off");
+            $("#mute-button-icon").removeClass("glyphicon-volume-up");
+            $("#mute-button-icon").addClass("glyphicon-volume-off");
         }else{
-            
-            $("#mute-button-icon").removeClass("glyphicon-volume-off").addClass("glyphicon-volume-up");
+            $("#mute-button-icon").removeClass("glyphicon-volume-off");
+            $("#mute-button-icon").addClass("glyphicon-volume-up");
         }
     });
     
