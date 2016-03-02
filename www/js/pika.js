@@ -3,6 +3,8 @@ var width = screen.width;
 var height = screen.height;
 // the number of videos to buffer, before and after current scene
 var scenesBuffer = 3; 
+var keys = {};
+var audio = {};
 
 // overriding setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
@@ -25,11 +27,6 @@ var film = new Phaser.Game(
         'body', 
         { preload: preload, create: create, update: update, render: render }
 );
-
-var filters = {};
-var fullscreenKey;
-var keys = {};
-var audio = {};
 
 var basicTextStyle = { font: "24px Helvetica", 
     fill: "#FFFFFF", 
@@ -96,11 +93,11 @@ var scenes = [
      'string': 'Tallus.mp4',
      'textIsShown': false
     },
-    {'title': 'talluswden',
-     'url': 'video/TallusWDen.mp4',
-     'string': 'TallusWDen.mp4',
-     'textIsShown': false
-    },
+//    {'title': 'talluswden',
+//     'url': 'video/TallusWDen.mp4',
+//     'string': 'TallusWDen.mp4',
+//     'textIsShown': false
+//    },
     {'title': 'fallcolorpikahabitat',
      'url': 'video/FallColorPikaHabitat.mp4',
      'string': 'FallColorPikaHabitat.mp4',
@@ -144,21 +141,21 @@ var scenes = [
 //     'string': 'EnnisLake.mp4',
 //     'textIsShown': false
 //    },
-    {'title': 'madisonriver',
-     'url': 'video/MadisonRiver.mp4',
-     'string': "MadisonRiver.mp4",
-     'textIsShown': false
-    },
+//    {'title': 'madisonriver',
+//     'url': 'video/MadisonRiver.mp4',
+//     'string': "MadisonRiver.mp4",
+//     'textIsShown': false
+//    },
 //    {'title': 'pallisadefalls',
 //     'url': 'video/PallisadeFalls.mp4',
 //     'string': 'PallisadeFalls.mp4',
 //     'textIsShown': false
 //    },
-    {'title': 'snowglitter',
-     'url': 'video/SnowGlitter.mp4',
-     'string': 'SnowGlitter.mp4',
-     'textIsShown': false
-    },
+//    {'title': 'snowglitter',
+//     'url': 'video/SnowGlitter.mp4',
+//     'string': 'SnowGlitter.mp4',
+//     'textIsShown': false
+//    },
     {'title': 'sunsethyalite',
      'url': 'video/SunsetHyalite.mp4',
      'string': 'SunsetHyalite.mp4',
@@ -210,16 +207,11 @@ function preload() {
 
 function create() {
     // Inputs
-    fullscreenKey = film.input.keyboard.addKey(Phaser.Keyboard.F);
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
     keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     keys.left = film.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     keys.right = film.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-    keys.w = film.input.keyboard.addKey(Phaser.Keyboard.W);
-    keys.a = film.input.keyboard.addKey(Phaser.Keyboard.A);
-    keys.s = film.input.keyboard.addKey(Phaser.Keyboard.S);
-    keys.d = film.input.keyboard.addKey(Phaser.Keyboard.D);
-    //keys.blurKey = film.input.keyboard.addKey(Phaser.Keyboard.B);
+
     
     // Scenes
 //    for(var i = 0; i <= scenesBuffer; i++){
@@ -257,8 +249,8 @@ function create() {
     filters.blurY = this.add.filter('BlurY');
     
     scenes[scene].video.onPlay.addOnce(start,this);
-    fadeIn(scenes[scene].image,fadeTime);
-    scenes[scene].video.play(true,speed);
+    fadeIn(scenes[scene].image, fadeTime, film);
+    scenes[scene].video.play(true, speed);
     
     
 }
@@ -267,11 +259,20 @@ function update() {
     
 }
 
+function render() {
+
+    //film.debug.text("Video width: " + scenes[scene].video.video.videoWidth, 600, 32);
+    //film.debug.text("Video height: " + scenes[scene].video.video.videoHeight, 600, 64);
+
+    //film.debug.text("Video Time: " + scenes[scene].video.currentTime, 32, 32);
+    //film.debug.text("Video Duration: " + scenes[scene].video.duration, 32, 64);
+
+}
+
 function start() {
 
     //  hot keys
     enableControls();
-    fullscreenKey.onDown.add(toggleFullScreen,this);
     
 //    var piechart = new PieChart(film,width/2, height/2, height/4, 50,50 );
 //    piechart.draw();
@@ -292,30 +293,30 @@ function nextScene() {
     disableControls(fadeTime);
     if(scenes[scene].textIsShown){
         var curScene = scenes[scene];
-        fadeOutText(curScene.text,fadeTime, function(){curScene.text.kill();});
-        fadeOut(curScene.image, fadeTime, function () {
+        fadeOutText(curScene.text,fadeTime, film, function(){curScene.text.kill();});
+        fadeOut(curScene.image, fadeTime, film, function () {
             curScene.image.kill();
             curScene.video.stop();
             curScene.textIsShown = false;
-            removeBlur(curScene.image);
+            removeBlur(curScene.image, fadeTime, film);
         });
-        fadeOutVolumeOnVideo(curScene.video, fadeTime);
+        fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
 
         scene++;
         if( scene > scenes.length - 1 ) {
             scene = 0;
         }
         
-        fadeIn(scenes[scene].image,fadeTime);
-        fadeInVolumeOnVideo(scenes[scene].video,fadeTime);
-        scenes[scene].video.play(true,speed);
+        fadeIn(scenes[scene].image, fadeTime, film);
+        fadeInVolumeOnVideo(scenes[scene].video, fadeTime, film);
+        scenes[scene].video.play(true, speed);
 
         
     }else{ // show the text
         if( scenes[scene].hasOwnProperty('text') ){
             scenes[scene].textIsShown = true;
-            fadeInText(scenes[scene].text,fadeTime);
-            addBlur(scenes[scene].image);
+            fadeInText(scenes[scene].text, fadeTime, film);
+            addBlur(scenes[scene].image, fadeTime, film);
         }
     }
 }
@@ -326,26 +327,26 @@ function prevScene() {
     if(scenes[scene].textIsShown){
         if( scenes[scene].hasOwnProperty('text') ){
             curScene.textIsShown = false;
-            fadeOutText(curScene.text, fadeTime, function(){curScene.text.kill();});
-            removeBlur(curScene.image);
+            fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+            removeBlur(curScene.image, fadeTime, film);
         }
     }else{
-        fadeOutText(curScene.text, fadeTime, function(){curScene.text.kill();});
-        fadeOut(scenes[scene].image, fadeTime, function () {
+        fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+        fadeOut(scenes[scene].image, fadeTime, film, function () {
             curScene.image.kill();
             curScene.video.stop();
             curScene.textIsShown = false;
-            removeBlur(curScene.image);
+            removeBlur(curScene.image, fadeTime, film);
         });
-        fadeOutVolumeOnVideo(curScene.video, fadeTime);
+        fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
 
         scene--;
         if( scene < 0 ) {
             scene = scenes.length-1;
         }
 
-        fadeIn(scenes[scene].image,fadeTime);
-        fadeInVolumeOnVideo(scenes[scene].video,fadeTime);
+        fadeIn(scenes[scene].image, fadeTime, film);
+        fadeInVolumeOnVideo(scenes[scene].video, fadeTime, film);
         scenes[scene].video.play(true,speed);
         
     }
@@ -359,10 +360,6 @@ function disableControls(time){
     keys.down.onDown.removeAll();
     keys.left.onDown.removeAll();
     keys.right.onDown.removeAll();
-    keys.w.onDown.removeAll();
-    keys.a.onDown.removeAll();
-    keys.s.onDown.removeAll();
-    keys.d.onDown.removeAll();
     
     film.input.mouse.mouseWheelCallback = null;
     setTimeout(function () {enableControls();
@@ -376,10 +373,6 @@ function enableControls(){
     keys.down.onDown.add(nextScene, this);
     keys.left.onDown.add(prevScene, this);
     keys.right.onDown.add(nextScene, this);
-    keys.w.onDown.add(prevScene, this);
-    keys.a.onDown.add(prevScene, this);
-    keys.s.onDown.add(nextScene, this);
-    keys.d.onDown.add(nextScene, this);
     
     enableMousewheel();
 }
@@ -388,7 +381,7 @@ function enableMousewheel(){
     film.input.mouse.mouseWheelCallback = function(event) {
         if( film.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP ){
             prevScene();
-        }else{
+        }else if( film.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_DOWN ){
             nextScene();
         }
     };
@@ -400,66 +393,4 @@ function toggleFullScreen() {
     }else{
         film.scale.startFullScreen(false);
     }
-}
-
-function fadeIn(image, time) {
-    image.alpha = 0;
-    image.revive();
-    film.add.tween(image).to( {alpha: 1}, time, "Linear", true );
-}
-
-function fadeOut(image, time, callback) {
-    film.add.tween(image).to( {alpha: 0}, time, "Linear", true );
-    setTimeout(callback,time);
-}
-
-function fadeInText(image, time) {
-    image.anchor.x = 0;
-    image.anchor.y = 1;
-    image.x = 40;
-    image.y = window.innerHeight - 10;
-    film.add.tween(image).to({y: window.innerHeight - 30}, time, "Linear", true);
-    fadeIn(image, time);
-}
-
-function fadeOutText(image, time, callback) {
-    film.add.tween(image).to({y: image.y + 30}, time, "Linear", true);
-    fadeOut(image, time, callback);
-}
-
-function fadeInVolumeOnVideo(video, time, max){
-    if(max === undefined) max = 1;
-    video.volume = 0;
-    film.add.tween(video).to( {volume: max}, time, "Linear", true);
-    
-}
-
-function fadeOutVolumeOnVideo(video, time){
-    film.add.tween(video).to( {volume: 0}, time, "Linear", true);
-    
-}
-
-function addBlur(image) {
-    filters.blurX.uniforms.blur.value  = 0;
-    filters.blurY.uniforms.blur.value  = 0;
-    image.filters = [filters.blurX, filters.blurY];
-    film.add.tween(filters.blurX.uniforms.blur).to({value: 1/512},fadeTime,"Linear",true);
-    film.add.tween(filters.blurY.uniforms.blur).to({value: 1/512},fadeTime,"Linear",true);
-}
-
-function removeBlur(image) {
-    film.add.tween(filters.blurX.uniforms.blur).to({value: 0},fadeTime,"Linear",true);
-    film.add.tween(filters.blurY.uniforms.blur).to({value: 0},fadeTime,"Linear",true);
-    
-    setTimeout(function(){image.filters = null;},fadeTime);
-}
-
-function render() {
-
-    //film.debug.text("Video width: " + scenes[scene].video.video.videoWidth, 600, 32);
-    //film.debug.text("Video height: " + scenes[scene].video.video.videoHeight, 600, 64);
-
-    //film.debug.text("Video Time: " + scenes[scene].video.currentTime, 32, 32);
-    //film.debug.text("Video Duration: " + scenes[scene].video.duration, 32, 64);
-
 }
