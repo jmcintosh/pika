@@ -1,7 +1,8 @@
 "use strict";
 var width = screen.width;
 var height = screen.height;
-
+// the number of videos to buffer, before and after current scene
+var scenesBuffer = 3; 
 
 // overriding setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
@@ -30,8 +31,8 @@ var fullscreenKey;
 var keys = {};
 var audio = {};
 
-var basicTextStyle = { font: "24px Arial", 
-    fill: "#000000", 
+var basicTextStyle = { font: "24px Helvetica", 
+    fill: "#FFFFFF", 
     wordWrap: true, 
     wordWrapWidth: window.innerWidth/4, 
     align: "left" 
@@ -39,41 +40,135 @@ var basicTextStyle = { font: "24px Arial",
 
 
 var scenes = [ 
-    {'title': 'bigtruckinsnow',
-     'url': 'video/BigTruckInSnow.mp4',
-     'string': 'A truck will drive by in a moment. Keep watching.',
+    
+//    {'title': 'iceinwater',
+//     'url': 'video/IceInWater.mp4',
+//     'string': 'IceInWater.mp4',
+//     'textIsShown': false
+//    },
+    {'title': 'treeinheat',
+     'url': 'video/TreeInHeat.mp4',
+     'string': 'TreeInHeat.mp4',
      'textIsShown': false
     },
-    {'title': 'ennislake',
-     'url': 'video/EnnisLake.mp4',
-     'string': 'What a lovely lake. I\'ve never been here, believe it or not.',
+//    {'title': 'grasses',
+//     'url': 'video/Grasses.mp4',
+//     'string': 'Grasses.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'Weasel',
+//     'url': 'video/Weasel.mp4',
+//     'string': 'Weasel.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'pikaeatslichensm',
+//     'url': 'video/PikaEatsLichenSM.mp4',
+//     'string': 'PikaEatsLichenSM.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'pikaeatsgrass',
+//     'url': 'video/PikaEatsGrass.mp4',
+//     'string': 'PikaEatsGrass.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'pikaeatsyellowflower3',
+//     'url': 'video/PikaEatsYellowFlower3.mp4',
+//     'string': 'PikaEatsYellowFlower3.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'pikaeatsyellowflower2',
+//     'url': 'video/PikaEatsYellowFlower2.mp4',
+//     'string': 'PikaEatsYellowFlower2.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'pikahaysyellowflower',
+//     'url': 'video/PikaHaysYellowFlower.mp4',
+//     'string': 'PikaHaysYellowFlower.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'pikaeatsyellowflower',
+//     'url': 'video/PikaEatsYellowFlower.mp4',
+//     'string': 'PikaEatsYellowFlower.mp4',
+//     'textIsShown': false
+//    },
+    {'title': 'tallus',
+     'url': 'video/Tallus.mp4',
+     'string': 'Tallus.mp4',
      'textIsShown': false
     },
+    {'title': 'talluswden',
+     'url': 'video/TallusWDen.mp4',
+     'string': 'TallusWDen.mp4',
+     'textIsShown': false
+    },
+    {'title': 'fallcolorpikahabitat',
+     'url': 'video/FallColorPikaHabitat.mp4',
+     'string': 'FallColorPikaHabitat.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikaden',
+     'url': 'video/PikaDen.mp4',
+     'string': 'PikaDen.mp4',
+     'textIsShown': false
+    },
+//    {'title': 'wspikahabitat',
+//     'url': 'video/WSPikaHabitat.mp4',
+//     'string': 'WSPikaHabitat.mp4',
+//     'textIsShown': false
+//    },
+    {'title': 'pikaeatsyellowflowers2',
+     'url': 'video/PikaEatsYellowFlowers2.mp4',
+     'string': 'PikaEatsYellowFlowers2.mp4',
+     'textIsShown': false
+    },
+//    {'title': 'grassblowingwind',
+//     'url': 'video/GrassBlowingWind.mp4',
+//     'string': 'GrassBlowingWind.mp4',
+//     'textIsShown': false
+//    },
+    {'title': 'pikahaypurpleflower',
+     'url': 'video/PikaHayPurpleFlower.mp4',
+     'string': 'PikaHayPurpleFlower.mp4',
+     'textIsShown': false
+    },
+    
+    
+    
+//    {'title': 'bigtruckinsnow',
+//     'url': 'video/BigTruckInSnow.mp4',
+//     'string': 'BigTruckInSnow.mp4',
+//     'textIsShown': false
+//    },
+//    {'title': 'ennislake',
+//     'url': 'video/EnnisLake.mp4',
+//     'string': 'EnnisLake.mp4',
+//     'textIsShown': false
+//    },
     {'title': 'madisonriver',
      'url': 'video/MadisonRiver.mp4',
-     'string': "Looks cold. I would prefer to not go swimming.",
+     'string': "MadisonRiver.mp4",
      'textIsShown': false
     },
-    {'title': 'pallisadefalls',
-     'url': 'video/PallisadeFalls.mp4',
-     'string': 'There are actually 11 pikas in this shot. Can you spot them all?',
-     'textIsShown': false
-    },
+//    {'title': 'pallisadefalls',
+//     'url': 'video/PallisadeFalls.mp4',
+//     'string': 'PallisadeFalls.mp4',
+//     'textIsShown': false
+//    },
     {'title': 'snowglitter',
      'url': 'video/SnowGlitter.mp4',
-     'string': 'I noticed that the blur effect is way too abrupt. I should figure out how to blur it gradually.',
+     'string': 'SnowGlitter.mp4',
      'textIsShown': false
     },
     {'title': 'sunsethyalite',
      'url': 'video/SunsetHyalite.mp4',
-     'string': 'Something unnatural about the sky. Doesn\'t seem right some how.',
-     'textIsShown': false
-    },
-    {'title': 'woodlandsnowycreek',
-     'url': 'video/WoodlandSnowyCreek.mp4',
-     'string': 'None of the videos are looping. I need to figure out why.',
+     'string': 'SunsetHyalite.mp4',
      'textIsShown': false
     }
+//    {'title': 'woodlandsnowycreek',
+//     'url': 'video/WoodlandSnowyCreek.mp4',
+//     'string': 'WoodlandSnowyCreek.mp4',
+//     'textIsShown': false
+//    }
 ];
 
 var speed = 1; //change speed of video, for testing purposes
@@ -91,7 +186,12 @@ function preload() {
     film.scale.forceOrientation(true,false);
     
     film.load.audio('background', 'audio/placeholder.mp3');
-
+    
+//    for(var i = 0; i <= scenesBuffer; i++){
+//        var scene = scenes[i];
+//        film.load.video(scene.title,scene.url);
+//    }
+    
     scenes.forEach(function(item,index,array) {
         film.load.video(item.title,item.url);
     });
@@ -122,6 +222,17 @@ function create() {
     //keys.blurKey = film.input.keyboard.addKey(Phaser.Keyboard.B);
     
     // Scenes
+//    for(var i = 0; i <= scenesBuffer; i++){
+//        var scene = scenes[i];
+//        var video = film.add.video(scene.title);
+//        scene.video = video;
+//        var scalex = width/video.video.videoWidth;
+//        var scaley = height/video.video.videoHeight;
+//        var scale = Math.max(scalex,scaley);
+//        scene.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
+//        scene.image.kill();
+//    }
+    
     scenes.forEach(function(item,index,array) {
         var video = film.add.video(item.title);
         item.video = video;

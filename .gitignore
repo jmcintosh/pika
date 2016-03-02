@@ -47,3 +47,5 @@ Temporary Items
 .apdisk
 /nbproject/private/
 *.properties
+*.mp4
+www/audio/placeholder.mp3
