@@ -1,10 +1,12 @@
 "use strict";
 var width = screen.width;
 var height = screen.height;
-// the number of videos to buffer, before and after current scene
-var scenesBuffer = 3; 
+var scenesBuffer = 2; // the number of videos to buffer, before and after current scene
 var keys = {};
 var audio = {};
+var speed = 1; //change speed of video, for testing purposes
+var scene = 0; //initial scene
+var fadeTime = 750; // time for fades on scene transitions
 
 // overriding setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
@@ -21,11 +23,11 @@ Phaser.ScaleManager.prototype.setExactFit = function () {
 };
 
 var film = new Phaser.Game(
-        width, 
-        height, 
-        Phaser.AUTO, 
-        'body', 
-        { preload: preload, create: create, update: update, render: render }
+    width, 
+    height, 
+    Phaser.AUTO, 
+    'body', 
+    { preload: preload, create: create, update: update, render: render }
 );
 
 var basicTextStyle = { font: "24px Helvetica", 
@@ -38,66 +40,66 @@ var basicTextStyle = { font: "24px Helvetica",
 
 var scenes = [ 
     
-//    {'title': 'iceinwater',
-//     'url': 'video/IceInWater.mp4',
-//     'string': 'IceInWater.mp4',
-//     'textIsShown': false
-//    },
+    {'title': 'iceinwater',
+     'url': 'video/IceInWater.mp4',
+     'string': 'IceInWater.mp4',
+     'textIsShown': false
+    },
     {'title': 'treeinheat',
      'url': 'video/TreeInHeat.mp4',
      'string': 'TreeInHeat.mp4',
      'textIsShown': false
     },
-//    {'title': 'grasses',
-//     'url': 'video/Grasses.mp4',
-//     'string': 'Grasses.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'Weasel',
-//     'url': 'video/Weasel.mp4',
-//     'string': 'Weasel.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'pikaeatslichensm',
-//     'url': 'video/PikaEatsLichenSM.mp4',
-//     'string': 'PikaEatsLichenSM.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'pikaeatsgrass',
-//     'url': 'video/PikaEatsGrass.mp4',
-//     'string': 'PikaEatsGrass.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'pikaeatsyellowflower3',
-//     'url': 'video/PikaEatsYellowFlower3.mp4',
-//     'string': 'PikaEatsYellowFlower3.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'pikaeatsyellowflower2',
-//     'url': 'video/PikaEatsYellowFlower2.mp4',
-//     'string': 'PikaEatsYellowFlower2.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'pikahaysyellowflower',
-//     'url': 'video/PikaHaysYellowFlower.mp4',
-//     'string': 'PikaHaysYellowFlower.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'pikaeatsyellowflower',
-//     'url': 'video/PikaEatsYellowFlower.mp4',
-//     'string': 'PikaEatsYellowFlower.mp4',
-//     'textIsShown': false
-//    },
+    {'title': 'grasses',
+     'url': 'video/Grasses.mp4',
+     'string': 'Grasses.mp4',
+     'textIsShown': false
+    },
+    {'title': 'Weasel',
+     'url': 'video/Weasel.mp4',
+     'string': 'Weasel.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikaeatslichensm',
+     'url': 'video/PikaEatsLichenSM.mp4',
+     'string': 'PikaEatsLichenSM.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikaeatsgrass',
+     'url': 'video/PikaEatsGrass.mp4',
+     'string': 'PikaEatsGrass.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikaeatsyellowflower3',
+     'url': 'video/PikaEatsYellowFlower3.mp4',
+     'string': 'PikaEatsYellowFlower3.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikaeatsyellowflower2',
+     'url': 'video/PikaEatsYellowFlower2.mp4',
+     'string': 'PikaEatsYellowFlower2.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikahaysyellowflower',
+     'url': 'video/PikaHaysYellowFlower.mp4',
+     'string': 'PikaHaysYellowFlower.mp4',
+     'textIsShown': false
+    },
+    {'title': 'pikaeatsyellowflower',
+     'url': 'video/PikaEatsYellowFlower.mp4',
+     'string': 'PikaEatsYellowFlower.mp4',
+     'textIsShown': false
+    },
     {'title': 'tallus',
      'url': 'video/Tallus.mp4',
      'string': 'Tallus.mp4',
      'textIsShown': false
     },
-//    {'title': 'talluswden',
-//     'url': 'video/TallusWDen.mp4',
-//     'string': 'TallusWDen.mp4',
-//     'textIsShown': false
-//    },
+    {'title': 'talluswden',
+     'url': 'video/TallusWDen.mp4',
+     'string': 'TallusWDen.mp4',
+     'textIsShown': false
+    },
     {'title': 'fallcolorpikahabitat',
      'url': 'video/FallColorPikaHabitat.mp4',
      'string': 'FallColorPikaHabitat.mp4',
@@ -108,21 +110,21 @@ var scenes = [
      'string': 'PikaDen.mp4',
      'textIsShown': false
     },
-//    {'title': 'wspikahabitat',
-//     'url': 'video/WSPikaHabitat.mp4',
-//     'string': 'WSPikaHabitat.mp4',
-//     'textIsShown': false
-//    },
+    {'title': 'wspikahabitat',
+     'url': 'video/WSPikaHabitat.mp4',
+     'string': 'WSPikaHabitat.mp4',
+     'textIsShown': false
+    },
     {'title': 'pikaeatsyellowflowers2',
      'url': 'video/PikaEatsYellowFlowers2.mp4',
      'string': 'PikaEatsYellowFlowers2.mp4',
      'textIsShown': false
     },
-//    {'title': 'grassblowingwind',
-//     'url': 'video/GrassBlowingWind.mp4',
-//     'string': 'GrassBlowingWind.mp4',
-//     'textIsShown': false
-//    },
+    {'title': 'grassblowingwind',
+     'url': 'video/GrassBlowingWind.mp4',
+     'string': 'GrassBlowingWind.mp4',
+     'textIsShown': false
+    },
     {'title': 'pikahaypurpleflower',
      'url': 'video/PikaHayPurpleFlower.mp4',
      'string': 'PikaHayPurpleFlower.mp4',
@@ -131,46 +133,42 @@ var scenes = [
     
     
     
-//    {'title': 'bigtruckinsnow',
-//     'url': 'video/BigTruckInSnow.mp4',
-//     'string': 'BigTruckInSnow.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'ennislake',
-//     'url': 'video/EnnisLake.mp4',
-//     'string': 'EnnisLake.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'madisonriver',
-//     'url': 'video/MadisonRiver.mp4',
-//     'string': "MadisonRiver.mp4",
-//     'textIsShown': false
-//    },
-//    {'title': 'pallisadefalls',
-//     'url': 'video/PallisadeFalls.mp4',
-//     'string': 'PallisadeFalls.mp4',
-//     'textIsShown': false
-//    },
-//    {'title': 'snowglitter',
-//     'url': 'video/SnowGlitter.mp4',
-//     'string': 'SnowGlitter.mp4',
-//     'textIsShown': false
-//    },
+    {'title': 'bigtruckinsnow',
+     'url': 'video/BigTruckInSnow.mp4',
+     'string': 'BigTruckInSnow.mp4',
+     'textIsShown': false
+    },
+    {'title': 'ennislake',
+     'url': 'video/EnnisLake.mp4',
+     'string': 'EnnisLake.mp4',
+     'textIsShown': false
+    },
+    {'title': 'madisonriver',
+     'url': 'video/MadisonRiver.mp4',
+     'string': "MadisonRiver.mp4",
+     'textIsShown': false
+    },
+    {'title': 'pallisadefalls',
+     'url': 'video/PallisadeFalls.mp4',
+     'string': 'PallisadeFalls.mp4',
+     'textIsShown': false
+    },
+    {'title': 'snowglitter',
+     'url': 'video/SnowGlitter.mp4',
+     'string': 'SnowGlitter.mp4',
+     'textIsShown': false
+    },
     {'title': 'sunsethyalite',
      'url': 'video/SunsetHyalite.mp4',
      'string': 'SunsetHyalite.mp4',
      'textIsShown': false
+    },
+    {'title': 'woodlandsnowycreek',
+     'url': 'video/WoodlandSnowyCreek.mp4',
+     'string': 'WoodlandSnowyCreek.mp4',
+     'textIsShown': false
     }
-//    {'title': 'woodlandsnowycreek',
-//     'url': 'video/WoodlandSnowyCreek.mp4',
-//     'string': 'WoodlandSnowyCreek.mp4',
-//     'textIsShown': false
-//    }
 ];
-
-var speed = 1; //change speed of video, for testing purposes
-var scene = 0; //initial scene
-var fadeTime = 500; // time for fades on scene transitions
 
 
 function preload() {
@@ -184,14 +182,14 @@ function preload() {
     
     film.load.audio('background', 'audio/placeholder.mp3');
     
-//    for(var i = 0; i <= scenesBuffer; i++){
-//        var scene = scenes[i];
-//        film.load.video(scene.title,scene.url);
-//    }
-    
-    scenes.forEach(function(item,index,array) {
+    for(var i = 0; i < scenesBuffer; i++){
+        var item = scenes[i];
         film.load.video(item.title,item.url);
-    });
+    }
+    
+//    scenes.forEach(function(item,index,array) {
+//        film.load.video(item.title,item.url);
+//    });
     
     film.load.script('filters', 'js/filters.js');
     
@@ -206,6 +204,9 @@ function preload() {
 }
 
 function create() {
+    
+    film.load.onFileComplete.add(fileComplete, this);
+    
     // Inputs
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
     keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -214,31 +215,10 @@ function create() {
 
     
     // Scenes
-//    for(var i = 0; i <= scenesBuffer; i++){
-//        var scene = scenes[i];
-//        var video = film.add.video(scene.title);
-//        scene.video = video;
-//        var scalex = width/video.video.videoWidth;
-//        var scaley = height/video.video.videoHeight;
-//        var scale = Math.max(scalex,scaley);
-//        scene.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
-//        scene.image.kill();
-//    }
+    for(var i = 0; i < scenesBuffer; i++){
+        prepareVideo(scenes[i]);
+    }
     
-    scenes.forEach(function(item,index,array) {
-        var video = film.add.video(item.title);
-        item.video = video;
-        var scalex = width/video.video.videoWidth;
-        var scaley = height/video.video.videoHeight;
-        var scale = Math.max(scalex,scaley);
-        item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
-        if( item.hasOwnProperty('string') ){
-            item.text = film.add.text(200,height-200,item.string,basicTextStyle);
-            item.text.anchor.set(0);
-            item.text.kill();
-        }
-        item.image.kill();
-    });
     
     // audio
     audio.background = film.add.audio('background');
@@ -251,8 +231,6 @@ function create() {
     scenes[scene].video.onPlay.addOnce(start,this);
     fadeIn(scenes[scene].image, fadeTime, film);
     scenes[scene].video.play(true, speed);
-    
-    
 }
 
 function update() {
@@ -269,6 +247,15 @@ function render() {
 
 }
 
+function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
+    for(var i = 0; i < scenes.length; i++){
+        if(cacheKey === scenes[i].title){
+            prepareVideo(scenes[i]);
+            break;
+        }
+    }
+}
+
 function start() {
 
     //  hot keys
@@ -279,7 +266,7 @@ function start() {
 }
 
 function startAudio() {
-    audio.background.loopFull(0.5);
+    audio.background.loopFull(0.0);
 }
 
 function toggleBackgroundAudio() {
@@ -288,10 +275,71 @@ function toggleBackgroundAudio() {
     return newState;
 };
 
+function loadVideo(item) {
+    film.load.video(item.title,item.url);
+    film.load.start();
+}
 
-function nextScene() {
+function prepareVideo(item){
+    var video = film.add.video(item.title);
+    item.video = video;
+    var scalex = width/video.video.videoWidth;
+    var scaley = height/video.video.videoHeight;
+    var scale = Math.max(scalex,scaley);
+    item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
+    item.image.kill();
+    if( item.hasOwnProperty('string') ){
+        item.text = film.add.text(200,height-200,item.string,basicTextStyle);
+        item.text.anchor.set(0);
+        item.text.kill();
+    }
+}
+
+function destroyVideo(item){
+    if(item.image !== undefined || item.image !== null){
+        item.image.destroy();
+        item.image = null;
+    }
+    if(item.video !== undefined || item.video !== null){
+        item.video.destroy();
+        item.video = null;
+        if(film.cache.checkVideoKey(item.title)){
+            console.log("clear cache: " + item.title);
+            film.cache.removeVideo(item.title);
+            console.log(film.cache.checkVideoKey(item.title));
+        };
+    }
+    if(item.text !== undefined || item.text !== null){
+        item.text.destroy();
+        item.text = null;
+    }
+}
+
+function forward() {
+    
     disableControls(fadeTime);
+    
     if(scenes[scene].textIsShown){
+        
+        if(scene === scenes.length-1){
+            return;
+        }
+        
+        // load video into buffer
+        var sceneToLoad = scene + scenesBuffer;
+        if(sceneToLoad < scenes.length){
+            var item = scenes[sceneToLoad];
+            if(item.image === undefined || item.image === null){
+                loadVideo(item);
+            }
+        }
+
+        // destroy video outside buffer range
+        var sceneToDestroy = ( scene - scenesBuffer ) + 1;
+        if(sceneToDestroy >= 0){
+            destroyVideo(scenes[sceneToDestroy]);
+        }
+        
         var curScene = scenes[scene];
         fadeOutText(curScene.text,fadeTime, film, function(){curScene.text.kill();});
         fadeOut(curScene.image, fadeTime, film, function () {
@@ -301,7 +349,7 @@ function nextScene() {
             removeBlur(curScene.image, fadeTime, film);
         });
         fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
-
+    
         scene++;
         if( scene > scenes.length - 1 ) {
             scene = 0;
@@ -319,9 +367,12 @@ function nextScene() {
             addBlur(scenes[scene].image, fadeTime, film);
         }
     }
+    
+
 }
 
-function prevScene() {
+function back() {
+    
     disableControls(fadeTime);
     var curScene = scenes[scene];
     if(scenes[scene].textIsShown){
@@ -331,6 +382,26 @@ function prevScene() {
             removeBlur(curScene.image, fadeTime, film);
         }
     }else{
+        
+        if(scene === 0){
+            return;
+        }
+        
+        // load video into buffer
+        var sceneToLoad = scene - scenesBuffer;
+        if(sceneToLoad >= 0){
+            var item = scenes[sceneToLoad];
+            if(item.image === undefined || item.image === null){
+                loadVideo(item);
+            }
+        }
+
+        // destroy video outside buffer range
+        var sceneToDestroy = ( scene + scenesBuffer ) - 1;
+        if(sceneToDestroy < scenes.length){
+            destroyVideo(scenes[sceneToDestroy]);
+        }
+        
         fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
         fadeOut(scenes[scene].image, fadeTime, film, function () {
             curScene.image.kill();
@@ -344,6 +415,7 @@ function prevScene() {
         if( scene < 0 ) {
             scene = scenes.length-1;
         }
+
 
         fadeIn(scenes[scene].image, fadeTime, film);
         fadeInVolumeOnVideo(scenes[scene].video, fadeTime, film);
@@ -367,12 +439,12 @@ function disableControls(time){
 }
 
 function enableControls(){
-    film.input.onDown.add(nextScene, this);
+    film.input.onDown.add(forward, this);
     
-    keys.up.onDown.add(prevScene, this);
-    keys.down.onDown.add(nextScene, this);
-    keys.left.onDown.add(prevScene, this);
-    keys.right.onDown.add(nextScene, this);
+    keys.up.onDown.add(back, this);
+    keys.down.onDown.add(forward, this);
+    keys.left.onDown.add(back, this);
+    keys.right.onDown.add(forward, this);
     
     enableMousewheel();
 }
@@ -380,9 +452,9 @@ function enableControls(){
 function enableMousewheel(){
     film.input.mouse.mouseWheelCallback = function(event) {
         if( film.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP ){
-            prevScene();
+            back();
         }else if( film.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_DOWN ){
-            nextScene();
+            forward();
         }
     };
 }
@@ -394,3 +466,4 @@ function toggleFullScreen() {
         film.scale.startFullScreen(false);
     }
 }
+
