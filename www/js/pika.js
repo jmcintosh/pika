@@ -1,12 +1,12 @@
-"use strict";
+//"use strict";
 var width = screen.width;
 var height = screen.height;
-var scenesBuffer = 2; // the number of videos to buffer, before and after current scene
+var scenesBuffer = 4; // the number of videos to buffer, before and after current scene
 var keys = {};
 var audio = {};
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
-var fadeTime = 750; // time for fades on scene transitions
+var fadeTime = 500; // time for fades on scene transitions
 
 // overriding setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
@@ -38,144 +38,157 @@ var basicTextStyle = { font: "24px Helvetica",
 };
 
 
-var scenes = [ 
-    
-    {'title': 'iceinwater',
-     'url': 'video/IceInWater.mp4',
-     'string': 'IceInWater.mp4',
-     'textIsShown': false
-    },
-    {'title': 'treeinheat',
-     'url': 'video/TreeInHeat.mp4',
-     'string': 'TreeInHeat.mp4',
-     'textIsShown': false
-    },
-    {'title': 'grasses',
-     'url': 'video/Grasses.mp4',
-     'string': 'Grasses.mp4',
-     'textIsShown': false
-    },
-    {'title': 'Weasel',
-     'url': 'video/Weasel.mp4',
-     'string': 'Weasel.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaeatslichensm',
-     'url': 'video/PikaEatsLichenSM.mp4',
-     'string': 'PikaEatsLichenSM.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaeatsgrass',
-     'url': 'video/PikaEatsGrass.mp4',
-     'string': 'PikaEatsGrass.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaeatsyellowflower3',
-     'url': 'video/PikaEatsYellowFlower3.mp4',
-     'string': 'PikaEatsYellowFlower3.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaeatsyellowflower2',
-     'url': 'video/PikaEatsYellowFlower2.mp4',
-     'string': 'PikaEatsYellowFlower2.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikahaysyellowflower',
-     'url': 'video/PikaHaysYellowFlower.mp4',
-     'string': 'PikaHaysYellowFlower.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaeatsyellowflower',
-     'url': 'video/PikaEatsYellowFlower.mp4',
-     'string': 'PikaEatsYellowFlower.mp4',
-     'textIsShown': false
-    },
-    {'title': 'tallus',
-     'url': 'video/Tallus.mp4',
-     'string': 'Tallus.mp4',
-     'textIsShown': false
-    },
-    {'title': 'talluswden',
-     'url': 'video/TallusWDen.mp4',
-     'string': 'TallusWDen.mp4',
-     'textIsShown': false
-    },
-    {'title': 'fallcolorpikahabitat',
-     'url': 'video/FallColorPikaHabitat.mp4',
-     'string': 'FallColorPikaHabitat.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaden',
-     'url': 'video/PikaDen.mp4',
-     'string': 'PikaDen.mp4',
-     'textIsShown': false
-    },
-    {'title': 'wspikahabitat',
-     'url': 'video/WSPikaHabitat.mp4',
-     'string': 'WSPikaHabitat.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikaeatsyellowflowers2',
-     'url': 'video/PikaEatsYellowFlowers2.mp4',
-     'string': 'PikaEatsYellowFlowers2.mp4',
-     'textIsShown': false
-    },
-    {'title': 'grassblowingwind',
-     'url': 'video/GrassBlowingWind.mp4',
-     'string': 'GrassBlowingWind.mp4',
-     'textIsShown': false
-    },
-    {'title': 'pikahaypurpleflower',
-     'url': 'video/PikaHayPurpleFlower.mp4',
-     'string': 'PikaHayPurpleFlower.mp4',
-     'textIsShown': false
-    },
-    
-    
-    
-    {'title': 'bigtruckinsnow',
-     'url': 'video/BigTruckInSnow.mp4',
-     'string': 'BigTruckInSnow.mp4',
-     'textIsShown': false
-    },
-    {'title': 'ennislake',
-     'url': 'video/EnnisLake.mp4',
-     'string': 'EnnisLake.mp4',
-     'textIsShown': false
-    },
-    {'title': 'madisonriver',
-     'url': 'video/MadisonRiver.mp4',
-     'string': "MadisonRiver.mp4",
-     'textIsShown': false
-    },
-    {'title': 'pallisadefalls',
-     'url': 'video/PallisadeFalls.mp4',
-     'string': 'PallisadeFalls.mp4',
-     'textIsShown': false
-    },
-    {'title': 'snowglitter',
-     'url': 'video/SnowGlitter.mp4',
-     'string': 'SnowGlitter.mp4',
-     'textIsShown': false
-    },
-    {'title': 'sunsethyalite',
-     'url': 'video/SunsetHyalite.mp4',
-     'string': 'SunsetHyalite.mp4',
-     'textIsShown': false
-    },
-    {'title': 'woodlandsnowycreek',
-     'url': 'video/WoodlandSnowyCreek.mp4',
-     'string': 'WoodlandSnowyCreek.mp4',
-     'textIsShown': false
+var scenes = [
+    {
+        "string": "Placeholder string for BigTruckInSnow.mp4", 
+        "textIsShown": false, 
+        "title": "BigTruckInSnow", 
+        "url": "video/BigTruckInSnow.mp4"
+    }, 
+    {
+        "string": "Placeholder string for DenTallusWS.mp4", 
+        "textIsShown": false, 
+        "title": "DenTallusWS", 
+        "url": "video/DenTallusWS.mp4"
+    }, 
+    {
+        "string": "Placeholder string for EnnisLake.mp4", 
+        "textIsShown": false, 
+        "title": "EnnisLake", 
+        "url": "video/EnnisLake.mp4"
+    }, 
+    {
+        "string": "Placeholder string for FallColorPikaHabitat.mp4", 
+        "textIsShown": false, 
+        "title": "FallColorPikaHabitat", 
+        "url": "video/FallColorPikaHabitat.mp4"
+    }, 
+    {
+        "string": "Placeholder string for FallColorPikaHabitat2.mp4", 
+        "textIsShown": false, 
+        "title": "FallColorPikaHabitat2", 
+        "url": "video/FallColorPikaHabitat2.mp4"
+    }, 
+    {
+        "string": "Placeholder string for GallatinRiver.mp4", 
+        "textIsShown": false, 
+        "title": "GallatinRiver", 
+        "url": "video/GallatinRiver.mp4"
+    }, 
+    {
+        "string": "Placeholder string for GraaWind.mp4", 
+        "textIsShown": false, 
+        "title": "GraaWind", 
+        "url": "video/GraaWind.mp4"
+    }, 
+    {
+        "string": "Placeholder string for IceIceBaby.mp4", 
+        "textIsShown": false, 
+        "title": "IceIceBaby", 
+        "url": "video/IceIceBaby.mp4"
+    }, 
+    {
+        "string": "Placeholder string for Pallisade.mp4", 
+        "textIsShown": false, 
+        "title": "Pallisade", 
+        "url": "video/Pallisade.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaDen.mp4", 
+        "textIsShown": false, 
+        "title": "PikaDen", 
+        "url": "video/PikaDen.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaEatsLichenSM.mp4", 
+        "textIsShown": false, 
+        "title": "PikaEatsLichenSM", 
+        "url": "video/PikaEatsLichenSM.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaEatsYellowFlowers.mp4", 
+        "textIsShown": false, 
+        "title": "PikaEatsYellowFlowers", 
+        "url": "video/PikaEatsYellowFlowers.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaEatsYellowFlowers2.mp4", 
+        "textIsShown": false, 
+        "title": "PikaEatsYellowFlowers2", 
+        "url": "video/PikaEatsYellowFlowers2.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaHaysGreenStems.mp4", 
+        "textIsShown": false, 
+        "title": "PikaHaysGreenStems", 
+        "url": "video/PikaHaysGreenStems.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaHaysYellowFlowers.mp4", 
+        "textIsShown": false, 
+        "title": "PikaHaysYellowFlowers", 
+        "url": "video/PikaHaysYellowFlowers.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaHaysYellowFlowers2.mp4", 
+        "textIsShown": false, 
+        "title": "PikaHaysYellowFlowers2", 
+        "url": "video/PikaHaysYellowFlowers2.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaonRock.mp4", 
+        "textIsShown": false, 
+        "title": "PikaonRock", 
+        "url": "video/PikaonRock.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaPurpleFlower.mp4", 
+        "textIsShown": false, 
+        "title": "PikaPurpleFlower", 
+        "url": "video/PikaPurpleFlower.mp4"
+    }, 
+    {
+        "string": "Placeholder string for SnowGlitter.mp4", 
+        "textIsShown": false, 
+        "title": "SnowGlitter", 
+        "url": "video/SnowGlitter.mp4"
+    }, 
+    {
+        "string": "Placeholder string for SunsetHyalite.mp4", 
+        "textIsShown": false, 
+        "title": "SunsetHyalite", 
+        "url": "video/SunsetHyalite.mp4"
+    }, 
+    {
+        "string": "Placeholder string for Tallus.mp4", 
+        "textIsShown": false, 
+        "title": "Tallus", 
+        "url": "video/Tallus.mp4"
+    }, 
+    {
+        "string": "Placeholder string for TreeNHeat.mp4", 
+        "textIsShown": false, 
+        "title": "TreeNHeat", 
+        "url": "video/TreeNHeat.mp4"
+    }, 
+    {
+        "string": "Placeholder string for Weasel.mp4", 
+        "textIsShown": false, 
+        "title": "Weasel", 
+        "url": "video/Weasel.mp4"
+    }, 
+    {
+        "string": "Placeholder string for WoodSnow.mp4", 
+        "textIsShown": false, 
+        "title": "WoodSnow", 
+        "url": "video/WoodSnow.mp4"
     }
 ];
-
 
 function preload() {
     film.stage.disableVisibilityChange = true;
     film.stage.backgroundColor = "#FFFFFF";
     film.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-
     film.scale.pageAlignHorizontally = false;
     film.scale.pageAlignVertically = false;
     film.scale.forceOrientation(true,false);
@@ -266,7 +279,7 @@ function start() {
 }
 
 function startAudio() {
-    audio.background.loopFull(0.0);
+    audio.background.loopFull(0.3);
 }
 
 function toggleBackgroundAudio() {
@@ -296,23 +309,21 @@ function prepareVideo(item){
 }
 
 function destroyVideo(item){
-    if(item.image !== undefined || item.image !== null){
-        item.image.destroy();
-        item.image = null;
-    }
-    if(item.video !== undefined || item.video !== null){
-        item.video.destroy();
-        item.video = null;
-        if(film.cache.checkVideoKey(item.title)){
-            console.log("clear cache: " + item.title);
-            film.cache.removeVideo(item.title);
-            console.log(film.cache.checkVideoKey(item.title));
-        };
-    }
-    if(item.text !== undefined || item.text !== null){
-        item.text.destroy();
-        item.text = null;
-    }
+//    if(item.image !== undefined || item.image !== null){
+//        item.image.destroy();
+//        item.image = null;
+//    }
+//    if(item.video !== undefined || item.video !== null){
+//        item.video.destroy();
+//        item.video = null;
+//        if(film.cache.checkVideoKey(item.title)){
+//            film.cache.removeVideo(item.title);
+//        };
+//    }
+//    if(item.text !== undefined || item.text !== null){
+//        item.text.destroy();
+//        item.text = null;
+//    }
 }
 
 function forward() {
@@ -322,6 +333,12 @@ function forward() {
     if(scenes[scene].textIsShown){
         
         if(scene === scenes.length-1){
+            return;
+        }
+        
+        // check if next scene is prepared
+        var nextScene = scenes[scene+1];
+        if(nextScene.image === undefined || nextScene.image === null){
             return;
         }
         
@@ -339,6 +356,8 @@ function forward() {
         if(sceneToDestroy >= 0){
             destroyVideo(scenes[sceneToDestroy]);
         }
+        
+
         
         var curScene = scenes[scene];
         fadeOutText(curScene.text,fadeTime, film, function(){curScene.text.kill();});
@@ -387,6 +406,12 @@ function back() {
             return;
         }
         
+        // check if next scene is ready
+        var nextScene = scenes[scene-1];
+        if(nextScene.image === undefined || nextScene.image === null){
+            return;
+        }
+        
         // load video into buffer
         var sceneToLoad = scene - scenesBuffer;
         if(sceneToLoad >= 0){
@@ -400,6 +425,11 @@ function back() {
         var sceneToDestroy = ( scene + scenesBuffer ) - 1;
         if(sceneToDestroy < scenes.length){
             destroyVideo(scenes[sceneToDestroy]);
+        }
+        
+        var nextScene = scenes[scene-1];
+        if(nextScene.image === undefined || nextScene.image === null){
+            return;
         }
         
         fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
