@@ -38,153 +38,6 @@ var basicTextStyle = { font: "24px Helvetica",
 };
 
 
-var scenes = [
-    {
-        "string": "Placeholder string for BigTruckInSnow.mp4", 
-        "textIsShown": false, 
-        "title": "BigTruckInSnow", 
-        "url": "video/BigTruckInSnow.mp4"
-    }, 
-    {
-        "string": "Placeholder string for DenTallusWS.mp4", 
-        "textIsShown": false, 
-        "title": "DenTallusWS", 
-        "url": "video/DenTallusWS.mp4"
-    }, 
-    {
-        "string": "Placeholder string for EnnisLake.mp4", 
-        "textIsShown": false, 
-        "title": "EnnisLake", 
-        "url": "video/EnnisLake.mp4"
-    }, 
-    {
-        "string": "Placeholder string for FallColorPikaHabitat.mp4", 
-        "textIsShown": false, 
-        "title": "FallColorPikaHabitat", 
-        "url": "video/FallColorPikaHabitat.mp4"
-    }, 
-    {
-        "string": "Placeholder string for FallColorPikaHabitat2.mp4", 
-        "textIsShown": false, 
-        "title": "FallColorPikaHabitat2", 
-        "url": "video/FallColorPikaHabitat2.mp4"
-    }, 
-    {
-        "string": "Placeholder string for GallatinRiver.mp4", 
-        "textIsShown": false, 
-        "title": "GallatinRiver", 
-        "url": "video/GallatinRiver.mp4"
-    }, 
-    {
-        "string": "Placeholder string for GraaWind.mp4", 
-        "textIsShown": false, 
-        "title": "GraaWind", 
-        "url": "video/GraaWind.mp4"
-    }, 
-    {
-        "string": "Placeholder string for IceIceBaby.mp4", 
-        "textIsShown": false, 
-        "title": "IceIceBaby", 
-        "url": "video/IceIceBaby.mp4"
-    }, 
-    {
-        "string": "Placeholder string for Pallisade.mp4", 
-        "textIsShown": false, 
-        "title": "Pallisade", 
-        "url": "video/Pallisade.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaDen.mp4", 
-        "textIsShown": false, 
-        "title": "PikaDen", 
-        "url": "video/PikaDen.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaEatsLichenSM.mp4", 
-        "textIsShown": false, 
-        "title": "PikaEatsLichenSM", 
-        "url": "video/PikaEatsLichenSM.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaEatsYellowFlowers.mp4", 
-        "textIsShown": false, 
-        "title": "PikaEatsYellowFlowers", 
-        "url": "video/PikaEatsYellowFlowers.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaEatsYellowFlowers2.mp4", 
-        "textIsShown": false, 
-        "title": "PikaEatsYellowFlowers2", 
-        "url": "video/PikaEatsYellowFlowers2.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaHaysGreenStems.mp4", 
-        "textIsShown": false, 
-        "title": "PikaHaysGreenStems", 
-        "url": "video/PikaHaysGreenStems.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaHaysYellowFlowers.mp4", 
-        "textIsShown": false, 
-        "title": "PikaHaysYellowFlowers", 
-        "url": "video/PikaHaysYellowFlowers.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaHaysYellowFlowers2.mp4", 
-        "textIsShown": false, 
-        "title": "PikaHaysYellowFlowers2", 
-        "url": "video/PikaHaysYellowFlowers2.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaonRock.mp4", 
-        "textIsShown": false, 
-        "title": "PikaonRock", 
-        "url": "video/PikaonRock.mp4"
-    }, 
-    {
-        "string": "Placeholder string for PikaPurpleFlower.mp4", 
-        "textIsShown": false, 
-        "title": "PikaPurpleFlower", 
-        "url": "video/PikaPurpleFlower.mp4"
-    }, 
-    {
-        "string": "Placeholder string for SnowGlitter.mp4", 
-        "textIsShown": false, 
-        "title": "SnowGlitter", 
-        "url": "video/SnowGlitter.mp4"
-    }, 
-    {
-        "string": "Placeholder string for SunsetHyalite.mp4", 
-        "textIsShown": false, 
-        "title": "SunsetHyalite", 
-        "url": "video/SunsetHyalite.mp4"
-    }, 
-    {
-        "string": "Placeholder string for Tallus.mp4", 
-        "textIsShown": false, 
-        "title": "Tallus", 
-        "url": "video/Tallus.mp4"
-    }, 
-    {
-        "string": "Placeholder string for TreeNHeat.mp4", 
-        "textIsShown": false, 
-        "title": "TreeNHeat", 
-        "url": "video/TreeNHeat.mp4"
-    }, 
-    {
-        "string": "Placeholder string for Weasel.mp4", 
-        "textIsShown": false, 
-        "title": "Weasel", 
-        "url": "video/Weasel.mp4"
-    }, 
-    {
-        "string": "Placeholder string for WoodSnow.mp4", 
-        "textIsShown": false, 
-        "title": "WoodSnow", 
-        "url": "video/WoodSnow.mp4"
-    }
-];
-
 function preload() {
     film.stage.disableVisibilityChange = true;
     film.stage.backgroundColor = "#FFFFFF";
@@ -309,36 +162,30 @@ function prepareVideo(item){
 }
 
 function destroyVideo(item){
-//    if(item.image !== undefined || item.image !== null){
-//        item.image.destroy();
-//        item.image = null;
-//    }
-//    if(item.video !== undefined || item.video !== null){
-//        item.video.destroy();
-//        item.video = null;
-//        if(film.cache.checkVideoKey(item.title)){
-//            film.cache.removeVideo(item.title);
-//        };
-//    }
-//    if(item.text !== undefined || item.text !== null){
-//        item.text.destroy();
-//        item.text = null;
-//    }
+    if(item.image !== undefined || item.image !== null){
+        item.image.destroy();
+        item.image = null;
+    }
+    if(item.video !== undefined || item.video !== null){
+        item.video.destroy();
+        item.video = null;
+        if(film.cache.checkVideoKey(item.title)){
+            film.cache.removeVideo(item.title);
+        };
+    }
+    if(item.text !== undefined || item.text !== null){
+        item.text.destroy();
+        item.text = null;
+    }
 }
 
 function forward() {
     
     disableControls(fadeTime);
-    
-    if(scenes[scene].textIsShown){
+    var curScene = scenes[scene];
+    if(curScene.textIsShown){
         
         if(scene === scenes.length-1){
-            return;
-        }
-        
-        // check if next scene is prepared
-        var nextScene = scenes[scene+1];
-        if(nextScene.image === undefined || nextScene.image === null){
             return;
         }
         
@@ -357,28 +204,14 @@ function forward() {
             destroyVideo(scenes[sceneToDestroy]);
         }
         
-
+        // changeScene
+        var nextScene = scenes[scene+1];
+        changeScene(curScene,nextScene);
         
-        var curScene = scenes[scene];
-        fadeOutText(curScene.text,fadeTime, film, function(){curScene.text.kill();});
-        fadeOut(curScene.image, fadeTime, film, function () {
-            curScene.image.kill();
-            curScene.video.stop();
-            curScene.textIsShown = false;
-            removeBlur(curScene.image, fadeTime, film);
-        });
-        fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
-    
         scene++;
         if( scene > scenes.length - 1 ) {
             scene = 0;
         }
-        
-        fadeIn(scenes[scene].image, fadeTime, film);
-        fadeInVolumeOnVideo(scenes[scene].video, fadeTime, film);
-        scenes[scene].video.play(true, speed);
-
-        
     }else{ // show the text
         if( scenes[scene].hasOwnProperty('text') ){
             scenes[scene].textIsShown = true;
@@ -394,8 +227,8 @@ function back() {
     
     disableControls(fadeTime);
     var curScene = scenes[scene];
-    if(scenes[scene].textIsShown){
-        if( scenes[scene].hasOwnProperty('text') ){
+    if(curScene.textIsShown){
+        if( curScene.hasOwnProperty('text') ){
             curScene.textIsShown = false;
             fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
             removeBlur(curScene.image, fadeTime, film);
@@ -403,12 +236,6 @@ function back() {
     }else{
         
         if(scene === 0){
-            return;
-        }
-        
-        // check if next scene is ready
-        var nextScene = scenes[scene-1];
-        if(nextScene.image === undefined || nextScene.image === null){
             return;
         }
         
@@ -427,7 +254,22 @@ function back() {
             destroyVideo(scenes[sceneToDestroy]);
         }
         
+        
+        // change scene
         var nextScene = scenes[scene-1];
+        changeScene(curScene,nextScene);
+        
+        scene--;
+        if( scene < 0 ) {
+            scene = scenes.length-1;
+        }
+    }
+    
+}
+
+function changeScene(curScene,nextScene){
+    
+        // check if nextScene is ready
         if(nextScene.image === undefined || nextScene.image === null){
             return;
         }
@@ -440,18 +282,11 @@ function back() {
             removeBlur(curScene.image, fadeTime, film);
         });
         fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
-
-        scene--;
-        if( scene < 0 ) {
-            scene = scenes.length-1;
-        }
-
-
-        fadeIn(scenes[scene].image, fadeTime, film);
-        fadeInVolumeOnVideo(scenes[scene].video, fadeTime, film);
-        scenes[scene].video.play(true,speed);
         
-    }
+        fadeIn(nextScene.image, fadeTime, film);
+        fadeInVolumeOnVideo(nextScene.video, fadeTime, film);
+        nextScene.video.play(true,speed);
+        
     
 }
 
@@ -464,8 +299,7 @@ function disableControls(time){
     keys.right.onDown.removeAll();
     
     film.input.mouse.mouseWheelCallback = null;
-    setTimeout(function () {enableControls();
-                            }, time);
+    setTimeout(enableControls, time);
 }
 
 function enableControls(){
