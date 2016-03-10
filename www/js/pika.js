@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 var width = screen.width;
 var height = screen.height;
 var scenesBuffer = 4; // the number of videos to buffer, before and after current scene
@@ -162,18 +162,18 @@ function prepareVideo(item){
 }
 
 function destroyVideo(item){
-    if(item.image !== undefined || item.image !== null){
+    if(item.hasOwnProperty('image') && (item.image !== undefined || item.image !== null)){
         item.image.destroy();
         item.image = null;
     }
-    if(item.video !== undefined || item.video !== null){
+    if(item.hasOwnProperty('video') &&  (item.video !== undefined || item.video !== null)){
         item.video.destroy();
         item.video = null;
         if(film.cache.checkVideoKey(item.title)){
             film.cache.removeVideo(item.title);
         };
     }
-    if(item.text !== undefined || item.text !== null){
+    if(item.hasOwnProperty('text') && (item.text !== undefined || item.text !== null)){
         item.text.destroy();
         item.text = null;
     }
@@ -183,7 +183,7 @@ function forward() {
     
     disableControls(fadeTime);
     var curScene = scenes[scene];
-    if(curScene.textIsShown){
+    if( !curScene.hasOwnProperty('text') || curScene.textIsShown){
         
         if(scene === scenes.length-1){
             return;
@@ -213,10 +213,10 @@ function forward() {
             scene = 0;
         }
     }else{ // show the text
-        if( scenes[scene].hasOwnProperty('text') ){
-            scenes[scene].textIsShown = true;
-            fadeInText(scenes[scene].text, fadeTime, film);
-            addBlur(scenes[scene].image, fadeTime, film);
+        if( curScene.hasOwnProperty('text') ){
+            curScene.textIsShown = true;
+            fadeInText(curScene.text, fadeTime, film);
+            addBlur(curScene.image, fadeTime, film);
         }
     }
     
@@ -273,9 +273,10 @@ function changeScene(curScene,nextScene){
         if(nextScene.image === undefined || nextScene.image === null){
             return;
         }
-        
-        fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
-        fadeOut(scenes[scene].image, fadeTime, film, function () {
+        if(curScene.hasOwnProperty('text')){
+            fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+        }
+        fadeOut(curScene.image, fadeTime, film, function () {
             curScene.image.kill();
             curScene.video.stop();
             curScene.textIsShown = false;

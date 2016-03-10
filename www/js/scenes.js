@@ -7,7 +7,7 @@ var scenes = [
         "url": "video/FallColorPikaHabitat.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "GraaWind", 
         "url": "video/GraaWind.mp4"
@@ -19,7 +19,7 @@ var scenes = [
         "url": "video/PikaEatsLeafRichColor.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "GallatinRiver", 
         "url": "video/GallatinRiver.mp4"
@@ -31,7 +31,7 @@ var scenes = [
         "url": "video/FallColorPikaHabitat2.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "Pallisade", 
         "url": "video/Pallisade.mp4"
@@ -43,7 +43,7 @@ var scenes = [
         "url": "video/PikaDen.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "GallitanGateway", 
         "url": "video/GallitanGateway.mp4"
@@ -55,7 +55,7 @@ var scenes = [
         "url": "video/PikaHaysYellowFlowers2.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "IceIceBaby", 
         "url": "video/IceIceBaby.mp4"
@@ -67,7 +67,7 @@ var scenes = [
         "url": "video/Tallus.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "TreeNHeat", 
         "url": "video/TreeNHeat.mp4"
@@ -79,7 +79,7 @@ var scenes = [
         "url": "video/PikaEatsYellowFlowers2.mp4"
     }, 
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "WoodSnow", 
         "url": "video/WoodSnow.mp4"
@@ -91,7 +91,7 @@ var scenes = [
         "url": "video/Weasel.mp4"
     },
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "SnowGlitter", 
         "url": "video/SnowGlitter.mp4"
@@ -103,13 +103,13 @@ var scenes = [
         "url": "video/PikaEatsLichenSM.mp4"
     },
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "SunsetHyalite", 
         "url": "video/SunsetHyalite.mp4"
     },
     {
-        "string": "", 
+        //"string": "", 
         "textIsShown": false, 
         "title": "BigTruckInSnow", 
         "url": "video/BigTruckInSnow.mp4"
