@@ -33,7 +33,7 @@ var film = new Phaser.Game(
 var basicTextStyle = { font: "24px Helvetica", 
     fill: "#FFFFFF", 
     wordWrap: true, 
-    wordWrapWidth: window.innerWidth/4, 
+    wordWrapWidth: width*0.4, 
     align: "left" 
 };
 
@@ -52,10 +52,6 @@ function preload() {
         var item = scenes[i];
         film.load.video(item.title,item.url);
     }
-    
-//    scenes.forEach(function(item,index,array) {
-//        film.load.video(item.title,item.url);
-//    });
     
     film.load.script('filters', 'js/filters.js');
     
@@ -127,12 +123,12 @@ function start() {
     //  hot keys
     enableControls();
     
-//    var piechart = new PieChart(film,width/2, height/2, height/4, 50,50 );
-//    piechart.draw();
+    var piechart = new PieChart(film, width/2, height/2, height/8, [58,25,88,56,89,89,89,89,89,15,89] );
+    piechart.draw();
 }
 
 function startAudio() {
-    audio.background.loopFull(0.3);
+    //audio.background.loopFull(0.3);
 }
 
 function toggleBackgroundAudio() {

@@ -36,6 +36,12 @@ var scenes = [
         "url": "video/GallatinRiver.mp4"
     }, 
     {
+        "string": "Placeholder string for GallitanGateway.mp4", 
+        "textIsShown": false, 
+        "title": "GallitanGateway", 
+        "url": "video/GallitanGateway.mp4"
+    }, 
+    {
         "string": "Placeholder string for GraaWind.mp4", 
         "textIsShown": false, 
         "title": "GraaWind", 
@@ -58,6 +64,12 @@ var scenes = [
         "textIsShown": false, 
         "title": "PikaDen", 
         "url": "video/PikaDen.mp4"
+    }, 
+    {
+        "string": "Placeholder string for PikaEatsLeafRichColor.mp4", 
+        "textIsShown": false, 
+        "title": "PikaEatsLeafRichColor", 
+        "url": "video/PikaEatsLeafRichColor.mp4"
     }, 
     {
         "string": "Placeholder string for PikaEatsLichenSM.mp4", 
