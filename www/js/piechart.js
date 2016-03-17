@@ -1,19 +1,20 @@
 "use strict";
-var colors = ['#9656B2','#FFD580','#3BB27A'];
+var colors = ['red','green','yellow'];
 
-var PieChart = function(game,x,y,radius,values) {
+var PieChart = function(game,x,y,radius,data) {
     this.x = x; // x position of center of circle
     this.y = y; // y position of center of circle
     this.radius = radius;
-    this.values = values; // array of values, will be normalized to sum to 1.0
     this.dim = radius * 2.2; // the dimensions of the drawing spacing
     this.center = this.dim /2;
     // setup canvas to draw the pie chart
     this.chart = game.make.bitmapData(this.dim,this.dim);
     this.chart.addToWorld(this.x,this.y,0.5,0.5,1,1);
     
+    this.items = data.map( d => d.item );
+    this.values = data.map( d => d.count );
+    
     var sum = this.values.reduce( (prev, curr) => prev + curr );
-    console.log(sum);
     this.normValues = this.values.map( val => val/sum );
 };
 
@@ -45,6 +46,8 @@ PieChart.prototype.draw = function() {
         ctx.stroke();
         
         startAngle = toAngle;
+        
+        // add label
     }
     
     

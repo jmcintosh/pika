@@ -8,6 +8,13 @@ var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
 
+var dimension = {
+    top: 0,
+    bottom: height,
+    right: width,
+    left: 0
+};
+
 // overriding setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
     var bounds = this.getParentBounds(this._tempBounds);
@@ -57,13 +64,11 @@ function preload() {
     
     
     // keep it centered
-    window.onresize = function(event){
-        var x = (film.scale.width - window.innerWidth)/2;
-        var y = (film.scale.height - window.innerHeight)/2;
-        window.scrollTo(x,y);
-    };
-
+    //window.onresize = onResize;
+    film.scale.setResizeCallback(onResize);
 }
+
+
 
 function create() {
     
@@ -123,7 +128,16 @@ function start() {
     //  hot keys
     enableControls();
     
-    var piechart = new PieChart(film, width/2, height/2, height/8, [58,25,88,56,89,89,89,89,89,15,89] );
+    
+    onResize();
+    
+    
+    var data = [
+            {item: 'Yes', count: 1},
+            {item: 'No', count: 2},
+            {item: 'Maybe', count: 3}
+        ];
+    var piechart = new PieChart(film, width/2, height/2, height/8, data);
     piechart.draw();
 }
 
@@ -158,20 +172,20 @@ function prepareVideo(item){
 }
 
 function destroyVideo(item){
-    if(item.hasOwnProperty('image') && (item.image !== undefined || item.image !== null)){
+    if(item.hasOwnProperty('image') && item.image !== undefined){
         item.image.destroy();
-        item.image = null;
+        delete item.image;
     }
-    if(item.hasOwnProperty('video') &&  (item.video !== undefined || item.video !== null)){
+    if(item.hasOwnProperty('video') &&  item.video !== undefined){
         item.video.destroy();
-        item.video = null;
+        delete item.image;
         if(film.cache.checkVideoKey(item.title)){
             film.cache.removeVideo(item.title);
         };
     }
-    if(item.hasOwnProperty('text') && (item.text !== undefined || item.text !== null)){
+    if(item.hasOwnProperty('text') && item.text !== undefined){
         item.text.destroy();
-        item.text = null;
+        delete item.text;
     }
 }
 
@@ -189,7 +203,7 @@ function forward() {
         var sceneToLoad = scene + scenesBuffer;
         if(sceneToLoad < scenes.length){
             var item = scenes[sceneToLoad];
-            if(item.image === undefined || item.image === null){
+            if(item.image === undefined){
                 loadVideo(item);
             }
         }
@@ -239,7 +253,7 @@ function back() {
         var sceneToLoad = scene - scenesBuffer;
         if(sceneToLoad >= 0){
             var item = scenes[sceneToLoad];
-            if(item.image === undefined || item.image === null){
+            if(item.image === undefined){
                 loadVideo(item);
             }
         }
@@ -266,7 +280,7 @@ function back() {
 function changeScene(curScene,nextScene){
     
         // check if nextScene is ready
-        if(nextScene.image === undefined || nextScene.image === null){
+        if(nextScene.image === undefined){
             return;
         }
         if(curScene.hasOwnProperty('text')){
@@ -323,8 +337,34 @@ function enableMousewheel(){
 function toggleFullScreen() {
     if(film.scale.isFullScreen){
         film.scale.stopFullScreen();
+        //onResize();
     }else{
         film.scale.startFullScreen(false);
+    }
+    
+}
+
+function onResize(){
+    if(film.scale.isFullScreen){
+        dimension.top = 0;
+        dimension.bottom = height;
+        dimension.left = 0;
+        dimension.right = width;
+    }else{
+        var scaleX = film.scale.scaleFactor.x;
+        var scaleY = film.scale.scaleFactor.y;
+        var x = (film.scale.width - window.innerWidth)/2;
+        var y = (film.scale.height - window.innerHeight)/2;
+        dimension.left = scaleX*x;
+        dimension.right = scaleX*(film.scale.width - x);
+        dimension.top = scaleY*y;
+        dimension.bottom = scaleY*(film.scale.height - y);
+        //console.log(JSON.stringify(dimension,null, "  "));
+        window.scrollTo(x,y);
+        
+    }
+    if(scenes[scene].textIsShown){
+        adjustText(scenes[scene].text);
     }
 }
 
