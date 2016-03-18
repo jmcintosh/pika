@@ -37,10 +37,11 @@ var film = new Phaser.Game(
     { preload: preload, create: create, update: update, render: render }
 );
 
-var basicTextStyle = { font: "24px Helvetica", 
+var basicTextStyle = { 
+    font: "24px Helvetica", 
     fill: "#FFFFFF", 
     wordWrap: true, 
-    wordWrapWidth: width*0.4, 
+    wordWrapWidth: width*0.45, 
     align: "left" 
 };
 
@@ -64,7 +65,6 @@ function preload() {
     
     
     // keep it centered
-    //window.onresize = onResize;
     film.scale.setResizeCallback(onResize);
 }
 
@@ -124,11 +124,8 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
 }
 
 function start() {
-
-    //  hot keys
     enableControls();
-    
-    
+    // center it
     onResize();
     
     
@@ -138,7 +135,7 @@ function start() {
             {item: 'Maybe', count: 3}
         ];
     var piechart = new PieChart(film, width/2, height/2, height/8, data);
-    piechart.draw();
+    //piechart.draw();
 }
 
 function startAudio() {
@@ -165,10 +162,15 @@ function prepareVideo(item){
     item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
     item.image.kill();
     if( item.hasOwnProperty('string') ){
-        item.text = film.add.text(200,height-200,item.string,basicTextStyle);
-        item.text.anchor.set(0);
-        item.text.kill();
+        prepareText(item);
     }
+}
+
+function prepareText(item){
+    item.text = film.add.text(200,height-200,item.string,basicTextStyle);
+    item.text.anchor.set(0);
+    item.text.setShadow(2,2,'#000000',3);
+    item.text.kill();
 }
 
 function destroyVideo(item){
