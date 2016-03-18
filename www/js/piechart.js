@@ -8,7 +8,7 @@ var PieChart = function(game,x,y,radius,data) {
     this.dim = radius * 2.2; // the dimensions of the drawing spacing
     this.center = this.dim /2;
     // setup canvas to draw the pie chart
-    this.chart = game.make.bitmapData(this.dim,this.dim);
+    this.chart = game.make.bitmapData(this.dim*2.5,this.dim);
     this.chart.addToWorld(this.x,this.y,0.5,0.5,1,1);
     
     this.items = data.map( d => d.item );
@@ -22,9 +22,18 @@ var PieChart = function(game,x,y,radius,data) {
 PieChart.prototype.draw = function() {
     this.chart.cls();
     var ctx = this.chart.context;
-    ctx.lineWidth = "3";
+    ctx.lineWidth = 3;
     ctx.strokeStyle = "black";
-    var startAngle = 0;
+//    ctx.shadowBlur = 3;
+//    ctx.shadowOffsetY = 2;
+//    ctx.shadowOffsetX = 2;
+//    ctx.shadowColor = "black";
+    var startAngle = -0.5*Math.PI;
+    var squareMargin = 10;
+    var squareDim = (this.radius/3)-squareMargin;
+    ctx.font = squareDim + "px Helvetica";
+    var squareX = 2.5*this.radius;
+    var squareY = 0.1*this.radius;
     for(var i = 0, n = this.normValues.length; i < n; i++){
         
         var angle = this.normValues[i]*2*Math.PI;
@@ -42,12 +51,28 @@ PieChart.prototype.draw = function() {
             ctx.closePath();
         }
         ctx.fillStyle = colors[i%colors.length];
-        ctx.fill();
-        ctx.stroke();
+        //ctx.fill();
+        //ctx.stroke();
         
         startAngle = toAngle;
         
         // add label
+        ctx.rect(squareX,squareY,squareDim,squareDim);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetY = 2;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowColor = "black";
+        ctx.fillText(this.items[i], squareX + squareDim + squareMargin, squareY+squareDim-ctx.lineWidth);
+        ctx.shadowBlur = null;
+        ctx.shadowOffsetY = null;
+        ctx.shadowOffsetX = null;
+        ctx.shadowColor = null;
+        squareY += squareDim + squareMargin;
     }
     
     

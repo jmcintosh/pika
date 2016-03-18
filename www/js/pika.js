@@ -7,6 +7,7 @@ var audio = {};
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
+var font = "24px Helvetica";
 
 var dimension = {
     top: 0,
@@ -38,8 +39,8 @@ var film = new Phaser.Game(
 );
 
 var basicTextStyle = { 
-    font: "24px Helvetica", 
-    fill: "#FFFFFF", 
+    font: font, 
+    fill: "white", 
     wordWrap: true, 
     wordWrapWidth: width*0.45, 
     align: "left" 
@@ -135,7 +136,7 @@ function start() {
             {item: 'Maybe', count: 3}
         ];
     var piechart = new PieChart(film, width/2, height/2, height/8, data);
-    //piechart.draw();
+    piechart.draw();
 }
 
 function startAudio() {
@@ -169,7 +170,7 @@ function prepareVideo(item){
 function prepareText(item){
     item.text = film.add.text(200,height-200,item.string,basicTextStyle);
     item.text.anchor.set(0);
-    item.text.setShadow(2,2,'#000000',3);
+    item.text.setShadow(2,2,'black',3);
     item.text.kill();
 }
 
