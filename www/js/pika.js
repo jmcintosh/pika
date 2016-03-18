@@ -131,12 +131,15 @@ function start() {
     
     
     var data = [
-            {item: 'Yes', count: 1},
-            {item: 'No', count: 2},
-            {item: 'Maybe', count: 3}
+            {item: 'Yes', count: 100},
+            {item: 'No', count: 587},
+            {item: 'Maybe', count: 300}
+            //{item: 'Dunno', count: 1},
+            //{item: 'I\'m scared', count: 20}
         ];
     var piechart = new PieChart(film, width/2, height/2, height/8, data);
-    piechart.draw();
+    piechart.animate();
+    //piechart.draw();
 }
 
 function startAudio() {

@@ -31,8 +31,6 @@ function fadeOut(image, time, game, callback) {
 function fadeInText(image, time, game) {
     image.anchor.x = 0;
     image.anchor.y = 1;
-    console.log(dimension.right);
-    console.log(dimension.bottom);
     
     image.x = dimension.left + textMarginX ;
     image.y = dimension.bottom ;

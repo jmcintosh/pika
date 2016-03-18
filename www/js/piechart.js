@@ -1,7 +1,8 @@
 "use strict";
-var colors = ['red','green','yellow'];
+var colors = ['red','orange','yellow','green','blue','purple'];
 
 var PieChart = function(game,x,y,radius,data) {
+    this.game = game;
     this.x = x; // x position of center of circle
     this.y = y; // y position of center of circle
     this.radius = radius;
@@ -16,18 +17,16 @@ var PieChart = function(game,x,y,radius,data) {
     
     var sum = this.values.reduce( (prev, curr) => prev + curr );
     this.normValues = this.values.map( val => val/sum );
+    this.tween = 1;
 };
 
 
 PieChart.prototype.draw = function() {
     this.chart.cls();
+    this.chart.update();
     var ctx = this.chart.context;
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black";
-//    ctx.shadowBlur = 3;
-//    ctx.shadowOffsetY = 2;
-//    ctx.shadowOffsetX = 2;
-//    ctx.shadowColor = "black";
     var startAngle = -0.5*Math.PI;
     var squareMargin = 10;
     var squareDim = (this.radius/3)-squareMargin;
@@ -36,7 +35,7 @@ PieChart.prototype.draw = function() {
     var squareY = 0.1*this.radius;
     for(var i = 0, n = this.normValues.length; i < n; i++){
         
-        var angle = this.normValues[i]*2*Math.PI;
+        var angle = this.normValues[i]*2*Math.PI*this.tween;
         var toAngle = startAngle + angle;
         
         ctx.beginPath();
@@ -60,14 +59,17 @@ PieChart.prototype.draw = function() {
         ctx.rect(squareX,squareY,squareDim,squareDim);
         ctx.fill();
         ctx.stroke();
+        //  text with shadow
         ctx.beginPath();
         ctx.fillStyle = "white";
-        
         ctx.shadowBlur = 3;
         ctx.shadowOffsetY = 2;
         ctx.shadowOffsetX = 2;
         ctx.shadowColor = "black";
-        ctx.fillText(this.items[i], squareX + squareDim + squareMargin, squareY+squareDim-ctx.lineWidth);
+        ctx.fillText(this.items[i],
+            squareX + squareDim + squareMargin,
+            squareY+squareDim-ctx.lineWidth
+        );
         ctx.shadowBlur = null;
         ctx.shadowOffsetY = null;
         ctx.shadowOffsetX = null;
@@ -76,4 +78,10 @@ PieChart.prototype.draw = function() {
     }
     
     
+};
+
+PieChart.prototype.animate = function () {
+    this.tween = 0;
+    var t = this.game.add.tween(this).to( {tween: 1}, 500, "Linear", true );
+    t.onUpdateCallback(this.draw,this);
 };
