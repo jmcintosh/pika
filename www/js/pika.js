@@ -8,6 +8,9 @@ var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
 var font = "24px Helvetica";
+var onIntro = true;
+var introText = [];
+var images = {};
 
 var dimension = {
     top: 0,
@@ -57,6 +60,7 @@ function preload() {
     
     film.load.audio('background', 'audio/placeholder.mp3');
     
+    film.load.onFileComplete.add(fileComplete, this);
     for(var i = 0; i < scenesBuffer; i++){
         var item = scenes[i];
         film.load.video(item.title,item.url);
@@ -64,6 +68,7 @@ function preload() {
     
     film.load.script('filters', 'js/filters.js');
     
+    film.load.image('map','img/map.jpg');
     
     // keep it centered
     film.scale.setResizeCallback(onResize);
@@ -72,21 +77,11 @@ function preload() {
 
 
 function create() {
-    
-    film.load.onFileComplete.add(fileComplete, this);
-    
     // Inputs
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
     keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     keys.left = film.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     keys.right = film.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-
-    
-    // Scenes
-    for(var i = 0; i < scenesBuffer; i++){
-        prepareVideo(scenes[i]);
-    }
-    
     
     // audio
     audio.background = film.add.audio('background');
@@ -96,24 +91,10 @@ function create() {
     filters.blurX = this.add.filter('BlurX');
     filters.blurY = this.add.filter('BlurY');
     
-    scenes[scene].video.onPlay.addOnce(start,this);
-    fadeIn(scenes[scene].image, fadeTime, film);
-    scenes[scene].video.play(true, speed);
+    doIntro();
 }
 
-function update() {
-    
-}
 
-function render() {
-
-    //film.debug.text("Video width: " + scenes[scene].video.video.videoWidth, 600, 32);
-    //film.debug.text("Video height: " + scenes[scene].video.video.videoHeight, 600, 64);
-
-    //film.debug.text("Video Time: " + scenes[scene].video.currentTime, 32, 32);
-    //film.debug.text("Video Duration: " + scenes[scene].video.duration, 32, 64);
-
-}
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
     for(var i = 0; i < scenes.length; i++){
@@ -124,21 +105,77 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
     }
 }
 
-function start() {
-    enableControls();
-    // center it
+function doIntro(){
+    disableControls(10000);
+    onIntro = true;
+    // show image
+    images.mapImage = film.add.image(width/2,height/2,'map');
+    images.mapImage.anchor.set(0.5,0.5);
+    var scalex = width/images.mapImage.width;
+    var scaley = height/images.mapImage.height;
+    var scale = Math.max(scalex,scaley);
+    images.mapImage.scale.set(scale,scale);
     onResize();
+    fadeIn(images.mapImage,fadeTime,film);
+    
+    var taxonomy = [
+        "Anamalia",
+        "Chordata",
+        "Mammalia",
+        "Lagomorpha",
+        "Ochotonidae",
+        "Ochotona princips"
+    ];
+
+    
+    var taxonomyTextStyle = {
+        font: font, 
+        fontSize: 44,
+        fill: "white", 
+        wordWrap: false, 
+        wordWrapWidth: width*0.45, 
+        align: "left" 
+    };
+    
+    var xSpacing = 30;
+    var ySpacing = 60;
+    var x = (width/2)-250;
+    var y = (height/2)-130;
+    var i = 0;
+    var interval = setInterval(function(){
+        if(i >= taxonomy.length){ 
+            clearInterval(interval);
+        }
+        var text = film.add.text(x,y,taxonomy[i],taxonomyTextStyle);
+        text.setShadow(3,3,'black',3);
+        text.anchor.set(0,0.5);
+        x += xSpacing;
+        y += ySpacing;
+        fadeIn(text,1000,film);
+        introText.push(text);
+        i++;
+    },1000);
+    
+    var common_name = "The American Pika";
+    
+    var title = "The American Pika:";
+    var subtitle = "Another Piece of the Puzzle";
+}
+
+function start() {
+    // center it
+    //onResize();
     
     
-    var data = [
-            {item: 'Yes', count: 100},
-            {item: 'No', count: 587},
-            {item: 'Maybe', count: 300}
-            //{item: 'Dunno', count: 1},
-            //{item: 'I\'m scared', count: 20}
-        ];
-    var piechart = new PieChart(film, width/2, height/2, height/8, data);
-    piechart.animate();
+//    var data = [
+//            {item: 'Yes', count: 100},
+//            {item: 'No', count: 587},
+//            {item: 'Maybe', count: 300}
+//            //{item: 'Dunno', count: 1},
+//            //{item: 'I\'m scared', count: 20}
+//        ];
+//    var piechart = new PieChart(film, width/2, height/2, height/8, data);
+//    piechart.animate();
     //piechart.draw();
 }
 
@@ -172,7 +209,6 @@ function prepareVideo(item){
 
 function prepareText(item){
     item.text = film.add.text(200,height-200,item.string,basicTextStyle);
-    item.text.anchor.set(0);
     item.text.setShadow(2,2,'black',3);
     item.text.kill();
 }
@@ -196,43 +232,55 @@ function destroyVideo(item){
 }
 
 function forward() {
-    
-    disableControls(fadeTime);
-    var curScene = scenes[scene];
-    if( !curScene.hasOwnProperty('text') || curScene.textIsShown){
-        
-        if(scene === scenes.length-1){
-            return;
-        }
-        
-        // load video into buffer
-        var sceneToLoad = scene + scenesBuffer;
-        if(sceneToLoad < scenes.length){
-            var item = scenes[sceneToLoad];
-            if(item.image === undefined){
-                loadVideo(item);
-            }
-        }
 
-        // destroy video outside buffer range
-        var sceneToDestroy = ( scene - scenesBuffer ) + 1;
-        if(sceneToDestroy >= 0){
-            destroyVideo(scenes[sceneToDestroy]);
-        }
+    disableControls(fadeTime);
+    
+    if(onIntro){
+        fadeOut(images.mapImage,fadeTime,film);
+        introText.map(function(item){fadeOut(item,fadeTime,film);});
+        onIntro = false;
+        scene = 0;
+        scenes[scene].video.onPlay.addOnce(start,this);
+        fadeIn(scenes[scene].image, fadeTime, film);
+        scenes[scene].video.play(true, speed);
         
-        // changeScene
-        var nextScene = scenes[scene+1];
-        changeScene(curScene,nextScene);
-        
-        scene++;
-        if( scene > scenes.length - 1 ) {
-            scene = 0;
-        }
-    }else{ // show the text
-        if( curScene.hasOwnProperty('text') ){
-            curScene.textIsShown = true;
-            fadeInText(curScene.text, fadeTime, film);
-            addBlur(curScene.image, fadeTime, film);
+    }else{
+        var curScene = scenes[scene];
+        if( !curScene.hasOwnProperty('text') || curScene.textIsShown ){
+
+            if(scene === scenes.length-1){
+                return;
+            }
+
+            // load video into buffer
+            var sceneToLoad = scene + scenesBuffer;
+            if(sceneToLoad < scenes.length){
+                var item = scenes[sceneToLoad];
+                if(item.image === undefined){
+                    loadVideo(item);
+                }
+            }
+
+            // destroy video outside buffer range
+            var sceneToDestroy = ( scene - scenesBuffer ) + 1;
+            if(sceneToDestroy >= 0){
+                destroyVideo(scenes[sceneToDestroy]);
+            }
+
+            // changeScene
+            var nextScene = scenes[scene+1];
+            changeScene(curScene,nextScene);
+
+            scene++;
+            if( scene > scenes.length - 1 ) {
+                scene = 0;
+            }
+        }else{ // show the text
+            if( curScene.hasOwnProperty('text') ){
+                curScene.textIsShown = true;
+                fadeInText(curScene.text, fadeTime, film);
+                addBlur(curScene.image, fadeTime, film);
+            }
         }
     }
     
@@ -241,43 +289,50 @@ function forward() {
 
 function back() {
     
-    disableControls(fadeTime);
-    var curScene = scenes[scene];
-    if(curScene.textIsShown){
-        if( curScene.hasOwnProperty('text') ){
-            curScene.textIsShown = false;
-            fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
-            removeBlur(curScene.image, fadeTime, film);
-        }
+    
+    if(onIntro){
+        return;
     }else{
-        
-        if(scene === 0){
-            return;
-        }
-        
-        // load video into buffer
-        var sceneToLoad = scene - scenesBuffer;
-        if(sceneToLoad >= 0){
-            var item = scenes[sceneToLoad];
-            if(item.image === undefined){
-                loadVideo(item);
+        var curScene = scenes[scene];
+        if(curScene.textIsShown){
+            if( curScene.hasOwnProperty('text') ){
+                curScene.textIsShown = false;
+                fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+                removeBlur(curScene.image, fadeTime, film);
             }
-        }
+        }else{
 
-        // destroy video outside buffer range
-        var sceneToDestroy = ( scene + scenesBuffer ) - 1;
-        if(sceneToDestroy < scenes.length){
-            destroyVideo(scenes[sceneToDestroy]);
-        }
-        
-        
-        // change scene
-        var nextScene = scenes[scene-1];
-        changeScene(curScene,nextScene);
-        
-        scene--;
-        if( scene < 0 ) {
-            scene = scenes.length-1;
+            if(scene === 0){
+                doIntro();
+                fadeOutCurrentScene(curScene);
+                return;
+            }
+            disableControls(fadeTime);
+            
+            // load video into buffer
+            var sceneToLoad = scene - scenesBuffer;
+            if(sceneToLoad >= 0){
+                var item = scenes[sceneToLoad];
+                if(item.image === undefined){
+                    loadVideo(item);
+                }
+            }
+
+            // destroy video outside buffer range
+            var sceneToDestroy = ( scene + scenesBuffer ) - 1;
+            if(sceneToDestroy < scenes.length){
+                destroyVideo(scenes[sceneToDestroy]);
+            }
+
+
+            // change scene
+            var nextScene = scenes[scene-1];
+            changeScene(curScene,nextScene);
+
+            scene--;
+            if( scene < 0 ) {
+                scene = scenes.length-1;
+            }
         }
     }
     
@@ -285,25 +340,32 @@ function back() {
 
 function changeScene(curScene,nextScene){
     
-        // check if nextScene is ready
-        if(nextScene.image === undefined){
-            return;
-        }
-        if(curScene.hasOwnProperty('text')){
-            fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
-        }
-        fadeOut(curScene.image, fadeTime, film, function () {
-            curScene.image.kill();
-            curScene.video.stop();
-            curScene.textIsShown = false;
-            removeBlur(curScene.image, fadeTime, film);
-        });
-        fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
-        
-        fadeIn(nextScene.image, fadeTime, film);
-        fadeInVolumeOnVideo(nextScene.video, fadeTime, film);
-        nextScene.video.play(true,speed);
-        
+    // check if nextScene is ready
+    if(nextScene.image === undefined){
+        return;
+    }
+    fadeOutCurrentScene(curScene);
+    fadeInNextScene(nextScene);
+}
+
+function fadeOutCurrentScene(curScene){
+    if(curScene.hasOwnProperty('text')){
+        fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+    }
+    fadeOut(curScene.image, fadeTime, film, function () {
+        curScene.image.kill();
+        curScene.video.stop();
+        curScene.textIsShown = false;
+        removeBlur(curScene.image, fadeTime, film);
+    });
+    fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
+    
+}
+
+function fadeInNextScene(nextScene){
+    fadeIn(nextScene.image, fadeTime, film);
+    fadeInVolumeOnVideo(nextScene.video, fadeTime, film);
+    nextScene.video.play(true,speed);
     
 }
 
@@ -343,7 +405,6 @@ function enableMousewheel(){
 function toggleFullScreen() {
     if(film.scale.isFullScreen){
         film.scale.stopFullScreen();
-        //onResize();
     }else{
         film.scale.startFullScreen(false);
     }
@@ -365,7 +426,6 @@ function onResize(){
         dimension.right = scaleX*(film.scale.width - x);
         dimension.top = scaleY*y;
         dimension.bottom = scaleY*(film.scale.height - y);
-        //console.log(JSON.stringify(dimension,null, "  "));
         window.scrollTo(x,y);
         
     }
@@ -374,3 +434,10 @@ function onResize(){
     }
 }
 
+function update() {
+    
+}
+
+function render() {
+
+}

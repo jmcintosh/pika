@@ -25,7 +25,9 @@ function fadeIn(image, time, game) {
 
 function fadeOut(image, time, game, callback) {
     game.add.tween(image).to( {alpha: 0}, time, "Linear", true );
-    setTimeout(callback,time);
+    if(callback !== undefined){
+        setTimeout(callback,time);
+    }
 }
 
 function fadeInText(image, time, game) {
