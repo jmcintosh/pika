@@ -7,10 +7,9 @@ var audio = {};
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
-var font = "24px Helvetica";
+var font = "Helvetica";
 var onIntro = true;
-var introText = [];
-var images = {};
+var introGroup = [];
 
 var dimension = {
     top: 0,
@@ -19,7 +18,7 @@ var dimension = {
     left: 0
 };
 
-// overriding setExactFit function to maintain aspect ratio
+// overwriting setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
     var bounds = this.getParentBounds(this._tempBounds);
     var width = bounds.width;
@@ -43,6 +42,7 @@ var film = new Phaser.Game(
 
 var basicTextStyle = { 
     font: font, 
+    fontSize: 24,
     fill: "white", 
     wordWrap: true, 
     wordWrapWidth: width*0.45, 
@@ -91,6 +91,9 @@ function create() {
     filters.blurX = this.add.filter('BlurX');
     filters.blurY = this.add.filter('BlurY');
     
+    
+    window.onfocus = onResize;
+    
     doIntro();
 }
 
@@ -106,17 +109,19 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
 }
 
 function doIntro(){
-    disableControls(10000);
+    disableControls(12000);
     onIntro = true;
     // show image
-    images.mapImage = film.add.image(width/2,height/2,'map');
-    images.mapImage.anchor.set(0.5,0.5);
-    var scalex = width/images.mapImage.width;
-    var scaley = height/images.mapImage.height;
+    introGroup = film.add.group();
+    var mapImage = film.add.image(width/2,height/2,'map');
+    mapImage.anchor.set(0.5,0.5);
+    var scalex = width/mapImage.width;
+    var scaley = height/mapImage.height;
     var scale = Math.max(scalex,scaley);
-    images.mapImage.scale.set(scale,scale);
+    mapImage.scale.set(scale,scale);
+    introGroup.add(mapImage);
     onResize();
-    fadeIn(images.mapImage,fadeTime,film);
+    fadeIn(mapImage,fadeTime,film);
     
     var taxonomy = [
         "Anamalia",
@@ -139,27 +144,64 @@ function doIntro(){
     
     var xSpacing = 30;
     var ySpacing = 60;
-    var x = (width/2)-250;
-    var y = (height/2)-130;
+    var x = (width/2)-275;
+    var y = (height/2)-250;
     var i = 0;
+    var taxText = [];
     var interval = setInterval(function(){
         if(i >= taxonomy.length){ 
             clearInterval(interval);
+            setTimeout(function(){
+                showTitle();
+                taxText.map(function(item){
+                    film.add.tween(item).to( {alpha: 0.5}, 750, "Linear", true );
+                });
+            },250);
+        }else{
+            var text = film.add.text(x,y,taxonomy[i],taxonomyTextStyle);
+            text.setShadow(3,3,'black',3);
+            text.anchor.set(0,0);
+            fadeIn(text,750,film);
+            x += xSpacing;
+            y += ySpacing;
+            taxText.push(text);
+            introGroup.add(text);
+            i++;
         }
-        var text = film.add.text(x,y,taxonomy[i],taxonomyTextStyle);
-        text.setShadow(3,3,'black',3);
-        text.anchor.set(0,0.5);
-        x += xSpacing;
-        y += ySpacing;
-        fadeIn(text,1000,film);
-        introText.push(text);
-        i++;
     },1000);
     
-    var common_name = "The American Pika";
+    var showTitle = function(){
+        var title = "The American Pika";
+        var subtitle = "Another Piece of the Puzzle";
+        var titleTextStyle = {
+            font: font, 
+            fontSize: 60,
+            fill: "white", 
+            wordWrap: false, 
+            wordWrapWidth: width*0.45, 
+            align: "left" 
+        };
+        x-=3*xSpacing;
+        var titleText = film.add.text(x,y,title,titleTextStyle);
+        titleText.setShadow(3,3,'black',3);
+        titleText.anchor.set(0,0);
+        fadeIn(titleText,750,film);
+        setTimeout(function(){
+            var colon = film.add.text(x+titleText.width,y,':',titleTextStyle);
+            colon.setShadow(3,3,'black',3);
+            fadeIn(colon,750,film);
+            var subtitleText = film.add.text(x+xSpacing,y+ySpacing,subtitle,taxonomyTextStyle);
+            subtitleText.setShadow(3,3,'black',3);
+            fadeIn(subtitleText,750,film);
+            introGroup.add(titleText);
+            introGroup.add(colon);
+            introGroup.add(subtitleText);
+        },1500);
+        
+        
+    };
     
-    var title = "The American Pika:";
-    var subtitle = "Another Piece of the Puzzle";
+    
 }
 
 function start() {
@@ -236,14 +278,17 @@ function forward() {
     disableControls(fadeTime);
     
     if(onIntro){
-        fadeOut(images.mapImage,fadeTime,film);
-        introText.map(function(item){fadeOut(item,fadeTime,film);});
+        film.add.tween(introGroup).to( {alpha: 0}, fadeTime, "Linear", true );
+        setTimeout(function(){
+            introGroup.destroy();
+        },fadeTime);
+        
         onIntro = false;
         scene = 0;
         scenes[scene].video.onPlay.addOnce(start,this);
         fadeIn(scenes[scene].image, fadeTime, film);
         scenes[scene].video.play(true, speed);
-        
+        onResize();
     }else{
         var curScene = scenes[scene];
         if( !curScene.hasOwnProperty('text') || curScene.textIsShown ){
