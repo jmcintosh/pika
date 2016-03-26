@@ -22,4 +22,23 @@ function readyFn(){
     $("#fullscreen-button").click(function(){
         toggleFullScreen();
     });
+    
+    submitAnswer();
+}
+
+function submitAnswer(){
+    var data = {id: 1, answer: 'yes'};
+    var url = 'http://ec2-54-213-82-29.us-west-2.compute.amazonaws.com:5000/question';
+    function success(response){
+        console.log(response);
+    }
+    var settings = {
+        type: "GET",
+        url: url,
+        data: data,
+        success: success,
+        dataType: "json"
+    };
+    $.ajax(settings);
+    
 }

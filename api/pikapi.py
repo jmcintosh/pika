@@ -1,9 +1,11 @@
 
 from flask import Flask, request, jsonify
+from flask.ext.cors import CORS
 import sqlite3
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 DB_FILE_NAME = 'pika.sqlite'
 QUESTION_IDS = set(['1','2','3','4'])
