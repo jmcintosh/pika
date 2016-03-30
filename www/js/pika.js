@@ -210,15 +210,14 @@ function start() {
     
     
 //    var data = [
-//            {item: 'Yes', count: 100},
-//            {item: 'No', count: 587},
-//            {item: 'Maybe', count: 300}
-//            //{item: 'Dunno', count: 1},
-//            //{item: 'I\'m scared', count: 20}
+//            {item: 'Figs', count: 100},
+//                        {item: 'dogmeat', count: 25},
+//                        {item: 'Maybe', count: 36},
+//                        {item: 'Maybe', count: 36}
 //        ];
 //    var piechart = new PieChart(film, width/2, height/2, height/8, data);
 //    piechart.animate();
-    //piechart.draw();
+//    piechart.draw();
 }
 
 function startAudio() {
@@ -294,6 +293,17 @@ function forward() {
         if( !curScene.hasOwnProperty('text') || curScene.textIsShown ){
 
             if(scene === scenes.length-1){
+                var data = [
+                        {item: 'Figs', count: 100},
+                        {item: 'dogmeat', count: 25},
+                        {item: 'Maybe', count: 36},
+                        {item: 'Maybe', count: 36}
+                        //{item: 'Dunno', count: 1},
+                        //{item: 'I\'m scared', count: 20}
+                    ];
+                var piechart = new PieChart(film, width/2, height/2, height/8, data);
+                piechart.animate();
+                setTimeout(function(){piechart.destroy();},5000);
                 return;
             }
 
@@ -352,6 +362,7 @@ function back() {
                 fadeOutCurrentScene(curScene);
                 return;
             }
+            
             disableControls(fadeTime);
             
             // load video into buffer

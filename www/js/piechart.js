@@ -1,5 +1,5 @@
 "use strict";
-var colors = ['red','orange','yellow','green','blue','purple'];
+var colors = ['#4f2ea9','orange','yellow','green','blue','purple'];
 
 var PieChart = function(game,x,y,radius,data) {
     this.game = game;
@@ -18,6 +18,10 @@ var PieChart = function(game,x,y,radius,data) {
     var sum = this.values.reduce( (prev, curr) => prev + curr );
     this.normValues = this.values.map( val => val/sum );
     this.tween = 1;
+};
+
+PieChart.prototype.destroy = function(){
+    this.chart.cls();
 };
 
 
@@ -50,12 +54,10 @@ PieChart.prototype.draw = function() {
             ctx.closePath();
         }
         ctx.fillStyle = colors[i%colors.length];
-        //ctx.fill();
-        //ctx.stroke();
         
         startAngle = toAngle;
         
-        // add label
+        // add labels
         ctx.rect(squareX,squareY,squareDim,squareDim);
         ctx.fill();
         ctx.stroke();

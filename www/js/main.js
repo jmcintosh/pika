@@ -23,7 +23,7 @@ function readyFn(){
         toggleFullScreen();
     });
     
-    submitAnswer();
+    //submitAnswer();
 }
 
 function submitAnswer(){
