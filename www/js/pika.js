@@ -7,8 +7,15 @@ var audio = {};
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
-var font = "Helvetica";
-var onIntro = true;
+var font = "Pompiere";
+var states ={
+    'intro': 0,
+    'scenes': 1,
+    'questions': 2,
+    'credits': 3,
+    'facts': 4  
+};
+var state = states.intro;
 var introGroup = [];
 
 var dimension = {
@@ -17,6 +24,8 @@ var dimension = {
     right: width,
     left: 0
 };
+
+
 
 // overwriting setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
@@ -42,7 +51,7 @@ var film = new Phaser.Game(
 
 var basicTextStyle = { 
     font: font, 
-    fontSize: 24,
+    fontSize: 0.03*height,
     fill: "white", 
     wordWrap: true, 
     wordWrapWidth: width*0.45, 
@@ -50,7 +59,7 @@ var basicTextStyle = {
 };
 
 
-function preload() {
+function preload() {    
     film.stage.disableVisibilityChange = true;
     film.stage.backgroundColor = "#FFFFFF";
     film.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -68,7 +77,7 @@ function preload() {
     
     film.load.script('filters', 'js/filters.js');
     
-    film.load.image('map','img/map.jpg');
+    film.load.image('intro','img/intro.jpg');
     
     // keep it centered
     film.scale.setResizeCallback(onResize);
@@ -94,7 +103,7 @@ function create() {
     
     window.onfocus = onResize;
     
-    doIntro();
+    document.fonts.ready.then(function () {doIntro();});
 }
 
 
@@ -109,96 +118,95 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
 }
 
 function doIntro(){
-    disableControls(12000);
-    onIntro = true;
+    disableControls(5000);
+    state = states.intro;
     // show image
     introGroup = film.add.group();
-    var mapImage = film.add.image(width/2,height/2,'map');
-    mapImage.anchor.set(0.5,0.5);
-    var scalex = width/mapImage.width;
-    var scaley = height/mapImage.height;
+    var introImage = film.add.image(width/2,height/2,'intro');
+    introImage.anchor.set(0.5,0.5);
+    var scalex = width/introImage.width;
+    var scaley = height/introImage.height;
     var scale = Math.max(scalex,scaley);
-    mapImage.scale.set(scale,scale);
-    introGroup.add(mapImage);
+    introImage.scale.set(scale,scale);
+    introGroup.add(introImage);
+    fadeIn(introImage,fadeTime,film);
     onResize();
-    fadeIn(mapImage,fadeTime,film);
     
-    var taxonomy = [
-        "Anamalia",
-        "Chordata",
-        "Mammalia",
-        "Lagomorpha",
-        "Ochotonidae",
-        "Ochotona princips"
-    ];
-
-    
-    var taxonomyTextStyle = {
+    var titleTextStyle = {
         font: font, 
-        fontSize: 44,
+        fontSize: 0.07*height,
         fill: "white", 
         wordWrap: false, 
-        wordWrapWidth: width*0.45, 
+        align: "left" 
+    };
+    var subtitleTextStyle = {
+        font: font, 
+        fontSize: 0.05*height,
+        fill: "white", 
+        wordWrap: false, 
         align: "left" 
     };
     
-    var xSpacing = 30;
-    var ySpacing = 60;
-    var x = (width/2)-275;
-    var y = (height/2)-250;
-    var i = 0;
-    var taxText = [];
-    var interval = setInterval(function(){
-        if(i >= taxonomy.length){ 
-            clearInterval(interval);
-            setTimeout(function(){
-                showTitle();
-                taxText.map(function(item){
-                    film.add.tween(item).to( {alpha: 0.5}, 750, "Linear", true );
-                });
-            },250);
-        }else{
-            var text = film.add.text(x,y,taxonomy[i],taxonomyTextStyle);
-            text.setShadow(3,3,'black',3);
-            text.anchor.set(0,0);
-            fadeIn(text,750,film);
-            x += xSpacing;
-            y += ySpacing;
-            taxText.push(text);
-            introGroup.add(text);
-            i++;
-        }
+    // we create a dummy text object to load the font
+    // otherwise the title doesn't display correctly
+    var dummy = film.add.text(0,0,'abc',titleTextStyle);
+    dummy.destroy();
+    
+    setTimeout(function(){
+        showTitle();
     },1000);
     
     var showTitle = function(){
         var title = "The American Pika";
         var subtitle = "Another Piece of the Puzzle";
-        var titleTextStyle = {
-            font: font, 
-            fontSize: 60,
-            fill: "white", 
-            wordWrap: false, 
-            wordWrapWidth: width*0.45, 
-            align: "left" 
-        };
-        x-=3*xSpacing;
+
+        var x =0.15*width;
+        var y = 0.18*height;
         var titleText = film.add.text(x,y,title,titleTextStyle);
         titleText.setShadow(3,3,'black',3);
         titleText.anchor.set(0,0);
         fadeIn(titleText,750,film);
         setTimeout(function(){
-            var colon = film.add.text(x+titleText.width,y,':',titleTextStyle);
-            colon.setShadow(3,3,'black',3);
-            fadeIn(colon,750,film);
-            var subtitleText = film.add.text(x+xSpacing,y+ySpacing,subtitle,taxonomyTextStyle);
+            var comma = film.add.text(x+titleText.width,y,'',titleTextStyle);
+            comma.setShadow(3,3,'black',3);
+            fadeIn(comma,750,film);
+            var subtitleText = film.add.text(x,y+titleTextStyle.fontSize+10,subtitle,subtitleTextStyle);
             subtitleText.setShadow(3,3,'black',3);
             fadeIn(subtitleText,750,film);
             introGroup.add(titleText);
-            introGroup.add(colon);
+            introGroup.add(comma);
             introGroup.add(subtitleText);
+            
+            setTimeout(function(){
+                showLocation();
+            },1000);
         },1500);
         
-        
+    };
+    
+    var showLocation = function(){
+        if( location_data.success ){
+            if(location_data.country === 'United States'){
+                var species = 1361;
+                var statement = 'There are ' + species + ' listed endangered species in the United States.';
+                var region = location_data.region;
+                if(region !== null){
+                    species = endangered_by_state[region].species;
+                    var state = endangered_by_state[region].name;
+                    statement = 'There are ' + species + ' listed endangered species in ' + state + '.';
+                    
+                    
+                }
+                var x = 0.5*width;
+                var y = 0.7*height;
+                var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
+                
+                speciesText.anchor.set(0.5,0.5);
+                speciesText.setShadow(3,3,'black',3);
+                fadeIn(speciesText,750,film);
+                introGroup.add(speciesText);
+            }
+        }
     };
     
     
@@ -243,15 +251,15 @@ function prepareVideo(item){
     var scale = Math.max(scalex,scaley);
     item.image = video.addToWorld(width/2,height/2,0.5,0.5,scale,scale);
     item.image.kill();
-    if( item.hasOwnProperty('string') ){
-        prepareText(item);
-    }
+
 }
 
 function prepareText(item){
-    item.text = film.add.text(200,height-200,item.string,basicTextStyle);
-    item.text.setShadow(2,2,'black',3);
-    item.text.kill();
+    if( item.hasOwnProperty('string') ){
+        item.text = film.add.text(200,height-200,item.string,basicTextStyle);
+        item.text.setShadow(2,2,'black',3);
+        item.text.kill();
+    }
 }
 
 function destroyVideo(item){
@@ -276,14 +284,15 @@ function forward() {
 
     disableControls(fadeTime);
     
-    if(onIntro){
+    if(state === states.intro){
         film.add.tween(introGroup).to( {alpha: 0}, fadeTime, "Linear", true );
         setTimeout(function(){
             introGroup.destroy();
         },fadeTime);
         
-        onIntro = false;
+        state = states.scenes;
         scene = 0;
+        prepareText(scenes[scene]);
         scenes[scene].video.onPlay.addOnce(start,this);
         fadeIn(scenes[scene].image, fadeTime, film);
         scenes[scene].video.play(true, speed);
@@ -345,7 +354,7 @@ function forward() {
 function back() {
     
     
-    if(onIntro){
+    if(state === states.intro){
         return;
     }else{
         var curScene = scenes[scene];
@@ -401,6 +410,7 @@ function changeScene(curScene,nextScene){
         return;
     }
     fadeOutCurrentScene(curScene);
+    prepareText(nextScene);
     fadeInNextScene(nextScene);
 }
 

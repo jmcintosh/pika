@@ -14,3 +14,15 @@ body {
 #mute-button {
     /*position: fixed;*/
 }
+
+.btn{
+    color: lightgrey;
+}
+
+#mute-button:hover{
+    color: white;
+}
+
+#fullscreen-button:hover{
+    color: white;
+}
