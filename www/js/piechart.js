@@ -1,5 +1,5 @@
 "use strict";
-var colors = ['#4f2ea9','orange','yellow','green','blue','purple'];
+var colors = ['red','orange','yellow','green','blue','purple'];
 
 var PieChart = function(game,x,y,radius,data) {
     this.game = game;
@@ -15,8 +15,15 @@ var PieChart = function(game,x,y,radius,data) {
     this.items = data.map( d => d.item );
     this.values = data.map( d => d.count );
     
-    var sum = this.values.reduce( (prev, curr) => prev + curr );
-    this.normValues = this.values.map( val => val/sum );
+    var sum = 0;
+    for(var i = 0; i < this.values.length;i++){
+        sum += this.values[i];
+    }
+    this.normValues = [];
+    for(var i = 0; i < this.values.length;i++){
+        this.normValues[i]=this.values[i]/sum;
+    }
+    
     this.tween = 1;
 };
 

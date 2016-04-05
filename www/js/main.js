@@ -17,7 +17,7 @@ function readyFn(){
     getIPGeo();
     
     $("#mute-button").click(function(){
-        var muted = toggleBackgroundAudio();
+        var muted = toggleAudio();
         if(muted){
             $("#mute-button-icon").removeClass("glyphicon-volume-up");
             $("#mute-button-icon").addClass("glyphicon-volume-off");
@@ -30,6 +30,8 @@ function readyFn(){
     $("#fullscreen-button").click(function(){
         toggleFullScreen();
     });
+    
+    $('#background-audio').prop('volume',0.5);
     
     //submitAnswer();
 }
@@ -59,8 +61,6 @@ function getIPGeo(){
                     location_data.country = json.country;
                     location_data.region = json.region;
                     location_data.success = true;
-                    console.log('location: ' + location_data.country + ' ' + location_data.region);
-                    console.log(endangered_by_state[location_data.region].name);
                 }
             }else if(json.status === "fail"){
                 console.log('unable to get location');

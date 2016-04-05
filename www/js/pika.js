@@ -3,7 +3,6 @@ var width = screen.width;
 var height = screen.height;
 var scenesBuffer = 4; // the number of videos to buffer, before and after current scene
 var keys = {};
-var audio = {};
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
@@ -17,12 +16,21 @@ var states ={
 };
 var state = states.intro;
 var introGroup = [];
-
+var audioReady = false;
 var dimension = {
     top: 0,
     bottom: height,
     right: width,
     left: 0
+};
+
+var basicTextStyle = { 
+    font: font, 
+    fontSize: 0.03*height,
+    fill: "white", 
+    wordWrap: true, 
+    wordWrapWidth: width*0.45, 
+    align: "left" 
 };
 
 
@@ -49,15 +57,6 @@ var film = new Phaser.Game(
     { preload: preload, create: create, update: update, render: render }
 );
 
-var basicTextStyle = { 
-    font: font, 
-    fontSize: 0.03*height,
-    fill: "white", 
-    wordWrap: true, 
-    wordWrapWidth: width*0.45, 
-    align: "left" 
-};
-
 
 function preload() {    
     film.stage.disableVisibilityChange = true;
@@ -67,13 +66,21 @@ function preload() {
     film.scale.pageAlignVertically = false;
     film.scale.forceOrientation(true,false);
     
-    film.load.audio('background', 'audio/placeholder.mp3');
+    film.load.audio('background', 'audio/song.mp3');
     
     film.load.onFileComplete.add(fileComplete, this);
     for(var i = 0; i < scenesBuffer; i++){
         var item = scenes[i];
         film.load.video(item.title,item.url);
     }
+    
+    var audioKeys = Object.keys(audioClips);
+    for(var i = 0; i < audioKeys.length; i++){
+        var key = audioKeys[i];
+        var clip = audioClips[key];
+        film.load.audio(key,clip.url);
+    }
+    
     
     film.load.script('filters', 'js/filters.js');
     
@@ -93,8 +100,17 @@ function create() {
     keys.right = film.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     
     // audio
-    audio.background = film.add.audio('background');
-    film.sound.setDecodedCallback(audio.background, startAudio, this);
+    //audio.background = film.add.audio('background');
+    //film.sound.setDecodedCallback(audio.background, startAudio, this);
+    var sounds = [];
+    var audioKeys = Object.keys(audioClips);
+    for(var i = 0; i < audioKeys.length; i++){
+        var key = audioKeys[i];
+        audioClips[key].audio = film.add.audio(key);
+        sounds[i] = audioClips[key].audio;
+    }
+    film.sound.setDecodedCallback(sounds, function(){audioReady = true;}, this);
+    
     
     //filters
     filters.blurX = this.add.filter('BlurX');
@@ -103,7 +119,8 @@ function create() {
     
     window.onfocus = onResize;
     
-    document.fonts.ready.then(function () {doIntro();});
+    //document.fonts.ready.then(function () {doIntro();});
+    doIntro();
 }
 
 
@@ -131,10 +148,10 @@ function doIntro(){
     introGroup.add(introImage);
     fadeIn(introImage,fadeTime,film);
     onResize();
-    
+    var titleFontSize = 0.07*height;
     var titleTextStyle = {
         font: font, 
-        fontSize: 0.07*height,
+        fontSize: titleFontSize,
         fill: "white", 
         wordWrap: false, 
         align: "left" 
@@ -143,7 +160,8 @@ function doIntro(){
         font: font, 
         fontSize: 0.05*height,
         fill: "white", 
-        wordWrap: false, 
+        wordWrap: true, 
+        wordWrapWidth: width*0.33, 
         align: "left" 
     };
     
@@ -167,10 +185,10 @@ function doIntro(){
         titleText.anchor.set(0,0);
         fadeIn(titleText,750,film);
         setTimeout(function(){
-            var comma = film.add.text(x+titleText.width,y,'',titleTextStyle);
+            var comma = film.add.text(x+titleText.width,y,',',titleTextStyle);
             comma.setShadow(3,3,'black',3);
-            fadeIn(comma,750,film);
-            var subtitleText = film.add.text(x,y+titleTextStyle.fontSize+10,subtitle,subtitleTextStyle);
+            fadeIn(comma,750,film);            
+            var subtitleText = film.add.text(x,y+titleFontSize+10,subtitle,subtitleTextStyle);
             subtitleText.setShadow(3,3,'black',3);
             fadeIn(subtitleText,750,film);
             introGroup.add(titleText);
@@ -193,12 +211,13 @@ function doIntro(){
                 if(region !== null){
                     species = endangered_by_state[region].species;
                     var state = endangered_by_state[region].name;
-                    statement = 'There are ' + species + ' listed endangered species in ' + state + '.';
+                    statement = 'There are ' + species + ' listed endangered species in your state of ' + state + '.';
                     
                     
                 }
                 var x = 0.5*width;
                 var y = 0.7*height;
+                subtitleTextStyle.align = "center";
                 var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
                 
                 speciesText.anchor.set(0.5,0.5);
@@ -211,32 +230,6 @@ function doIntro(){
     
     
 }
-
-function start() {
-    // center it
-    //onResize();
-    
-    
-//    var data = [
-//            {item: 'Figs', count: 100},
-//                        {item: 'dogmeat', count: 25},
-//                        {item: 'Maybe', count: 36},
-//                        {item: 'Maybe', count: 36}
-//        ];
-//    var piechart = new PieChart(film, width/2, height/2, height/8, data);
-//    piechart.animate();
-//    piechart.draw();
-}
-
-function startAudio() {
-    //audio.background.loopFull(0.3);
-}
-
-function toggleBackgroundAudio() {
-    var newState = !audio.background.mute;
-    audio.background.mute = newState;
-    return newState;
-};
 
 function loadVideo(item) {
     film.load.video(item.title,item.url);
@@ -292,29 +285,16 @@ function forward() {
         
         state = states.scenes;
         scene = 0;
-        prepareText(scenes[scene]);
-        scenes[scene].video.onPlay.addOnce(start,this);
-        fadeIn(scenes[scene].image, fadeTime, film);
-        scenes[scene].video.play(true, speed);
+        var nextScene = scenes[scene]
+        prepareText(nextScene);
+        fadeInNextScene(nextScene);
+        
+        var clip = audioClips[nextScene.audio].audio;
+        clip.fadeIn(fadeTime,true);
         onResize();
     }else{
         var curScene = scenes[scene];
         if( !curScene.hasOwnProperty('text') || curScene.textIsShown ){
-
-            if(scene === scenes.length-1){
-                var data = [
-                        {item: 'Figs', count: 100},
-                        {item: 'dogmeat', count: 25},
-                        {item: 'Maybe', count: 36},
-                        {item: 'Maybe', count: 36}
-                        //{item: 'Dunno', count: 1},
-                        //{item: 'I\'m scared', count: 20}
-                    ];
-                var piechart = new PieChart(film, width/2, height/2, height/8, data);
-                piechart.animate();
-                setTimeout(function(){piechart.destroy();},5000);
-                return;
-            }
 
             // load video into buffer
             var sceneToLoad = scene + scenesBuffer;
@@ -412,6 +392,20 @@ function changeScene(curScene,nextScene){
     fadeOutCurrentScene(curScene);
     prepareText(nextScene);
     fadeInNextScene(nextScene);
+    
+    //audio
+    if(curScene.audio === nextScene.audio){
+        return;
+    }
+    if(curScene.audio !== null){
+        var clip = audioClips[curScene.audio].audio;
+        clip.fadeOut(fadeTime);
+    }
+    
+    if(nextScene.audio !== null){
+        var clip = audioClips[nextScene.audio].audio;
+        clip.fadeIn(fadeTime,true);
+    }
 }
 
 function fadeOutCurrentScene(curScene){
@@ -426,12 +420,16 @@ function fadeOutCurrentScene(curScene){
     });
     fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
     
+
+    
+    
 }
 
 function fadeInNextScene(nextScene){
     fadeIn(nextScene.image, fadeTime, film);
     fadeInVolumeOnVideo(nextScene.video, fadeTime, film);
     nextScene.video.play(true,speed);
+
     
 }
 
