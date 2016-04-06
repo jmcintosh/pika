@@ -9,10 +9,11 @@ var fadeTime = 500; // time for fades on scene transitions
 var font = "Pompiere";
 var states ={
     'intro': 0,
-    'scenes': 1,
-    'questions': 2,
-    'credits': 3,
-    'facts': 4  
+    'instructions': 1,
+    'scenes': 2,
+    'questions': 3,
+    'credits': 4,
+    'facts': 5  
 };
 var state = states.intro;
 var introGroup = [];
@@ -134,102 +135,7 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles){
     }
 }
 
-function doIntro(){
-    disableControls(5000);
-    state = states.intro;
-    // show image
-    introGroup = film.add.group();
-    var introImage = film.add.image(width/2,height/2,'intro');
-    introImage.anchor.set(0.5,0.5);
-    var scalex = width/introImage.width;
-    var scaley = height/introImage.height;
-    var scale = Math.max(scalex,scaley);
-    introImage.scale.set(scale,scale);
-    introGroup.add(introImage);
-    fadeIn(introImage,fadeTime,film);
-    onResize();
-    var titleFontSize = 0.07*height;
-    var titleTextStyle = {
-        font: font, 
-        fontSize: titleFontSize,
-        fill: "white", 
-        wordWrap: false, 
-        align: "left" 
-    };
-    var subtitleTextStyle = {
-        font: font, 
-        fontSize: 0.05*height,
-        fill: "white", 
-        wordWrap: true, 
-        wordWrapWidth: width*0.33, 
-        align: "left" 
-    };
-    
-    // we create a dummy text object to load the font
-    // otherwise the title doesn't display correctly
-    var dummy = film.add.text(0,0,'abc',titleTextStyle);
-    dummy.destroy();
-    
-    setTimeout(function(){
-        showTitle();
-    },1000);
-    
-    var showTitle = function(){
-        var title = "The American Pika";
-        var subtitle = "Another Piece of the Puzzle";
 
-        var x =0.15*width;
-        var y = 0.18*height;
-        var titleText = film.add.text(x,y,title,titleTextStyle);
-        titleText.setShadow(3,3,'black',3);
-        titleText.anchor.set(0,0);
-        fadeIn(titleText,750,film);
-        setTimeout(function(){
-            var comma = film.add.text(x+titleText.width,y,',',titleTextStyle);
-            comma.setShadow(3,3,'black',3);
-            fadeIn(comma,750,film);            
-            var subtitleText = film.add.text(x,y+titleFontSize+10,subtitle,subtitleTextStyle);
-            subtitleText.setShadow(3,3,'black',3);
-            fadeIn(subtitleText,750,film);
-            introGroup.add(titleText);
-            introGroup.add(comma);
-            introGroup.add(subtitleText);
-            
-            setTimeout(function(){
-                showLocation();
-            },1000);
-        },1500);
-        
-    };
-    
-    var showLocation = function(){
-        if( location_data.success ){
-            if(location_data.country === 'United States'){
-                var species = 1361;
-                var statement = 'There are ' + species + ' listed endangered species in the United States.';
-                var region = location_data.region;
-                if(region !== null){
-                    species = endangered_by_state[region].species;
-                    var state = endangered_by_state[region].name;
-                    statement = 'There are ' + species + ' listed endangered species in your state of ' + state + '.';
-                    
-                    
-                }
-                var x = 0.5*width;
-                var y = 0.7*height;
-                subtitleTextStyle.align = "center";
-                var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
-                
-                speciesText.anchor.set(0.5,0.5);
-                speciesText.setShadow(3,3,'black',3);
-                fadeIn(speciesText,750,film);
-                introGroup.add(speciesText);
-            }
-        }
-    };
-    
-    
-}
 
 function loadVideo(item) {
     film.load.video(item.title,item.url);
@@ -285,16 +191,18 @@ function forward() {
         
         state = states.scenes;
         scene = 0;
-        var nextScene = scenes[scene]
+        var nextScene = scenes[scene];
         prepareText(nextScene);
         fadeInNextScene(nextScene);
-        
-        var clip = audioClips[nextScene.audio].audio;
-        clip.fadeIn(fadeTime,true);
+        audioClips[nextScene.audio].audio.fadeIn(fadeTime,true);
         onResize();
-    }else{
+    }else if (state === states.scenes){
         var curScene = scenes[scene];
         if( !curScene.hasOwnProperty('text') || curScene.textIsShown ){
+            
+            if(scene === scenes.length-1){
+                return;
+            }
 
             // load video into buffer
             var sceneToLoad = scene + scenesBuffer;
@@ -336,7 +244,7 @@ function back() {
     
     if(state === states.intro){
         return;
-    }else{
+    }else if(state === states.scenes){
         var curScene = scenes[scene];
         if(curScene.textIsShown){
             if( curScene.hasOwnProperty('text') ){
@@ -349,6 +257,7 @@ function back() {
             if(scene === 0){
                 doIntro();
                 fadeOutCurrentScene(curScene);
+                audioClips[curScene.audio].audio.fadeOut(fadeTime,true);
                 return;
             }
             
@@ -380,7 +289,6 @@ function back() {
             }
         }
     }
-    
 }
 
 function changeScene(curScene,nextScene){
@@ -398,13 +306,10 @@ function changeScene(curScene,nextScene){
         return;
     }
     if(curScene.audio !== null){
-        var clip = audioClips[curScene.audio].audio;
-        clip.fadeOut(fadeTime);
+        audioClips[curScene.audio].audio.fadeOut(fadeTime);
     }
-    
     if(nextScene.audio !== null){
-        var clip = audioClips[nextScene.audio].audio;
-        clip.fadeIn(fadeTime,true);
+        audioClips[nextScene.audio].audio.fadeIn(fadeTime,true);
     }
 }
 
@@ -419,18 +324,12 @@ function fadeOutCurrentScene(curScene){
         removeBlur(curScene.image, fadeTime, film);
     });
     fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
-    
-
-    
-    
 }
 
 function fadeInNextScene(nextScene){
     fadeIn(nextScene.image, fadeTime, film);
     fadeInVolumeOnVideo(nextScene.video, fadeTime, film);
     nextScene.video.play(true,speed);
-
-    
 }
 
 function disableControls(time){
@@ -504,4 +403,137 @@ function update() {
 
 function render() {
 
+}
+
+function doIntro(){
+    disableControls(10000);
+    state = states.intro;
+    
+    // show image
+    introGroup = film.add.group();
+    var textGroup = film.add.group();
+    var introImage = film.add.image(width/2,height/2,'intro');
+    introImage.anchor.set(0.5,0.5);
+    var scalex = width/introImage.width;
+    var scaley = height/introImage.height;
+    var scale = Math.max(scalex,scaley);
+    introImage.scale.set(scale,scale);
+    introGroup.add(introImage);
+    fadeIn(introImage,fadeTime,film);
+    onResize();
+    var titleFontSize = 0.07*height;
+    var titleTextStyle = {
+        font: font, 
+        fontSize: titleFontSize,
+        fill: "white", 
+        wordWrap: false, 
+        align: "left" 
+    };
+    var subtitleTextStyle = {
+        font: font, 
+        fontSize: 0.05*height,
+        fill: "white", 
+        wordWrap: true, 
+        wordWrapWidth: width*0.33, 
+        align: "left" 
+    };
+    
+    // we create a dummy text object to load the font
+    // otherwise the title doesn't display correctly
+    var dummy = film.add.text(0,0,'abc',titleTextStyle);
+    dummy.destroy();
+    
+    setTimeout(function(){
+        showTitle();
+    },1500);
+    
+    var showTitle = function(){
+        var title = "The American Pika";
+        var subtitle = "Another Piece of the Puzzle";
+
+        var x =0.15*width;
+        var y = 0.18*height;
+        var titleText = film.add.text(x,y,title,titleTextStyle);
+        titleText.setShadow(3,3,'black',3);
+        titleText.anchor.set(0,0);
+        fadeIn(titleText,750,film);
+        setTimeout(function(){
+            var comma = film.add.text(x+titleText.width,y,',',titleTextStyle);
+            comma.setShadow(3,3,'black',3);
+            fadeIn(comma,750,film);            
+            var subtitleText = film.add.text(x,y+titleFontSize+10,subtitle,subtitleTextStyle);
+            subtitleText.setShadow(3,3,'black',3);
+            fadeIn(subtitleText,750,film);
+            textGroup.add(titleText);
+            textGroup.add(comma);
+            textGroup.add(subtitleText);
+            setTimeout(function(){
+                showLocation();
+            },3000);
+        },1500);
+        
+    };
+    
+    var showLocation = function(){
+        if( location_data.success ){
+            if(location_data.country === 'United States'){
+                var species = 1361;
+                var statement = 'There are ' + species + ' listed endangered species in the United States.';
+                var region = location_data.region;
+                if(region !== null && endangered_by_state.hasOwnProperty(region)){
+                    species = endangered_by_state[region].species;
+                    var state = endangered_by_state[region].name;
+                    statement = 'There are ' + species + ' listed endangered species in your state of ' + state + '.';
+                    
+                    
+                }
+                var x = 0.5*width;
+                var y = 0.7*height;
+                subtitleTextStyle.align = "center";
+                var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
+                speciesText.anchor.set(0.5,0.5);
+                speciesText.setShadow(3,3,'black',3);
+                fadeIn(speciesText,750,film);
+                textGroup.add(speciesText);
+                introGroup.add(textGroup);
+            }
+        }
+        setTimeout(function(){showInstructions();},3000);
+    };
+    
+    var showInstructions = function(){
+        
+        film.add.tween(textGroup).to( {alpha: 0}, fadeTime, "Linear", true );
+        var fontSize = 0.04*height;
+        var instTextStyle = {
+            font: font, 
+            fontSize: fontSize,
+            fill: "white", 
+            wordWrap: true, 
+            wordWrapWidth: width*0.4, 
+            align: "left" 
+        };
+        var instructions = [
+            "THIS interactive web documentary reveals the potential consequences of climate change in relation to the American pika. These threats are discussed alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and reading their corresponding text, the two separate topics will merge, and you, the viewer, will be able to add your personal opinions to make this documentary a personal discussion.",
+            "For best viewing experience, please press the full-screen icon in the upper right corner of this page beside the mute button.",
+            "Scroll down to begin."
+        ];
+        var x =0.15*width;
+        var y = 0.18*height/3;
+        for(var i = 0; i < instructions.length; i++){
+            var text = film.add.text(x,y,instructions[i],instTextStyle);
+            text.anchor.set(0,0);
+            text.setShadow(3,3,'black',3);
+            fadeIn(text,750,film);
+            introGroup.add(text);
+            
+            y += text.height + fontSize;
+        }
+
+        
+        
+        
+    };
+    
+    
 }

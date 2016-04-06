@@ -22,7 +22,7 @@ var scenes = [
         "title": "03 PikaEatsLeafRichColor", 
         "url": "video/PikaEatsLeafRichColor.mp4",
         "textPosition": 'right',
-        "audio": "pikaoutdoortone"
+        "audio": "happybirds"
     }, 
     {
         "string": "Every living creature relies on its environment to survive, and global climate change is projected to impact all habitats, some more extremely than others. The most negative projection for a species impacted by climate change is death and extinction. As conscious beings, the thought of our own mortality or the extinction of our species causes us emotional discomfort, so we create buffers to relieve our anxiety.", 
@@ -30,8 +30,8 @@ var scenes = [
         "title": "04 GallitanGateway", 
         "url": "video/GallitanGateway.mp4",
         "textPosition": 'left',
-        "audio": "pikaoutdoortone",
-        "special-audio": "river"
+        "audio": "river",
+        "special-audio": "raven"
     },
     {
         "string": "According to the fossil record, American pikas have existed for 500,000 years. As far back as 10,000 years ago, they thrived in locations 100 km south of their present distribution and at much lower elevations in grasslands and valley bottoms. By 7,500 years ago, the most recent ice age was coming to an end causing western North America to warm. This drove the pikas upslope into their current, preferred, high-elevation habitat.", 
@@ -39,7 +39,7 @@ var scenes = [
         "title": "05 FallColorPikaHabitat2", 
         "url": "video/FallColorPikaHabitat2.mp4",
         "textPosition": 'right',
-        "audio": "pikaoutdoortone"
+        "audio": "happybirds"
     }, 
     {
         "string": "In 1973 anthropologist Ernest Becker published The Denial of Death to note our fear of death and how we respond to it. He awards this fear as the most anxiety-producing issue of mankind. In his book, he discusses our coping mechanisms for relieving existential anxiety caused by our fear of mortality. He claims that humans create an alternate reality where we can symbolically live forever through “immortality projects.” These projects are most often realized by acts of heroism that allow us to become part of something eternal, like written history or biological and artistic legacies.", 
@@ -55,7 +55,7 @@ var scenes = [
         "title": "07 Tallus", 
         "url": "video/Tallus.mp4",
         "textPosition": 'right',
-        "audio": null
+        "audio": "happybirds"
     }, 
     {
         "string": "Becker’s writings influenced other philosophers to propose the Terror Management Theory. The Terror Management Theory hypothesizes that we use self-esteem to decrease our anxiety caused by the inevitability of death. Individuals with more self-esteem are less stressed by their own mortality.", 
@@ -71,7 +71,7 @@ var scenes = [
         "title": "09 PikaDen", 
         "url": "video/PikaDen.mp4",
         "textPosition": 'right',
-        "audio": null
+        "audio": "happybirds"
     }, 
     {
         "string": "We gain self-esteem by reaching culturally accepted levels of achievement. These accomplishments are delineated by our cultural worldview. Cultural worldviews vary across the world, but they all value something that individuals in society can exhibit. Some cultures value belief in the supernatural, while others appreciate respect for heroism, materialism, nationalism, or artistry. When we perform well according to our cultural values, we feel positively about ourselves. This positive feeling gives us the self-esteem we need to ease our stress about death.", 
@@ -87,7 +87,7 @@ var scenes = [
         "title": "11 PikaEatsYellowFlowers2", 
         "url": "video/PikaEatsYellowFlowers2.mp4",
         "textPosition": 'right',
-        "audio": null
+        "audio": "happybirds"
     }, 
     {
         "string": "In Western, industrialized communities, our animal-like nature reminds us of our own vulnerability to death, so we elevate our animalistic tendencies –like eating and sex –to a status above necessity. We see them as ritualistic habits that are further described by individual cultural worldviews. Furthermore, we claim that our ability for culture places us higher than other animals. Considering ourselves “above” other animals alleviates the stress caused by their reminders about our mortality.", 
@@ -103,7 +103,7 @@ var scenes = [
         "title": "13 PikaHaysYellowFlowers2", 
         "url": "video/PikaHaysYellowFlowers2.mp4",
         "textPosition": 'right',
-        "audio": null
+        "audio": "happybirds"
     }, 
     {
         "string": "If the thought of death is made a topic we actively consider, we will defend our cultural worldview. We do this in order to sustain our level of self-esteem attained from achieving to our cultural standards. Therefore, as we age, we grow to defend and repeatedly validate our worldview and dislike others with opposing cultural worldviews to our own.", 
@@ -119,7 +119,7 @@ var scenes = [
         "title": "15 Weasel", 
         "url": "video/Weasel.mp4",
         "textPosition": 'right',
-        "audio": null
+        "audio": "happybirds"
     },
     {
         "string": "What if a person’s cultural worldview included the importance of conservation and carbon neutrality? What if achieving to these standard was an avenue for self-esteem?  What if people saw sustainable nature as an immortality project?", 
@@ -135,7 +135,7 @@ var scenes = [
         "title": "17 PikaEatsLichenSM", 
         "url": "video/PikaEatsLichenSM.mp4",
         "textPosition": 'right',
-        "audio": null
+        "audio": "happybirds"
     },
     {
         "string": '"Only within the moment of time represented by the present century has one species -man- acquired significant power to alter the nature of the world." ~Rachel Carson', 
