@@ -31,7 +31,7 @@ function readyFn(){
         toggleFullScreen();
     });
     
-    $('#background-audio').prop('volume',0.5);
+    $('#background-audio').prop('volume',1.0);
     
     //submitAnswer();
 }

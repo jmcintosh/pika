@@ -406,7 +406,7 @@ function render() {
 }
 
 function doIntro(){
-    disableControls(10000);
+    disableControls(15000);
     state = states.intro;
     
     // show image
@@ -498,7 +498,7 @@ function doIntro(){
                 introGroup.add(textGroup);
             }
         }
-        setTimeout(function(){showInstructions();},3000);
+        setTimeout(function(){showInstructions();},7000);
     };
     
     var showInstructions = function(){

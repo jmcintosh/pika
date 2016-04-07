@@ -1,28 +1,48 @@
 
 
 var audioClips = {
-    'happybirds': {
-        url: 'audio/happybirds.mp3',
+    'ambiancealittlerustleraven': {
+        url: 'audio/ambiancealittlerustleraven.mp3',
+        audio: null
+    },
+    'birdsforpika': {
+        url: 'audio/birdsforpika.mp3',
+        audio: null
+    },
+    'clipforpikaeating': {
+        url: 'audio/clipforpikaeating.mp3',
         audio: null
     },
     'closeupwater': {
         url: 'audio/closeupwater.mp3',
         audio: null
     },
-    'pikaoutdoortone': { 
-        url: 'audio/pikaoutdoortone.mp3',
+    'grassblows': {
+        url: 'audio/grassblows.mp3',
         audio: null
     },
-    'raven': {
-        url: 'audio/raven.mp3',
+    'happybirds': {
+        url: 'audio/happybirds.mp3',
         audio: null
     },
-    'river': {
-        url: 'audio/river.mp3',
+    'pikasandambiancebirds': { 
+        url: 'audio/pikasandambiancebirds.mp3',
         audio: null
     },
-    'wind': {
-        url: 'audio/wind.mp3',
+    'ravennew': {
+        url: 'audio/ravennew.mp3',
+        audio: null
+    },
+    'river2': {
+        url: 'audio/river2.mp3',
+        audio: null
+    },
+    'whitenoiseish': {
+        url: 'audio/whitenoiseish.mp3',
+        audio: null
+    },
+    'wind2': {
+        url: 'audio/wind2.mp3',
         audio: null
     }
 };
