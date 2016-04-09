@@ -1,6 +1,15 @@
 "use strict";
 var colors = ['red','orange','yellow','green','blue','purple'];
 
+//var data = [
+//        {item: 'Yes', count: 1},
+//        {item: 'No', count: 2},
+//        {item: 'Maybe', count: 3}
+//    ];
+//var piechart = new PieChart(film, width/2, height/2, height/8, data);
+//piechart.draw();
+//piechart.animate();
+
 var PieChart = function(game,x,y,radius,data) {
     this.game = game;
     this.x = x; // x position of center of circle
@@ -12,18 +21,16 @@ var PieChart = function(game,x,y,radius,data) {
     this.chart = game.make.bitmapData(this.dim*2.5,this.dim);
     this.chart.addToWorld(this.x,this.y,0.5,0.5,1,1);
     
-//    this.items = data.map( d => d.item );
-//    this.values = data.map( d => d.count );
-    
+    var sum = 0;
+    this.items = [];
+    this.values = [];
     for(var i = 0; i< data.length; i++){
         this.items[i] = data[i].item;
-        this.values[i] = data[i].count;
+        var value = data[i].count;
+        this.values[i] = value;
+        sum += value;
     }
     
-    var sum = 0;
-    for(var i = 0; i < this.values.length;i++){
-        sum += this.values[i];
-    }
     this.normValues = [];
     for(var i = 0; i < this.values.length;i++){
         this.normValues[i]=this.values[i]/sum;
