@@ -1,11 +1,10 @@
 var scenes = [
-    
     {
         "string": "THE AMERICAN PIKA’S range spans across mountainous areas in western North America in small patches. In their southerly extent, it is uncommon to encounter pikas lower than 2,500 meters above sea level. Contrarily, in the northern part of their range, they can be found at sea level. Overall, they are mainly found at high elevations where it is cool, moist, and the ground is covered in broken rocks. This high level of habitat specificity gives their distribution its patchy nature.", 
         "textIsShown": false, 
         "title": "01 FallColorPikaHabitat", 
         "url": "video/FallColorPikaHabitat.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "happybirds"
     }, 
     {
@@ -13,7 +12,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "02 IceIceBaby", 
         "url": "video/IceIceBaby.mp4",
-        "textPosition": 'left',
+        "textPosition": 7,
         "audio": "closeupwater"
     }, 
     {
@@ -21,7 +20,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "03 PikaEatsLeafRichColor", 
         "url": "video/PikaEatsLeafRichColor.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "whitenoiseish"
     }, 
     {
@@ -29,7 +28,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "04 GallitanGateway", 
         "url": "video/GallitanGateway.mp4",
-        "textPosition": 'left',
+        "textPosition": 7,
         "audio": "river2"
     },
     {
@@ -37,7 +36,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "05 FallColorPikaHabitat2", 
         "url": "video/FallColorPikaHabitat2.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "pikasandambiancebirds"
     }, 
     {
@@ -45,7 +44,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "06 TreeNHeat", 
         "url": "video/TreeNHeat.mp4",
-        "textPosition": 'right',
+        "textPosition": 7,
         "audio": null
     }, 
     {
@@ -53,7 +52,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "07 Tallus", 
         "url": "video/Tallus.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "ambiancealittlerustleraven"
     }, 
     {
@@ -61,7 +60,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "08 EnnisLake", 
         "url": "video/EnnisLake.mp4",
-        "textPosition": 'left',
+        "textPosition": 7,
         "audio": null
     },  
     {
@@ -69,7 +68,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "09 PikaDen", 
         "url": "video/PikaDen.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "pikasandambiancebirds"
     }, 
     {
@@ -77,7 +76,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "10 SnowGlitter", 
         "url": "video/SnowGlitter.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": null
     }, 
     {
@@ -85,7 +84,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "11 PikaEatsYellowFlowers2", 
         "url": "video/PikaEatsYellowFlowers2.mp4",
-        "textPosition": 'right',
+        "textPosition": 7,
         "audio": "clipforpikaeating"
     }, 
     {
@@ -93,7 +92,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "12 Pallisade", 
         "url": "video/Pallisade.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": null
     },
     {
@@ -101,7 +100,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "13 PikaHaysYellowFlowers2", 
         "url": "video/PikaHaysYellowFlowers2.mp4",
-        "textPosition": 'right',
+        "textPosition": 7,
         "audio": "clipforpikaeating"
     }, 
     {
@@ -109,7 +108,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "14 GallatinRiver", 
         "url": "video/GallatinRiver.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "river2"
     }, 
     {
@@ -117,7 +116,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "15 Weasel", 
         "url": "video/Weasel.mp4",
-        "textPosition": 'right',
+        "textPosition": 7,
         "audio": "ravennew"
     },
     {
@@ -125,7 +124,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "16 GraaWind", 
         "url": "video/GraaWind.mp4",
-        "textPosition": 'right',
+        "textPosition": 9,
         "audio": "grassblows"
     }, 
     {
@@ -133,7 +132,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "17 PikaEatsLichenSM", 
         "url": "video/PikaEatsLichenSM.mp4",
-        "textPosition": 'right',
+        "textPosition": 7,
         "audio": "whitenoiseish"
     },
     {
@@ -141,7 +140,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "18 SunsetHyalite", 
         "url": "video/SunsetHyalite.mp4",
-        "textPosition": 'right',
+        "textPosition": 5,
         "audio": null
     },
     {
@@ -149,7 +148,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "19 BigTruckInSnow", 
         "url": "video/BigTruckInSnow.mp4",
-        "textPosition": 'right',
+        "textPosition": 7,
         "audio": null
     } ,
     {
@@ -157,6 +156,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "20 PikaPurpleFlower", 
         "url": "video/PikaPurpleFlower.mp4",
+        "textPosition": 7,
         "audio": null
     }, 
     {
@@ -164,44 +164,7 @@ var scenes = [
         "textIsShown": false, 
         "title": "21 WoodSnow", 
         "url": "video/WoodSnow.mp4",
+        "textPosition": 7,
         "audio": null
     }
-//    {
-//        "string": "Becker’s writings influenced other philosophers to propose the Terror Management Theory. The Terror Management Theory hypothesizes that we use self-esteem to decrease our anxiety caused by the inevitability of death. Individuals with more self-esteem are less stressed by their own mortality.", 
-//        "textIsShown": false, 
-//        "title": "08 IceIceBaby", 
-//        "url": "video/IceIceBaby.mp4",
-//        "textPosition": 'right',
-//        "audio": "happybirds"
-//    }, 
-//    {
-//        "string": "Placeholder string for DenTallusWS.mp4", 
-//        "textIsShown": false, 
-//        "title": "DenTallusWS", 
-//        "url": "video/DenTallusWS.mp4"
-//    }, 
-//    {
-//        "string": "Placeholder string for PikaEatsYellowFlowers.mp4", 
-//        "textIsShown": false, 
-//        "title": "PikaEatsYellowFlowers", 
-//        "url": "video/PikaEatsYellowFlowers.mp4"
-//    }, 
-//    {
-//        "string": "Placeholder string for PikaHaysGreenStems.mp4", 
-//        "textIsShown": false, 
-//        "title": "PikaHaysGreenStems", 
-//        "url": "video/PikaHaysGreenStems.mp4"
-//    }, 
-//    {
-//        "string": "Placeholder string for PikaHaysYellowFlowers.mp4", 
-//        "textIsShown": false, 
-//        "title": "PikaHaysYellowFlowers", 
-//        "url": "video/PikaHaysYellowFlowers.mp4"
-//    }, 
-//    {
-//        "string": "Placeholder string for PikaonRock.mp4", 
-//        "textIsShown": false, 
-//        "title": "PikaonRock", 
-//        "url": "video/PikaonRock.mp4"
-//    }, 
 ];

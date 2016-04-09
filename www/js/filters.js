@@ -1,7 +1,7 @@
 /**
 * A horizontal blur filter by Mat Groves http://matgroves.com/ @Doormat23
 */
-BLUR_INTENSITY = 512;
+var BLUR_INTENSITY = 512;
 
 Phaser.Filter.BlurX = function (game) {
 

@@ -6,7 +6,6 @@ var keys = {};
 var speed = 1; //change speed of video, for testing purposes
 var scene = 0; //initial scene
 var fadeTime = 500; // time for fades on scene transitions
-var font = "Pompiere";
 var states ={
     'intro': 0,
     'instructions': 1,
@@ -25,15 +24,16 @@ var dimension = {
     left: 0
 };
 
+var font = "Roboto";
+
 var basicTextStyle = { 
     font: font, 
-    fontSize: 0.03*height,
+    fontSize: 0.025*height,
     fill: "white", 
     wordWrap: true, 
     wordWrapWidth: width*0.45, 
     align: "left" 
 };
-
 
 
 // overwriting setExactFit function to maintain aspect ratio
@@ -59,7 +59,7 @@ var film = new Phaser.Game(
 );
 
 
-function preload() {    
+function preload() {   
     film.stage.disableVisibilityChange = true;
     film.stage.backgroundColor = "#FFFFFF";
     film.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -94,6 +94,7 @@ function preload() {
 
 
 function create() {
+    film.onFocus = onResize;
     // Inputs
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
     keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -180,7 +181,6 @@ function destroyVideo(item){
 }
 
 function forward() {
-
     disableControls(fadeTime);
     
     if(state === states.intro){
@@ -230,18 +230,14 @@ function forward() {
         }else{ // show the text
             if( curScene.hasOwnProperty('text') ){
                 curScene.textIsShown = true;
-                fadeInText(curScene.text, fadeTime, film);
+                fadeInText(curScene.text, fadeTime, film, curScene.textPosition);
                 addBlur(curScene.image, fadeTime, film);
             }
         }
     }
-    
-
 }
 
 function back() {
-    
-    
     if(state === states.intro){
         return;
     }else if(state === states.scenes){
@@ -317,7 +313,7 @@ function fadeOutCurrentScene(curScene){
     if(curScene.hasOwnProperty('text')){
         fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
     }
-    fadeOut(curScene.image, fadeTime, film, function () {
+    fadeOutImage(curScene.image, fadeTime, film, function () {
         curScene.image.kill();
         curScene.video.stop();
         curScene.textIsShown = false;
@@ -327,7 +323,7 @@ function fadeOutCurrentScene(curScene){
 }
 
 function fadeInNextScene(nextScene){
-    fadeIn(nextScene.image, fadeTime, film);
+    fadeInImage(nextScene.image, fadeTime, film);
     fadeInVolumeOnVideo(nextScene.video, fadeTime, film);
     nextScene.video.play(true,speed);
 }
@@ -392,8 +388,9 @@ function onResize(){
         window.scrollTo(x,y);
         
     }
-    if(scenes[scene].textIsShown){
-        adjustText(scenes[scene].text);
+    var curScene =scenes[scene];
+    if(curScene.textIsShown){
+        adjustText(curScene.text,curScene.textPosition);
     }
 }
 
@@ -419,9 +416,9 @@ function doIntro(){
     var scale = Math.max(scalex,scaley);
     introImage.scale.set(scale,scale);
     introGroup.add(introImage);
-    fadeIn(introImage,fadeTime,film);
-    onResize();
-    var titleFontSize = 0.07*height;
+    fadeInImage(introImage,fadeTime,film);
+    
+    var titleFontSize = 0.06*height;
     var titleTextStyle = {
         font: font, 
         fontSize: titleFontSize,
@@ -431,10 +428,10 @@ function doIntro(){
     };
     var subtitleTextStyle = {
         font: font, 
-        fontSize: 0.05*height,
+        fontSize: 0.04*height,
         fill: "white", 
         wordWrap: true, 
-        wordWrapWidth: width*0.33, 
+        wordWrapWidth: width*0.35, 
         align: "left" 
     };
     
@@ -448,6 +445,7 @@ function doIntro(){
     },1500);
     
     var showTitle = function(){
+        onResize();
         var title = "The American Pika";
         var subtitle = "Another Piece of the Puzzle";
 
@@ -456,14 +454,14 @@ function doIntro(){
         var titleText = film.add.text(x,y,title,titleTextStyle);
         titleText.setShadow(3,3,'black',3);
         titleText.anchor.set(0,0);
-        fadeIn(titleText,750,film);
+        fadeInImage(titleText,750,film);
         setTimeout(function(){
             var comma = film.add.text(x+titleText.width,y,',',titleTextStyle);
             comma.setShadow(3,3,'black',3);
-            fadeIn(comma,750,film);            
+            fadeInImage(comma,750,film);            
             var subtitleText = film.add.text(x,y+titleFontSize+10,subtitle,subtitleTextStyle);
             subtitleText.setShadow(3,3,'black',3);
-            fadeIn(subtitleText,750,film);
+            fadeInImage(subtitleText,750,film);
             textGroup.add(titleText);
             textGroup.add(comma);
             textGroup.add(subtitleText);
@@ -493,7 +491,7 @@ function doIntro(){
                 var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
                 speciesText.anchor.set(0.5,0.5);
                 speciesText.setShadow(3,3,'black',3);
-                fadeIn(speciesText,750,film);
+                fadeInImage(speciesText,750,film);
                 textGroup.add(speciesText);
                 introGroup.add(textGroup);
             }
@@ -504,7 +502,7 @@ function doIntro(){
     var showInstructions = function(){
         
         film.add.tween(textGroup).to( {alpha: 0}, fadeTime, "Linear", true );
-        var fontSize = 0.04*height;
+        var fontSize = 0.035*height;
         var instTextStyle = {
             font: font, 
             fontSize: fontSize,
@@ -524,14 +522,11 @@ function doIntro(){
             var text = film.add.text(x,y,instructions[i],instTextStyle);
             text.anchor.set(0,0);
             text.setShadow(3,3,'black',3);
-            fadeIn(text,750,film);
+            fadeInImage(text,750,film);
             introGroup.add(text);
             
             y += text.height + fontSize;
         }
-
-        
-        
         
     };
     

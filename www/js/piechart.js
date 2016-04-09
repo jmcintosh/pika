@@ -12,8 +12,13 @@ var PieChart = function(game,x,y,radius,data) {
     this.chart = game.make.bitmapData(this.dim*2.5,this.dim);
     this.chart.addToWorld(this.x,this.y,0.5,0.5,1,1);
     
-    this.items = data.map( d => d.item );
-    this.values = data.map( d => d.count );
+//    this.items = data.map( d => d.item );
+//    this.values = data.map( d => d.count );
+    
+    for(var i = 0; i< data.length; i++){
+        this.items[i] = data[i].item;
+        this.values[i] = data[i].count;
+    }
     
     var sum = 0;
     for(var i = 0; i < this.values.length;i++){
