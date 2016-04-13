@@ -7,6 +7,9 @@
 
 $(document).ready(readyFn);
 
+var width = screen.width;
+var height = screen.height;
+
 var location_data = {
     'success': false,
     'country': null,

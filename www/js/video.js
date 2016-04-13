@@ -4,8 +4,8 @@
 
 var filters = {};
 
-var textMarginX = 30;
-var textMarginY = 30;
+var textMarginX = 0.03*height;
+var textMarginY = 0.03*height;
 
 var POSITION = {
     "top_left": 1,
@@ -16,7 +16,11 @@ var POSITION = {
     "mid_right": 6,
     "bot_left": 7,
     "bot_center": 8,
-    "bot_right": 9
+    "bot_right": 9,
+    "top_left_low": 10,
+    "bot_right_high": 11,
+    "mid_left_2": 12,
+    "mid_right_2": 13
 };
 
 function fadeInVolumeOnVideo(video, time, game, max){
@@ -52,6 +56,12 @@ function fadeInText(image, time, game, position) {
             image.x = dimension.left + textMarginX;
             image.y = dimension.top + 2*textMarginY;
             break;
+        case POSITION.top_left_low:
+            image.anchor.x = 0;
+            image.anchor.y = 0;
+            image.x = dimension.left + textMarginX;
+            image.y = dimension.top + 6*textMarginY;
+            break;
         case POSITION.top_center:
             image.anchor.x = 0.5;
             image.anchor.y = 0;
@@ -70,6 +80,12 @@ function fadeInText(image, time, game, position) {
             image.x = dimension.left + textMarginX;
             image.y = (dimension.top+dimension.bottom)/2 + textMarginY;
             break;
+        case POSITION.mid_left_2:
+            image.anchor.x = 0;
+            image.anchor.y = 0.5;
+            image.x = dimension.left + 5*textMarginX;
+            image.y = (dimension.top+dimension.bottom)/2 + textMarginY;
+            break;
         case POSITION.mid_center:
             image.anchor.x = 0.5;
             image.anchor.y = 0.5;
@@ -80,6 +96,12 @@ function fadeInText(image, time, game, position) {
             image.anchor.x = 1;
             image.anchor.y = 0.5;
             image.x = dimension.right - textMarginX ;
+            image.y = (dimension.top+dimension.bottom)/2 + textMarginY;
+            break;
+        case POSITION.mid_right_2:
+            image.anchor.x = 1;
+            image.anchor.y = 0.5;
+            image.x = dimension.right - 5*textMarginX ;
             image.y = (dimension.top+dimension.bottom)/2 + textMarginY;
             break;
         case POSITION.bot_left:
@@ -99,6 +121,12 @@ function fadeInText(image, time, game, position) {
             image.anchor.y = 1;
             image.x = dimension.right - textMarginX ;
             image.y = dimension.bottom;
+            break;
+        case POSITION.bot_right_high:
+            image.anchor.x = 1;
+            image.anchor.y = 1;
+            image.x = dimension.right - textMarginX ;
+            image.y = dimension.bottom - 4*textMarginY;
             break;
         default:
             console.log("default position");
@@ -124,6 +152,10 @@ function adjustText(image,position){
             image.x = dimension.left + textMarginX;
             image.y = dimension.top + textMarginY;
             break;
+        case POSITION.top_left_low:
+            image.x = dimension.left + textMarginX;
+            image.y = dimension.top + 5*textMarginY;
+            break;
         case POSITION.top_center:
             image.x = (dimension.left + dimension.right)/2;
             image.y = dimension.top + textMarginY;
@@ -136,12 +168,20 @@ function adjustText(image,position){
             image.x = dimension.left + textMarginX;
             image.y = (dimension.top+dimension.bottom)/2;
             break;
+        case POSITION.mid_left_2:
+            image.x = dimension.left + 5*textMarginX;
+            image.y = (dimension.top+dimension.bottom)/2;
+            break;
         case POSITION.mid_center:
             image.x = (dimension.left + dimension.right)/2;
             image.y = (dimension.top+dimension.bottom)/2;
             break;
         case POSITION.mid_right:
             image.x = dimension.right - textMarginX ;
+            image.y = (dimension.top+dimension.bottom)/2;
+            break;
+        case POSITION.mid_right_2:
+            image.x = dimension.right - 5*textMarginX ;
             image.y = (dimension.top+dimension.bottom)/2;
             break;
         case POSITION.bot_left:
@@ -156,8 +196,12 @@ function adjustText(image,position){
             image.x = dimension.right - textMarginX ;
             image.y = dimension.bottom - textMarginY;
             break;
+        case POSITION.bot_right_high:
+            image.x = dimension.right - textMarginX ;
+            image.y = dimension.bottom - 5*textMarginY;
+            break;
         default:
-            console.log("default position");
+            console.log("position: " + position);
             image.x = dimension.left + textMarginX ;
             image.y = dimension.bottom - textMarginY;
             break;

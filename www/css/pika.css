@@ -11,10 +11,6 @@ body {
     overflow: hidden;
 }
 
-#mute-button {
-    /*position: fixed;*/
-}
-
 .btn{
     color: lightgrey;
 }

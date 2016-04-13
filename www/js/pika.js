@@ -1,6 +1,4 @@
 "use strict";
-var width = screen.width;
-var height = screen.height;
 var scenesBuffer = 4; // the number of videos to buffer, before and after current scene
 var keys = {};
 var speed = 1; //change speed of video, for testing purposes
@@ -28,12 +26,16 @@ var font = "Roboto";
 
 var basicTextStyle = { 
     font: font, 
-    fontSize: 0.025*height,
+    fontSize: 0.03*height,
     fill: "white", 
     wordWrap: true, 
     wordWrapWidth: width*0.45, 
-    align: "left" 
+    align: "left",
+    fontVariant: 'small-caps'
 };
+
+//var centeredTextStyle = basicTextStyle;
+//centeredTextStyle.align = "center";
 
 
 // overwriting setExactFit function to maintain aspect ratio
@@ -94,7 +96,6 @@ function preload() {
 
 
 function create() {
-    film.onFocus = onResize;
     // Inputs
     keys.up = film.input.keyboard.addKey(Phaser.Keyboard.UP);
     keys.down = film.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -102,8 +103,6 @@ function create() {
     keys.right = film.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     
     // audio
-    //audio.background = film.add.audio('background');
-    //film.sound.setDecodedCallback(audio.background, startAudio, this);
     var sounds = [];
     var audioKeys = Object.keys(audioClips);
     for(var i = 0; i < audioKeys.length; i++){
@@ -119,9 +118,9 @@ function create() {
     filters.blurY = this.add.filter('BlurY');
     
     
+    film.onFocus.add(onResize);
     window.onfocus = onResize;
     
-    //document.fonts.ready.then(function () {doIntro();});
     doIntro();
 }
 
@@ -156,9 +155,20 @@ function prepareVideo(item){
 
 function prepareText(item){
     if( item.hasOwnProperty('string') ){
-        item.text = film.add.text(200,height-200,item.string,basicTextStyle);
-        item.text.setShadow(2,2,'black',3);
-        item.text.kill();
+        if(Array.isArray(item.string)){
+            var textArray = [];
+            for(var i = 0, n = item.string.length; i < n; i++){
+                var text = film.add.text(0,0,item.string[i],basicTextStyle);
+                text.setShadow(2,2,'black',2);
+                text.kill();
+                textArray[i] = text;
+            }
+            item.text = textArray;
+        }else{
+            item.text = film.add.text(0,0,item.string,basicTextStyle);
+            item.text.setShadow(2,2,'black',2);
+            item.text.kill();
+        }
     }
 }
 
@@ -175,7 +185,13 @@ function destroyVideo(item){
         };
     }
     if(item.hasOwnProperty('text') && item.text !== undefined){
-        item.text.destroy();
+        if(Array.isArray(item.text)){
+            for(var i = 0, n = item.text.length; i < n; i++){
+                item.text[i].destroy();
+            }
+        }else{
+            item.text.destroy();
+        }
         delete item.text;
     }
 }
@@ -230,7 +246,13 @@ function forward() {
         }else{ // show the text
             if( curScene.hasOwnProperty('text') ){
                 curScene.textIsShown = true;
-                fadeInText(curScene.text, fadeTime, film, curScene.textPosition);
+                if(Array.isArray(curScene.text)){
+                    for(var i = 0, n = curScene.text.length; i < n; i++){
+                        fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+                    }
+                }else{
+                    fadeInText(curScene.text, fadeTime, film, curScene.textPosition);
+                }
                 addBlur(curScene.image, fadeTime, film);
             }
         }
@@ -245,7 +267,14 @@ function back() {
         if(curScene.textIsShown){
             if( curScene.hasOwnProperty('text') ){
                 curScene.textIsShown = false;
-                fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+                if(Array.isArray(curScene.text)){
+                    for(var i = 0, n = curScene.text.length; i < n; i++){
+                        var text = curScene.text[i];
+                        fadeOutText(text, fadeTime, film, function(){text.kill();});
+                    }
+                }else{
+                    fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+                }
                 removeBlur(curScene.image, fadeTime, film);
             }
         }else{
@@ -311,7 +340,14 @@ function changeScene(curScene,nextScene){
 
 function fadeOutCurrentScene(curScene){
     if(curScene.hasOwnProperty('text')){
-        fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+        if(Array.isArray(curScene.text)){
+            for(var i = 0, n = curScene.text.length; i < n; i++){
+                var text = curScene.text[i];
+                fadeOutText(text, fadeTime, film, function(){text.kill();});
+            }
+        }else{
+            fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
+        }
     }
     fadeOutImage(curScene.image, fadeTime, film, function () {
         curScene.image.kill();
@@ -390,7 +426,13 @@ function onResize(){
     }
     var curScene =scenes[scene];
     if(curScene.textIsShown){
-        adjustText(curScene.text,curScene.textPosition);
+        if(Array.isArray(curScene.text)){
+            for(var i = 0, n = curScene.text.length; i < n; i++){
+                adjustText(curScene.text[i],curScene.textPosition[i]);
+            }
+        }else{
+            adjustText(curScene.text,curScene.textPosition);
+        }
     }
 }
 
@@ -409,6 +451,7 @@ function doIntro(){
     // show image
     introGroup = film.add.group();
     var textGroup = film.add.group();
+    
     var introImage = film.add.image(width/2,height/2,'intro');
     introImage.anchor.set(0.5,0.5);
     var scalex = width/introImage.width;
@@ -424,7 +467,8 @@ function doIntro(){
         fontSize: titleFontSize,
         fill: "white", 
         wordWrap: false, 
-        align: "left" 
+        align: "left",
+        fontVariant: 'small-caps'
     };
     var subtitleTextStyle = {
         font: font, 
@@ -432,7 +476,8 @@ function doIntro(){
         fill: "white", 
         wordWrap: true, 
         wordWrapWidth: width*0.35, 
-        align: "left" 
+        align: "left" ,
+        fontVariant: 'small-caps'
     };
     
     // we create a dummy text object to load the font
@@ -449,18 +494,19 @@ function doIntro(){
         var title = "The American Pika";
         var subtitle = "Another Piece of the Puzzle";
 
+
         var x =0.15*width;
         var y = 0.18*height;
         var titleText = film.add.text(x,y,title,titleTextStyle);
-        titleText.setShadow(3,3,'black',3);
+        titleText.setShadow(3,3,'black',2);
         titleText.anchor.set(0,0);
         fadeInImage(titleText,750,film);
         setTimeout(function(){
             var comma = film.add.text(x+titleText.width,y,',',titleTextStyle);
-            comma.setShadow(3,3,'black',3);
+            comma.setShadow(3,3,'black',2);
             fadeInImage(comma,750,film);            
             var subtitleText = film.add.text(x,y+titleFontSize+10,subtitle,subtitleTextStyle);
-            subtitleText.setShadow(3,3,'black',3);
+            subtitleText.setShadow(3,3,'black',2);
             fadeInImage(subtitleText,750,film);
             textGroup.add(titleText);
             textGroup.add(comma);
@@ -490,7 +536,7 @@ function doIntro(){
                 subtitleTextStyle.align = "center";
                 var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
                 speciesText.anchor.set(0.5,0.5);
-                speciesText.setShadow(3,3,'black',3);
+                speciesText.setShadow(3,3,'black',2);
                 fadeInImage(speciesText,750,film);
                 textGroup.add(speciesText);
                 introGroup.add(textGroup);
@@ -509,19 +555,19 @@ function doIntro(){
             fill: "white", 
             wordWrap: true, 
             wordWrapWidth: width*0.4, 
-            align: "left" 
+            align: "left",
+            fontVariant: 'small-caps'
         };
         var instructions = [
-            "THIS interactive web documentary reveals the potential consequences of climate change in relation to the American pika. These threats are discussed alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and reading their corresponding text, the two separate topics will merge, and you, the viewer, will be able to add your personal opinions to make this documentary a personal discussion.",
-            "For best viewing experience, please press the full-screen icon in the upper right corner of this page beside the mute button.",
-            "Scroll down to begin."
+            "THIS interactive web-based documentary reveals the consequences of climate change in relation to the American pika. The website discusses these threats alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and text, the two separate topics will merge, and you, the viewer, will be able to add your opinions to make this documentary a personal discussion.",
+            "Please press the full-screen icon in the upper right corner of this page, and scroll down to proceed with the story"
         ];
         var x =0.15*width;
         var y = 0.18*height/3;
         for(var i = 0; i < instructions.length; i++){
             var text = film.add.text(x,y,instructions[i],instTextStyle);
             text.anchor.set(0,0);
-            text.setShadow(3,3,'black',3);
+            text.setShadow(3,3,'black',2);
             fadeInImage(text,750,film);
             introGroup.add(text);
             

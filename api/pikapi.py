@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask.ext.cors import CORS
 import sqlite3
 import json
+import bleach
 
 app = Flask(__name__)
 CORS(app)
@@ -24,7 +25,7 @@ def hello():
     return response
 
 
-''' /question?id=1&answer=yes'''
+''' /question?id=1&answer=yes '''
 @app.route("/question")
 def question():
     question_id = str(request.args.get('id'))
@@ -43,6 +44,15 @@ def question():
         response = getAnswers(question_id)
 
     return response
+
+''' /question?name=1&content=content '''
+@app.route("/comment")
+def comment():
+    # use bleach to sanitize input
+    content = bleach.clean(request.args.get('content'))
+    name = bleach.clean(request.args.get('name'))
+
+    return
 
 
 '''TODELETE: for testing purposes, remove before going public'''
