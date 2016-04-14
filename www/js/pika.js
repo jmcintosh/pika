@@ -30,8 +30,7 @@ var basicTextStyle = {
     fill: "white", 
     wordWrap: true, 
     wordWrapWidth: width*0.45, 
-    align: "left",
-    fontVariant: 'small-caps'
+    align: "left"
 };
 
 //var centeredTextStyle = basicTextStyle;
@@ -57,7 +56,8 @@ var film = new Phaser.Game(
     height, 
     Phaser.AUTO, 
     'body', 
-    { preload: preload, create: create, update: update, render: render }
+    { preload: preload, create: create, update: update, render: render },
+    true
 );
 
 
@@ -69,7 +69,6 @@ function preload() {
     film.scale.pageAlignVertically = false;
     film.scale.forceOrientation(true,false);
     
-    film.load.audio('background', 'audio/song.mp3');
     
     film.load.onFileComplete.add(fileComplete, this);
     for(var i = 0; i < scenesBuffer; i++){
@@ -78,7 +77,7 @@ function preload() {
     }
     
     var audioKeys = Object.keys(audioClips);
-    for(var i = 0; i < audioKeys.length; i++){
+    for(var i = 0, n = audioKeys.length; i < n; i++){
         var key = audioKeys[i];
         var clip = audioClips[key];
         film.load.audio(key,clip.url);
@@ -214,7 +213,7 @@ function forward() {
         onResize();
     }else if (state === states.scenes){
         var curScene = scenes[scene];
-        if( !curScene.hasOwnProperty('text') || curScene.textIsShown ){
+        if( !curScene.hasOwnProperty('text') || curScene.changeScene ){
             
             if(scene === scenes.length-1){
                 return;
@@ -245,15 +244,50 @@ function forward() {
             }
         }else{ // show the text
             if( curScene.hasOwnProperty('text') ){
-                curScene.textIsShown = true;
                 if(Array.isArray(curScene.text)){
-                    for(var i = 0, n = curScene.text.length; i < n; i++){
-                        fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+                    switch(curScene.textTransition){
+                        case "persist":
+                            var i = curScene.textIndex;
+                            if(i === 0){
+                                addBlur(curScene.image, fadeTime, film);
+                            }
+                            fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+                            if(i >= curScene.text.length-1){
+                                curScene.changeScene = true;
+                                curScene.textIndex = 0;
+                            }else{
+                                curScene.textIndex++;
+                            }
+                            break;
+                        case "replace":
+                            var i = curScene.textIndex;
+                            if(i === 0){
+                                addBlur(curScene.image, fadeTime, film);
+                            }else{
+                                fadeOutText(curScene.text[i-1],fadeTime,film);
+                            }
+                            
+                            fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+                            if(i >= curScene.text.length-1){
+                                curScene.changeScene = true;
+                                curScene.textIndex = 0;
+                            }else{
+                                curScene.textIndex++;
+                            }
+                            break;
+                        default:
+                            addBlur(curScene.image, fadeTime, film);
+                            for(var i = 0, n = curScene.text.length; i < n; i++){
+                                fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+                            }
+                            curScene.changeScene = true;
                     }
+                    
                 }else{
                     fadeInText(curScene.text, fadeTime, film, curScene.textPosition);
+                    curScene.changeScene = true;
+                    addBlur(curScene.image, fadeTime, film);
                 }
-                addBlur(curScene.image, fadeTime, film);
             }
         }
     }
@@ -264,9 +298,10 @@ function back() {
         return;
     }else if(state === states.scenes){
         var curScene = scenes[scene];
-        if(curScene.textIsShown){
+        if(curScene.changeScene || curScene.textIndex !== 0){
             if( curScene.hasOwnProperty('text') ){
-                curScene.textIsShown = false;
+                curScene.changeScene = false;
+                curScene.textIndex = 0;
                 if(Array.isArray(curScene.text)){
                     for(var i = 0, n = curScene.text.length; i < n; i++){
                         var text = curScene.text[i];
@@ -278,7 +313,7 @@ function back() {
                 removeBlur(curScene.image, fadeTime, film);
             }
         }else{
-
+            console.log("go back");
             if(scene === 0){
                 doIntro();
                 fadeOutCurrentScene(curScene);
@@ -352,7 +387,7 @@ function fadeOutCurrentScene(curScene){
     fadeOutImage(curScene.image, fadeTime, film, function () {
         curScene.image.kill();
         curScene.video.stop();
-        curScene.textIsShown = false;
+        curScene.changeScene = false;
         removeBlur(curScene.image, fadeTime, film);
     });
     fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
@@ -425,7 +460,7 @@ function onResize(){
         
     }
     var curScene =scenes[scene];
-    if(curScene.textIsShown){
+    if(curScene.changeScene){
         if(Array.isArray(curScene.text)){
             for(var i = 0, n = curScene.text.length; i < n; i++){
                 adjustText(curScene.text[i],curScene.textPosition[i]);
@@ -467,8 +502,7 @@ function doIntro(){
         fontSize: titleFontSize,
         fill: "white", 
         wordWrap: false, 
-        align: "left",
-        fontVariant: 'small-caps'
+        align: "left"
     };
     var subtitleTextStyle = {
         font: font, 
@@ -476,8 +510,7 @@ function doIntro(){
         fill: "white", 
         wordWrap: true, 
         wordWrapWidth: width*0.35, 
-        align: "left" ,
-        fontVariant: 'small-caps'
+        align: "left"
     };
     
     // we create a dummy text object to load the font
@@ -519,29 +552,24 @@ function doIntro(){
     };
     
     var showLocation = function(){
-        if( location_data.success ){
-            if(location_data.country === 'United States'){
-                var species = 1361;
-                var statement = 'There are ' + species + ' listed endangered species in the United States.';
-                var region = location_data.region;
-                if(region !== null && endangered_by_state.hasOwnProperty(region)){
-                    species = endangered_by_state[region].species;
-                    var state = endangered_by_state[region].name;
-                    statement = 'There are ' + species + ' listed endangered species in your state of ' + state + '.';
-                    
-                    
-                }
-                var x = 0.5*width;
-                var y = 0.7*height;
-                subtitleTextStyle.align = "center";
-                var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
-                speciesText.anchor.set(0.5,0.5);
-                speciesText.setShadow(3,3,'black',2);
-                fadeInImage(speciesText,750,film);
-                textGroup.add(speciesText);
-                introGroup.add(textGroup);
+        var statement = 'There are 7323 listed endangered species world wide.';
+        if( location_data.success && location_data.country === 'United States'){
+            var region = location_data.region;
+            if(region !== null && endangered_by_state.hasOwnProperty(region)){
+                var species = endangered_by_state[region].species;
+                var state = endangered_by_state[region].name;
+                statement = 'There are ' + species + ' listed endangered species in your state of ' + state + '.';
             }
         }
+        var x = 0.5*width;
+        var y = 0.7*height;
+        subtitleTextStyle.align = "center";
+        var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
+        speciesText.anchor.set(0.5,0.5);
+        speciesText.setShadow(3,3,'black',2);
+        fadeInImage(speciesText,750,film);
+        textGroup.add(speciesText);
+        introGroup.add(textGroup);
         setTimeout(function(){showInstructions();},7000);
     };
     
@@ -555,12 +583,11 @@ function doIntro(){
             fill: "white", 
             wordWrap: true, 
             wordWrapWidth: width*0.4, 
-            align: "left",
-            fontVariant: 'small-caps'
+            align: "left"
         };
         var instructions = [
             "THIS interactive web-based documentary reveals the consequences of climate change in relation to the American pika. The website discusses these threats alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and text, the two separate topics will merge, and you, the viewer, will be able to add your opinions to make this documentary a personal discussion.",
-            "Please press the full-screen icon in the upper right corner of this page, and scroll down to proceed with the story"
+            "Please press the full-screen icon in the upper right corner of this page, and scroll down to proceed with the story."
         ];
         var x =0.15*width;
         var y = 0.18*height/3;
