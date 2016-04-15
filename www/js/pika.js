@@ -247,42 +247,14 @@ function forward() {
                 if(Array.isArray(curScene.text)){
                     switch(curScene.textTransition){
                         case "persist":
-                            var i = curScene.textIndex;
-                            if(i === 0){
-                                addBlur(curScene.image, fadeTime, film);
-                            }
-                            fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
-                            if(i >= curScene.text.length-1){
-                                curScene.changeScene = true;
-                                curScene.textIndex = 0;
-                            }else{
-                                curScene.textIndex++;
-                            }
+                            persist(curScene);
                             break;
                         case "replace":
-                            var i = curScene.textIndex;
-                            if(i === 0){
-                                addBlur(curScene.image, fadeTime, film);
-                            }else{
-                                fadeOutText(curScene.text[i-1],fadeTime,film);
-                            }
-                            
-                            fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
-                            if(i >= curScene.text.length-1){
-                                curScene.changeScene = true;
-                                curScene.textIndex = 0;
-                            }else{
-                                curScene.textIndex++;
-                            }
+                            replace(curScene);
                             break;
                         default:
-                            addBlur(curScene.image, fadeTime, film);
-                            for(var i = 0, n = curScene.text.length; i < n; i++){
-                                fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
-                            }
-                            curScene.changeScene = true;
+                            standard(curScene);
                     }
-                    
                 }else{
                     fadeInText(curScene.text, fadeTime, film, curScene.textPosition);
                     curScene.changeScene = true;
@@ -290,6 +262,47 @@ function forward() {
                 }
             }
         }
+    }
+    
+    // text transition, text remains visible when new text appears
+    function persist(curScene){
+        var i = curScene.textIndex;
+        if(i === 0){
+            addBlur(curScene.image, fadeTime, film);
+        }
+        fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+        if(i >= curScene.text.length-1){
+            curScene.changeScene = true;
+            curScene.textIndex = 0;
+        }else{
+            curScene.textIndex++;
+        }
+    }
+    
+    // text transition, old text is replaced by new text
+    function replace(curScene){
+        var i = curScene.textIndex;
+        if(i === 0){
+            addBlur(curScene.image, fadeTime, film);
+        }else{
+            fadeOutText(curScene.text[i-1],fadeTime,film);
+        }
+        fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+        if(i >= curScene.text.length-1){
+            curScene.changeScene = true;
+            curScene.textIndex = 0;
+        }else{
+            curScene.textIndex++;
+        }
+    }
+    
+    // text transition, all text appears at once
+    function standard(curScene){
+        addBlur(curScene.image, fadeTime, film);
+        for(var i = 0, n = curScene.text.length; i < n; i++){
+            fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
+        }
+        curScene.changeScene = true;
     }
 }
 
@@ -299,6 +312,7 @@ function back() {
     }else if(state === states.scenes){
         var curScene = scenes[scene];
         if(curScene.changeScene || curScene.textIndex !== 0){
+            disableControls(fadeTime);
             if( curScene.hasOwnProperty('text') ){
                 curScene.changeScene = false;
                 curScene.textIndex = 0;
@@ -337,7 +351,6 @@ function back() {
             if(sceneToDestroy < scenes.length){
                 destroyVideo(scenes[sceneToDestroy]);
             }
-
 
             // change scene
             var nextScene = scenes[scene-1];
