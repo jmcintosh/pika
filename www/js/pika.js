@@ -33,9 +33,6 @@ var basicTextStyle = {
     align: "left"
 };
 
-//var centeredTextStyle = basicTextStyle;
-//centeredTextStyle.align = "center";
-
 
 // overwriting setExactFit function to maintain aspect ratio
 Phaser.ScaleManager.prototype.setExactFit = function () {
@@ -446,12 +443,37 @@ function enableMousewheel(){
 }
 
 function toggleFullScreen() {
-    if(film.scale.isFullScreen){
-        film.scale.stopFullScreen();
+    if(document.body.requestFullScreen){
+        if(document.fullScreen){
+            document.cancelFullScreen();
+        }else{
+            document.body.requestFullScreen();
+        }
+    }else if(document.body.webkitRequestFullScreen) {
+        if(document.webkitIsFullScreen){
+            document.webkitCancelFullScreen();
+        }else{
+            document.body.webkitRequestFullScreen();
+        }
+    }else if(document.body.mozRequestFullScreen) {
+        if(document.mozFullScreen){
+            document.mozCancelFullScreen();
+        }else{
+            document.body.mozRequestFullScreen();
+        }
+    }else if(document.body.msRequestFullscreen) {
+        if(document.msFullscreenElement){
+            document.msExitFullscreen();
+        }else{
+            document.body.msRequestFullscreen();
+        }
     }else{
-        film.scale.startFullScreen(false);
+        if(film.scale.isFullScreen){
+            film.scale.stopFullScreen();
+        }else{
+            film.scale.startFullScreen(false);
+        }
     }
-    
 }
 
 function onResize(){
