@@ -1,37 +1,5 @@
 "use strict";
-var scenesBuffer = 4; // the number of videos to buffer, before and after current scene
-var keys = {};
-var speed = 1; //change speed of video, for testing purposes
-var scene = 0; //initial scene
-var fadeTime = 500; // time for fades on scene transitions
-var states ={
-    'intro': 0,
-    'instructions': 1,
-    'scenes': 2,
-    'questions': 3,
-    'credits': 4,
-    'facts': 5  
-};
-var state = states.intro;
-var introGroup = [];
-var audioReady = false;
-var dimension = {
-    top: 0,
-    bottom: height,
-    right: width,
-    left: 0
-};
 
-var font = "Roboto";
-
-var basicTextStyle = { 
-    font: font, 
-    fontSize: 0.03*height,
-    fill: "white", 
-    wordWrap: true, 
-    wordWrapWidth: width*0.45, 
-    align: "left"
-};
 
 
 // overwriting setExactFit function to maintain aspect ratio
@@ -65,6 +33,14 @@ function preload() {
     film.scale.pageAlignHorizontally = false;
     film.scale.pageAlignVertically = false;
     film.scale.forceOrientation(true,false);
+    
+    var textStyleKeys = Object.keys(textStyles);
+    for(var i = 0, n = textStyleKeys.length; i< n; i++){
+        var key = textStyleKeys[i];
+        var textStyle = textStyles[key];
+        var dummy = film.add.text(0,0,'abc',textStyle);
+        dummy.destroy();
+    }
     
     
     film.load.onFileComplete.add(fileComplete, this);
@@ -150,18 +126,22 @@ function prepareVideo(item){
 }
 
 function prepareText(item){
+    var textStyle = textStyles.basic;
+    if(item.textStyle){
+        textStyle = item.textStyle;
+    }
     if( item.hasOwnProperty('string') ){
         if(Array.isArray(item.string)){
             var textArray = [];
             for(var i = 0, n = item.string.length; i < n; i++){
-                var text = film.add.text(0,0,item.string[i],basicTextStyle);
+                var text = film.add.text(0,0,item.string[i],textStyle[i]);
                 text.setShadow(2,2,'black',2);
                 text.kill();
                 textArray[i] = text;
             }
             item.text = textArray;
         }else{
-            item.text = film.add.text(0,0,item.string,basicTextStyle);
+            item.text = film.add.text(0,0,item.string,textStyle);
             item.text.setShadow(2,2,'black',2);
             item.text.kill();
         }
@@ -443,37 +423,45 @@ function enableMousewheel(){
 }
 
 function toggleFullScreen() {
+    var isFullscreen = false;
     if(document.body.requestFullScreen){
         if(document.fullScreen){
             document.cancelFullScreen();
         }else{
             document.body.requestFullScreen();
+            isFullscreen = true;
         }
     }else if(document.body.webkitRequestFullScreen) {
         if(document.webkitIsFullScreen){
             document.webkitCancelFullScreen();
         }else{
             document.body.webkitRequestFullScreen();
+            isFullscreen = true;
         }
     }else if(document.body.mozRequestFullScreen) {
         if(document.mozFullScreen){
             document.mozCancelFullScreen();
         }else{
             document.body.mozRequestFullScreen();
+            isFullscreen = true;
         }
     }else if(document.body.msRequestFullscreen) {
         if(document.msFullscreenElement){
             document.msExitFullscreen();
         }else{
             document.body.msRequestFullscreen();
+            isFullscreen = true;
         }
     }else{
         if(film.scale.isFullScreen){
             film.scale.stopFullScreen();
         }else{
             film.scale.startFullScreen(false);
+            isFullscreen = true;
         }
     }
+    
+    return isFullscreen;
 }
 
 function onResize(){
@@ -548,11 +536,6 @@ function doIntro(){
         align: "left"
     };
     
-    // we create a dummy text object to load the font
-    // otherwise the title doesn't display correctly
-    var dummy = film.add.text(0,0,'abc',titleTextStyle);
-    dummy.destroy();
-    
     setTimeout(function(){
         showTitle();
     },1500);
@@ -621,11 +604,11 @@ function doIntro(){
             align: "left"
         };
         var instructions = [
-            "THIS interactive web-based documentary reveals the consequences of climate change in relation to the American pika. The website discusses these threats alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and text, the two separate topics will merge, and you, the viewer, will be able to add your opinions to make this documentary a personal discussion.",
-            "Please press the full-screen icon in the upper right corner of this page, and scroll down to proceed with the story."
+            "This interactive web-based documentary reveals the consequences of climate change in relation to the American pika. The website discusses these threats alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and text, the two separate topics will merge, and you, the viewer, will be able to add your opinions to make this documentary a personal discussion.",
+            "Please press the full-screen icon in the upper right corner of the page and scroll down."
         ];
         var x =0.15*width;
-        var y = 0.18*height/3;
+        var y = 0.18*height;
         for(var i = 0; i < instructions.length; i++){
             var text = film.add.text(x,y,instructions[i],instTextStyle);
             text.anchor.set(0,0);

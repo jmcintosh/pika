@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-"use strict";
+//"use strict";
 
 $(document).ready(readyFn);
 
-var width = screen.width;
-var height = screen.height;
 
 var location_data = {
     'success': false,
@@ -31,8 +29,16 @@ function readyFn(){
     });
     
     $("#fullscreen-button").click(function(){
-        toggleFullScreen();
+        var isFullscreen = toggleFullScreen();
+        if(isFullscreen){
+            $("#fullscreen-button-icon").removeClass("glyphicon-resize-full");
+            $("#fullscreen-button-icon").addClass("glyphicon-resize-small");
+        }else{
+            $("#fullscreen-button-icon").removeClass("glyphicon-resize-small");
+            $("#fullscreen-button-icon").addClass("glyphicon-resize-full");
+        }
     });
+    
     
     $('#background-audio').prop('volume',1.0);
     

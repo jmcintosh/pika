@@ -7,7 +7,7 @@ body {
     background-color: white;
     margin: 0px;
     padding: 0px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Roboto", sans-serif;
     overflow: hidden;
 }
 
@@ -21,4 +21,42 @@ body {
 
 #fullscreen-button:hover{
     color: white;
+}
+
+.question-parent-div{
+    font-size: 3vh;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+}
+
+#question-1-div{
+    position: fixed;
+    max-width: 30vw;
+    max-height: 25vh;
+    top: 10vh;
+    left: 10vh;
+}
+
+#question-2-div{
+    position: fixed;
+    max-width: 30vw;
+    max-height: 25vh;
+    top: 10vh;
+    right: 10vh;
+}
+
+#question-3-div{
+    position: fixed;
+    max-width: 30vw;
+    max-height: 25vh;
+    bottom: 10vh;
+    left: 10vh;
+}
+
+#question-4-div{
+    position: fixed;
+    max-width: 50vw;
+    max-height: 50vh;
+    bottom: 10vh;
+    right: 10vh;
 }
