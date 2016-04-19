@@ -134,7 +134,11 @@ function prepareText(item){
         if(Array.isArray(item.string)){
             var textArray = [];
             for(var i = 0, n = item.string.length; i < n; i++){
-                var text = film.add.text(0,0,item.string[i],textStyle[i]);
+                var ts = textStyle;
+                if(Array.isArray(textStyle)){
+                    ts = textStyle[i];
+                }
+                var text = film.add.text(0,0,item.string[i],ts);
                 text.setShadow(2,2,'black',2);
                 text.kill();
                 textArray[i] = text;
@@ -229,6 +233,9 @@ function forward() {
                         case "replace":
                             replace(curScene);
                             break;
+                        case "question":
+                            question(curScene);
+                            break;
                         default:
                             standard(curScene);
                     }
@@ -273,6 +280,27 @@ function forward() {
         }
     }
     
+    // replacing question divs
+    function question(curScene){
+        var i = curScene.textIndex;
+        if(i === 0){
+            addBlur(curScene.image, fadeTime, film);
+        }else{
+            // remove old question
+            var question = $("#question-"+(i)+"-div");
+            fadeOutElement(question,fadeTime);
+        }
+        // add new questions
+        var question = $("#question-"+(i+1)+"-div");
+        fadeInElement(question,fadeTime);
+        if(i >= curScene.text.length-1){
+            curScene.changeScene = true;
+            curScene.textIndex = 0;
+        }else{
+            curScene.textIndex++;
+        }
+    }
+    
     // text transition, all text appears at once
     function standard(curScene){
         addBlur(curScene.image, fadeTime, film);
@@ -292,7 +320,6 @@ function back() {
             disableControls(fadeTime);
             if( curScene.hasOwnProperty('text') ){
                 curScene.changeScene = false;
-                curScene.textIndex = 0;
                 if(Array.isArray(curScene.text)){
                     for(var i = 0, n = curScene.text.length; i < n; i++){
                         var text = curScene.text[i];
@@ -301,6 +328,14 @@ function back() {
                 }else{
                     fadeOutText(curScene.text, fadeTime, film, function(){curScene.text.kill();});
                 }
+                
+                if(curScene.textTransition === 'question'){
+                    var i = curScene.textIndex;
+                    var question = $("#question-"+(i)+"-div");
+                    fadeOutElement(question,fadeTime);
+                    
+                }
+                curScene.textIndex = 0;
                 removeBlur(curScene.image, fadeTime, film);
             }
         }else{
@@ -494,6 +529,13 @@ function onResize(){
     }
 }
 
+function toggleAudio() {
+    var newState = !($("#background-audio").prop("muted"));
+    $("#background-audio").prop("muted",newState);
+    film.sound.mute = newState;
+    return newState;
+};
+
 function update() {
     
 }
@@ -503,7 +545,7 @@ function render() {
 }
 
 function doIntro(){
-    disableControls(15000);
+    disableControls(5000);
     state = states.intro;
     
     // show image
@@ -517,6 +559,7 @@ function doIntro(){
     var scale = Math.max(scalex,scaley);
     introImage.scale.set(scale,scale);
     introGroup.add(introImage);
+    onResize();
     fadeInImage(introImage,fadeTime,film);
     
     var titleFontSize = 0.06*height;
@@ -541,7 +584,6 @@ function doIntro(){
     },1500);
     
     var showTitle = function(){
-        onResize();
         var title = "The American Pika";
         var subtitle = "Another Piece of the Puzzle";
 

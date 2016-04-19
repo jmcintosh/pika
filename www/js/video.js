@@ -223,3 +223,30 @@ function removeBlur(image, time, game) {
     setTimeout(function(){image.filters = null;},time);
 }
 
+function fadeInElement(element, time){
+    element.css("visibility","visible");
+    element.animate(
+        {
+            top: '-='+textMarginY+'px',
+            opacity: '1'
+        },
+        time,
+        'linear'
+    );
+    
+}
+
+
+function fadeOutElement(element, time){
+    
+    element.animate(
+        {
+            top: '+='+textMarginY+'px',
+            opacity: '0'
+        },
+        time,
+        'linear',
+        function(){element.css("visibility","hidden");}
+    );
+    
+}

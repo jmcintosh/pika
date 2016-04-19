@@ -65,7 +65,7 @@ var scenes = [
         "title": "01 PikaEatsLichenSM ",
         "url": "video/PikaEatsLichenSM.mp4",
         "textPosition": 1,
-        "audio": "ambiancealittlerustleraven"
+        "audio": "pikasandambiancebirds"
     },
     {
         "string": "An increase in greenhouse gases has caused global surface temperatures to rise over the last 100 years.",
@@ -132,11 +132,13 @@ var scenes = [
         "audio": "pikasandambiancebirds"
     },
     {
-        "string": "Some cultures value belief in the supernatural, while others appreciate respect for heroism, materialism, nationalism, or artistry. When we perform well according to our cultural worldviews, we feel positively about ourselves. This positive feeling gives us the self-esteem we need to ease our stress about death.",
+        "string": ["Some cultures value belief in the supernatural, while others appreciate respect for heroism, materialism, nationalism, or artistry. When we perform well according to our cultural worldviews, we feel positively about ourselves.", "This positive feeling gives us the self-esteem we need to ease our stress about death."],
         "textIsShown": false,
         "title": "10 SnowGlitter",
         "url": "video/SnowGlitter.mp4",
-        "textPosition": 3,
+        "textPosition": [3,3],
+        "textTransition": "replace",
+        "textIndex": 0,
         "audio": null
     },
     {
@@ -185,7 +187,6 @@ var scenes = [
         "title": "16 GraaWind",
         "url": "video/GraaWind.mp4",
         "textPosition": [10, 5, 11],
-        "textStyle": [textStyles.basic,textStyles.basic,textStyles.basic],
         "textTransition": "persist",
         "textIndex": 0,
         "audio": "grassblows"
@@ -196,7 +197,6 @@ var scenes = [
         "title": "17 FallColorPikaHabitat ",
         "url": "video/FallColorPikaHabitat.mp4",
         "textPosition": [5,5],
-        "textStyle": [textStyles.basic,textStyles.basic],
         "textTransition": "replace",
         "textIndex": 0,
         "audio": "happybirds"
@@ -211,20 +211,22 @@ var scenes = [
         "audio": null
     },
     {
-        "string": "Do you think global climate change is occurring? Do you think humans contribute to global climate change? Do you think individuals can make a positive difference concerning global climate change? What are some ways you have behaviorally responded to global climate change awareness? Recycling, Carpooling, Composting, Biking/Walking in place of driving, Vegetarianism, Other, No Behavioral Response.",
+        "string": ["","","","",""],
         "textIsShown": false,
         "title": "19 BigTruckInSnow",
         "url": "video/BigTruckInSnow.mp4",
-        "textPosition": 1,
+        "textPosition": [1,1,1,1,1],
+        "textTransition": "question",
+        "textIndex": 0,
         "audio": null
     },
     {
-        "string": ["Created By\nCatherine Mullen", "Code By\nJohn McIntosh", "Produced as part of the MFA program in Science and Natural History Filmmaking\nMontana State University Bozeman\nsfp.montana.edu/sciencenaturefilm"],
+        "string": ["Created By\nCatherine Mullen", "Code By\nJohn McIntosh", "Music By\nBenoît Pioulard", "Produced as part of the MFA program in\nScience and Natural History Filmmaking\nMontana State University Bozeman\nsfp.montana.edu/sciencenaturefilm"],
         "textIsShown": false,
         "title": "20 PikaPurpleFlower",
         "url": "video/PikaPurpleFlower.mp4",
-        "textPosition": [12, 13, 8],
-        "textStyle": [textStyles.basic,textStyles.basic,textStyles.centered_basic],
+        "textPosition": [2, 12, 13, 8],
+        "textStyle": [textStyles.basic,textStyles.basic,textStyles.basic,textStyles.centered_basic],
         "audio": null
     },
     {
@@ -235,3 +237,50 @@ var scenes = [
         "audio": null
     }
 ];
+
+var audioClips = {
+    'ambiancealittlerustleraven': {
+        url: 'audio/ambiancealittlerustleraven.mp3',
+        audio: null
+    },
+    'birdsforpika': {
+        url: 'audio/birdsforpika.mp3',
+        audio: null
+    },
+    'clipforpikaeating': {
+        url: 'audio/clipforpikaeating.mp3',
+        audio: null
+    },
+    'closeupwater': {
+        url: 'audio/closeupwater.mp3',
+        audio: null
+    },
+    'grassblows': {
+        url: 'audio/grassblows.mp3',
+        audio: null
+    },
+    'happybirds': {
+        url: 'audio/happybirds.mp3',
+        audio: null
+    },
+    'pikasandambiancebirds': { 
+        url: 'audio/pikasandambiancebirds.mp3',
+        audio: null
+    },
+    'ravennew': {
+        url: 'audio/ravennew.mp3',
+        audio: null
+    },
+    'river2': {
+        url: 'audio/river2.mp3',
+        audio: null
+    },
+    'whitenoiseish': {
+        url: 'audio/whitenoiseish.mp3',
+        audio: null
+    },
+    'wind2': {
+        url: 'audio/wind2.mp3',
+        audio: null
+    }
+};

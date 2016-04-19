@@ -27,36 +27,40 @@ body {
     font-size: 3vh;
     color: white;
     text-shadow: 2px 2px 2px black;
+    text-align: center;
+}
+
+.question-buttons{
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.question-div{
+    position: fixed;
+    margin: auto;
+    max-width: 40vw;
+    max-height: 40vh;
+    top: 30vh;
+    left: 30vw;
 }
 
 #question-1-div{
-    position: fixed;
-    max-width: 30vw;
-    max-height: 25vh;
-    top: 10vh;
-    left: 10vh;
+    opacity: 0;
+    visibility: hidden;
 }
 
 #question-2-div{
-    position: fixed;
-    max-width: 30vw;
-    max-height: 25vh;
-    top: 10vh;
-    right: 10vh;
+    opacity: 0;
+    visibility: hidden;
 }
 
 #question-3-div{
-    position: fixed;
-    max-width: 30vw;
-    max-height: 25vh;
-    bottom: 10vh;
-    left: 10vh;
+    opacity: 0;
+    visibility: hidden;
 }
 
 #question-4-div{
-    position: fixed;
-    max-width: 50vw;
-    max-height: 50vh;
-    bottom: 10vh;
-    right: 10vh;
+    opacity: 0;
+    visibility: hidden;
 }
