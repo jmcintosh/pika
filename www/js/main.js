@@ -39,6 +39,44 @@ function readyFn(){
         }
     });
     
+    for(var i = 1; i < 6; i++){
+        var id = "#question-4-" + i;
+        $(id).click(function(event){
+            var id = event.currentTarget;
+            var cb = $(id).find(".glyphicon");
+            var isChecked = cb.hasClass("glyphicon-check");
+            if(isChecked){
+                cb.removeClass("glyphicon-check");
+                cb.addClass("glyphicon-unchecked");
+            }else{
+                cb.removeClass("glyphicon-unchecked");
+                cb.addClass("glyphicon-check");
+                // remove checkbox from "no-behavioral-response
+                $("#question-4-6-checkbox").removeClass("glyphicon-check");
+                $("#question-4-6-checkbox").addClass("glyphicon-unchecked");
+            }
+        });
+    }
+    
+    $("#question-4-6").click(function(event){
+        var id = event.currentTarget;
+        var cb = $("#question-4-6-checkbox");
+        var isChecked = cb.hasClass("glyphicon-check");
+        if(isChecked){
+            cb.removeClass("glyphicon-check");
+            cb.addClass("glyphicon-unchecked");
+        }else{
+            cb.removeClass("glyphicon-unchecked");
+            cb.addClass("glyphicon-check");
+            // remove checkbox from all other answers
+            for(var i = 1; i<6; i++){
+                $("#question-4-"+i+"-checkbox").removeClass("glyphicon-check");
+                $("#question-4-"+i+"-checkbox").addClass("glyphicon-unchecked");
+            }
+        }
+        
+    });
+    
     
     $('#background-audio').prop('volume',1.0);
     

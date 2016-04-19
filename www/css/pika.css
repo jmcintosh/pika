@@ -15,13 +15,14 @@ body {
     color: lightgrey;
 }
 
-#mute-button:hover{
+.btn-lg{
+    font-size: 2.5vh;
+}
+
+.btn:hover{
     color: white;
 }
 
-#fullscreen-button:hover{
-    color: white;
-}
 
 .question-parent-div{
     font-size: 3vh;
