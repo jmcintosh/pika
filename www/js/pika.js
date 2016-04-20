@@ -545,7 +545,7 @@ function render() {
 }
 
 function doIntro(){
-    disableControls(5000);
+    disableControls(6000);
     state = states.intro;
     
     // show image

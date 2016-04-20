@@ -50,7 +50,7 @@ var textStyles = {
     sunrise: 
         { 
             font: "Waiting for the Sunrise", 
-            fontSize: 0.03*height,
+            fontSize: 0.035*height,
             fill: "white", 
             wordWrap: true, 
             wordWrapWidth: width*0.45, 
@@ -64,24 +64,24 @@ var scenes = [
         "textIsShown": false,
         "title": "01 PikaEatsLichenSM ",
         "url": "video/PikaEatsLichenSM.mp4",
-        "textPosition": 1,
-        "audio": "pikasandambiancebirds"
+        "textPosition": 4,
+        "audio": "clipforpikaeating"
     },
     {
         "string": "An increase in greenhouse gases has caused global surface temperatures to rise over the last 100 years.",
         "textIsShown": false,
         "title": "02 IceIceBaby",
         "url": "video/IceIceBaby.mp4",
-        "textPosition": 9,
-        "audio": "closeupwater"
+        "textPosition": 3,
+        "audio": "river2"
     },
     {
         "string": "American pikas usually inhabit mountainous areas 2,500 meters above sea level in western North America. They prefer their temperatures cool, their environment moist, and their land to be covered with broken rocks. ",
         "textIsShown": false,
         "title": "03 FallColorPikaHabitat2",
         "url": "video/FallColorPikaHabitat2.mp4",
-        "textPosition": 1,
-        "audio": "happybirds"
+        "textPosition": 7,
+        "audio": "pikasandambiancebirds"
     },
     {
         "string": "Raising awareness of the causes and consequences of global climate change can alter individual behaviors, but most people quickly respond with avoidance and denial.",
@@ -96,11 +96,11 @@ var scenes = [
         "textIsShown": false,
         "title": "05 PikaEatsLeafRichColor",
         "url": "video/PikaEatsLeafRichColor.mp4",
-        "textPosition": 7,
-        "audio": "pikasandambiancebirds"
+        "textPosition": 1,
+        "audio": "ravennew"
     },
     {
-        "string": "The most negative projection for a species impacted by climate change is death and extinction. As conscious beings, the thought of our own mortality or the extinction of our species causes us anxiety.",
+        "string": "The most negative projection for a species impacted by climate change is death and extinction. As conscious beings, the thought of our own mortality or the extinction of our species causes us stress, so we strive to avoid these thoughts.",
         "textIsShown": false,
         "title": "06 TreeNHeat",
         "url": "video/TreeNHeat.mp4",
@@ -116,12 +116,12 @@ var scenes = [
         "audio": "pikasandambiancebirds"
     },
     {
-        "string": "According to the Terror Management Theory, we use self-esteem to reduce the stress caused by the inevitability of death.",
+        "string": "According to the Terror Management Theory, we use self-esteem to reduce the existential anxiety associated with thoughts of death’s inevitability.",
         "textIsShown": false,
         "title": "08 EnnisLake",
         "url": "video/EnnisLake.mp4",
         "textPosition": 3,
-        "audio": null
+        "audio": "ambiancealittlerustleraven"
     },
     {
         "string": "Since temperatures beneath the rocks remain comfortable for pikas year-round, they use the rocks as structure for their dens and refuge from heat, predators, and snow.",
@@ -129,20 +129,20 @@ var scenes = [
         "title": "09 PikaDen",
         "url": "video/PikaDen.mp4",
         "textPosition": 4,
-        "audio": "pikasandambiancebirds"
+        "audio": "clipforpikaeating"
     },
     {
         "string": ["Some cultures value belief in the supernatural, while others appreciate respect for heroism, materialism, nationalism, or artistry. When we perform well according to our cultural worldviews, we feel positively about ourselves.", "This positive feeling gives us the self-esteem we need to ease our stress about death."],
         "textIsShown": false,
         "title": "10 SnowGlitter",
         "url": "video/SnowGlitter.mp4",
-        "textPosition": [3,3],
+        "textPosition": [6,6],
         "textTransition": "replace",
         "textIndex": 0,
         "audio": null
     },
     {
-        "string": "To have available food during winter, pikas store edible vegetation within their dens in the summer, a process called haying. They forage for grasses, flowers, mosses, and lichens.",
+        "string": "To survive the frozen winter, pikas store edible vegetation within their dens in the summer, a process called haying. They forage for grasses, flowers, mosses, and lichens.",
         "textIsShown": false,
         "title": "11 PikaHaysYellowFlowers2",
         "url": "video/PikaHaysYellowFlowers2.mp4",
@@ -150,11 +150,11 @@ var scenes = [
         "audio": "clipforpikaeating"
     },
     {
-        "string": "Since we gain self-esteem by achieving to our cultural standards, we will defend our cultural worldview in order to protect our level of self-esteem.",
+        "string": "Since we gain self-esteem by achieving to our cultural standards, we will defend our cultural worldview in order to protect our level of self-esteem. As we age, we embrace people who think similarly to us.",
         "textIsShown": false,
         "title": "12 Pallisade",
         "url": "video/Pallisade.mp4",
-        "textPosition": 6,
+        "textPosition": 9,
         "audio": null
     },
     {
@@ -166,11 +166,12 @@ var scenes = [
         "audio": "pikasandambiancebirds"
     },
     {
-        "string": "As we age, we grow to dislike others with opposing worldviews to our own.",
+        "string": "Collective behavior from like-minded individuals through repeatedly validating a shared cultural worldview can cause large-scale impacts, positive and negative.",
         "textIsShown": false,
         "title": "14 GallatinRiver",
         "url": "video/GallatinRiver.mp4",
-        "textPosition": 9,
+        "textPosition": 5,
+        "textStyle": textStyles.sunrise,
         "audio": "river2"
     },
     {
@@ -184,12 +185,13 @@ var scenes = [
     {
         "string": ["What if a person’s cultural worldview included the importance of conservation and carbon neutrality?", "What if this was an avenue for self-esteem?", "What if people saw sustainable nature as an immortality project?"],
         "textIsShown": false,
-        "title": "16 GraaWind",
-        "url": "video/GraaWind.mp4",
+        "title": "16 WoodSnow",
+        "url": "video/WoodSnow.mp4",
         "textPosition": [10, 5, 11],
+        "textStyle": textStyles.sunrise,
         "textTransition": "persist",
         "textIndex": 0,
-        "audio": "grassblows"
+        "audio": null
     },
     {
         "string": ["Climate change models predict temperatures within the American pika’s current range to increase to life-threatening levels over the next 100 years.", "Since pikas already reside at the tops of mountains, there is no place cooler they can go."],
@@ -202,7 +204,7 @@ var scenes = [
         "audio": "happybirds"
     },
     {
-        "string": '"Only within the moment of time represented by the present century has one species - man - acquired significant power to alter the nature of the world."\n                                        Rachel Carson',
+        "string": '"Only within the moment of time represented by the present century has one species - man - acquired significant power to alter the nature of the world."\n                            Rachel Carson',
         "textIsShown": false,
         "title": "18 SunsetHyalite",
         "url": "video/SunsetHyalite.mp4",
@@ -211,11 +213,11 @@ var scenes = [
         "audio": null
     },
     {
-        "string": ["","","","",""],
+        "string": ["","","","","",""],
         "textIsShown": false,
         "title": "19 BigTruckInSnow",
         "url": "video/BigTruckInSnow.mp4",
-        "textPosition": [1,1,1,1,1],
+        "textPosition": [1,1,1,1,1,1],
         "textTransition": "question",
         "textIndex": 0,
         "audio": null
@@ -230,13 +232,14 @@ var scenes = [
         "audio": null
     },
     {
-        "title": "21 WoodSnow",
-        "url": "video/WoodSnow.mp4",
+        "title": "21 GraaWind",
+        "url": "video/GraaWind.mp4",
         "textPosition": 7,
         "textIndex": 0,
-        "audio": null
+        "audio": "ambiancealittlerustleraven"
     }
 ];
+
 
 var audioClips = {
     'ambiancealittlerustleraven': {
