@@ -39,6 +39,10 @@ function readyFn(){
         }
     });
     
+    $("#home-button").click(function(){
+        window.location.reload();
+    });
+    
     for(var i = 1; i < 6; i++){
         var id = "#question-4-" + i;
         $(id).click(function(event){

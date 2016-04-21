@@ -617,11 +617,10 @@ function doIntro(){
                 statement = 'There are ' + species + ' listed endangered species in your state of ' + state + '.';
             }
         }
-        var x = 0.5*width;
+        var x = 0.15*width;
         var y = 0.7*height;
-        subtitleTextStyle.align = "center";
         var speciesText = film.add.text(x,y,statement,subtitleTextStyle);
-        speciesText.anchor.set(0.5,0.5);
+        speciesText.anchor.set(0,0);
         speciesText.setShadow(3,3,'black',2);
         fadeInImage(speciesText,750,film);
         textGroup.add(speciesText);

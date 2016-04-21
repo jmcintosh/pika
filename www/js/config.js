@@ -26,7 +26,10 @@ var dimension = {
 
 var font = "Roboto";
 
+var filters = {};
 
+var textMarginX = 0.04*height;
+var textMarginY = 0.04*height;
 
 var textStyles = {
     basic: 

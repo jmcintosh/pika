@@ -1,11 +1,8 @@
 /* 
- * various functions related to videos for pika
+ * various helper functions related to videos for pika
  */
 
-var filters = {};
 
-var textMarginX = 0.03*height;
-var textMarginY = 0.03*height;
 
 var POSITION = {
     "top_left": 1,
@@ -83,7 +80,7 @@ function fadeInText(image, time, game, position) {
         case POSITION.mid_left_2:
             image.anchor.x = 0;
             image.anchor.y = 0.5;
-            image.x = dimension.left + 5*textMarginX;
+            image.x = dimension.left + 3*textMarginX;
             image.y = (dimension.top+dimension.bottom)/2 + textMarginY;
             break;
         case POSITION.mid_center:
@@ -101,7 +98,7 @@ function fadeInText(image, time, game, position) {
         case POSITION.mid_right_2:
             image.anchor.x = 1;
             image.anchor.y = 0.5;
-            image.x = dimension.right - 5*textMarginX ;
+            image.x = dimension.right - 3*textMarginX ;
             image.y = (dimension.top+dimension.bottom)/2 + textMarginY;
             break;
         case POSITION.bot_left:
@@ -169,7 +166,7 @@ function adjustText(image,position){
             image.y = (dimension.top+dimension.bottom)/2;
             break;
         case POSITION.mid_left_2:
-            image.x = dimension.left + 5*textMarginX;
+            image.x = dimension.left + 3*textMarginX;
             image.y = (dimension.top+dimension.bottom)/2;
             break;
         case POSITION.mid_center:
@@ -181,7 +178,7 @@ function adjustText(image,position){
             image.y = (dimension.top+dimension.bottom)/2;
             break;
         case POSITION.mid_right_2:
-            image.x = dimension.right - 5*textMarginX ;
+            image.x = dimension.right - 3*textMarginX ;
             image.y = (dimension.top+dimension.bottom)/2;
             break;
         case POSITION.bot_left:
