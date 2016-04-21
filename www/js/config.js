@@ -38,6 +38,16 @@ var textStyles = {
             wordWrapWidth: width*0.45, 
             align: "left"
         },
+    basic_italic: 
+        { 
+            font: font, 
+            fontStyle: "italic",
+            fontSize: 0.03*height,
+            fill: "white", 
+            wordWrap: true, 
+            wordWrapWidth: width*0.45, 
+            align: "left"
+        },
     centered_basic: 
         { 
             font: font, 
@@ -73,6 +83,7 @@ var scenes = [
         "title": "02 IceIceBaby",
         "url": "video/IceIceBaby.mp4",
         "textPosition": 3,
+        "textStyle": textStyles.basic_italic,
         "audio": "river2"
     },
     {
@@ -89,37 +100,40 @@ var scenes = [
         "title": "04 GallitanGateway",
         "url": "video/GallitanGateway.mp4",
         "textPosition": 9,
+        "textStyle": textStyles.basic_italic,
         "audio": "river2"
     },
     {
         "string": "This small mammal resembles its rabbit relatives. Its round, furry body appears cinnamon brown in the summer, but in winter, its fur lengthens and contains more gray hues.",
         "textIsShown": false,
-        "title": "05 PikaEatsLeafRichColor",
-        "url": "video/PikaEatsLeafRichColor.mp4",
+        "title": "05 Page5",
+        "url": "video/Page5.mp4",
         "textPosition": 1,
         "audio": "ravennew"
     },
     {
-        "string": "The most negative projection for a species impacted by climate change is death and extinction. As conscious beings, the thought of our own mortality or the extinction of our species causes us stress, so we strive to avoid these thoughts.",
+        "string": "The most negative projection for a species impacted by climate change is death and extinction. As conscious beings, the extinction of our species and the thought of our own mortality causes us stress, so we strive to avoid these thoughts.",
         "textIsShown": false,
         "title": "06 TreeNHeat",
         "url": "video/TreeNHeat.mp4",
         "textPosition": 6,
+        "textStyle": textStyles.basic_italic,
         "audio": null
     },
     {
         "string": "Pikas have a high resting body temperature suited for their cool, mountainous habitat. Air temperatures above even 78°F are lethal, causing pikas to overheat.",
         "textIsShown": false,
-        "title": "05 PikaEatsYellowFlowers2",
-        "url": "video/PikaEatsYellowFlowers2.mp4",
+        "title": "07 Page7",
+        "url": "video/Page7.mp4",
         "textPosition": 7,
         "audio": "pikasandambiancebirds"
     },
     {
-        "string": "According to the Terror Management Theory, we use self-esteem to reduce the existential anxiety associated with thoughts of death’s inevitability.",
+        "string": "According to the Terror Management Theory, we use self-esteem to reduce our existential anxiety associated with thoughts of the inevitability of death.",
         "textIsShown": false,
-        "title": "08 EnnisLake",
-        "url": "video/EnnisLake.mp4",
+        "title": "08 Page8",
+        "url": "video/Page8.mp4",
+        "textStyle": textStyles.basic_italic,
         "textPosition": 3,
         "audio": "ambiancealittlerustleraven"
     },
@@ -139,6 +153,7 @@ var scenes = [
         "textPosition": [6,6],
         "textTransition": "replace",
         "textIndex": 0,
+        "textStyle": textStyles.basic_italic,
         "audio": null
     },
     {
@@ -150,15 +165,16 @@ var scenes = [
         "audio": "clipforpikaeating"
     },
     {
-        "string": "Since we gain self-esteem by achieving to our cultural standards, we will defend our cultural worldview in order to protect our level of self-esteem. As we age, we embrace people who think similarly to us.",
+        "string": "Since we gain self-esteem by achieving our cultural goals, we will defend our worldview in order to protect our level of self-esteem. As we age, we embrace people who think similarly to us and reject those with opposing views.",
         "textIsShown": false,
         "title": "12 Pallisade",
         "url": "video/Pallisade.mp4",
-        "textPosition": 9,
+        "textPosition": 3,
+        "textStyle": textStyles.basic_italic,
         "audio": null
     },
     {
-        "string": "Pikas remain alert when they hay, vocalizing at every sign of potential predators. Weasels, their most successful predator, slip through the broken rocks to enter pikas’ dens. If pikas avoid predation, they can live up to 7 years.",
+        "string": "Pikas remain alert when they hay, vocalizing at every sign of potential predators. Weasels, their most successful predators, slip through the broken rocks to enter pikas’ dens. If pikas avoid predation, they can live up to 7 years.",
         "textIsShown": false,
         "title": "13 Weasel",
         "url": "video/Weasel.mp4",
@@ -171,7 +187,7 @@ var scenes = [
         "title": "14 GallatinRiver",
         "url": "video/GallatinRiver.mp4",
         "textPosition": 5,
-        "textStyle": textStyles.sunrise,
+        "textStyle": textStyles.basic_italic,
         "audio": "river2"
     },
     {
@@ -188,16 +204,16 @@ var scenes = [
         "title": "16 WoodSnow",
         "url": "video/WoodSnow.mp4",
         "textPosition": [10, 5, 11],
-        "textStyle": textStyles.sunrise,
         "textTransition": "persist",
         "textIndex": 0,
+        "textStyle": textStyles.basic_italic,
         "audio": null
     },
     {
         "string": ["Climate change models predict temperatures within the American pika’s current range to increase to life-threatening levels over the next 100 years.", "Since pikas already reside at the tops of mountains, there is no place cooler they can go."],
         "textIsShown": false,
-        "title": "17 FallColorPikaHabitat ",
-        "url": "video/FallColorPikaHabitat.mp4",
+        "title": "17 Page17",
+        "url": "video/Page17.mp4",
         "textPosition": [5,5],
         "textTransition": "replace",
         "textIndex": 0,
@@ -239,6 +255,7 @@ var scenes = [
         "audio": "ambiancealittlerustleraven"
     }
 ];
+
 
 
 var audioClips = {

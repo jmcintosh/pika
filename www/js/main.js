@@ -83,14 +83,14 @@ function readyFn(){
     //submitAnswer();
 }
 
-function submitAnswer(){
-    var data = {id: 1, answer: 'yes'};
+function submitAnswer(question_id,answer){
+    var data = {id: question_id, answer: answer};
     var url = 'http://ec2-54-213-82-29.us-west-2.compute.amazonaws.com:5000/question';
     function success(response){
         console.log(response);
     }
     var settings = {
-        type: "GET",
+        type: "POST",
         url: url,
         data: data,
         success: success,

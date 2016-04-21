@@ -594,15 +594,11 @@ function doIntro(){
         titleText.setShadow(3,3,'black',2);
         titleText.anchor.set(0,0);
         fadeInImage(titleText,750,film);
-        setTimeout(function(){
-            var comma = film.add.text(x+titleText.width,y,',',titleTextStyle);
-            comma.setShadow(3,3,'black',2);
-            fadeInImage(comma,750,film);            
+        setTimeout(function(){          
             var subtitleText = film.add.text(x,y+titleFontSize+10,subtitle,subtitleTextStyle);
             subtitleText.setShadow(3,3,'black',2);
             fadeInImage(subtitleText,750,film);
             textGroup.add(titleText);
-            textGroup.add(comma);
             textGroup.add(subtitleText);
             setTimeout(function(){
                 showLocation();
