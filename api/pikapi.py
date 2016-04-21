@@ -53,34 +53,30 @@ def question():
     return response
 
 ''' /comment?name=john&content=pikasrule '''
-@app.route("/comment",methods=['POST','PUT'])
+@app.route("/comment",methods=['GET','POST','PUT'])
 def comment():
     # use bleach to sanitize input
     content = bleach.clean(request.args.get('content'))
     name = bleach.clean(request.args.get('name'))
     user_id = buildUserID(request)
 
-    insertComment(user_id,name,content)
+    content = content.rstrip()
+    content = content.lstrip()
+    name = name.rstrip()
+    name = name.lstrip()
 
-    response = {"user_id":user_id,"name":name,"content":content}
-    response = json.dumps(response)
-    return response
+    if len(name) == 0:
+        name = 'Anonymous'
+
+    if(len(content)>0 and len(name)>0):
+        insertComment(user_id,name,content)
+
+    return getComments()
 
 @app.route("/comments",methods=['GET'])
 def comments():
     return getComments()
 
-
-'''TODELETE: for testing purposes, remove before going public'''
-# @app.route("/users")
-def getUsers():
-    conn = sqlite3.connect(DB_FILE_NAME)
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM poll")
-    response = str(cur.fetchall())
-    cur.close()
-    conn.close()
-    return response
 
 def buildUserID(request):
     ip_address = request.remote_addr
@@ -185,7 +181,9 @@ def getAnswers4():
 
 def insertComment(user_id,name,content):
     approved = 0
-    if len(content) <= 144 and len(name) <= 32:
+    lcont = len(content)
+    lname = len(name)
+    if lcont <= 144 and lcont > 4 and lname <= 32 and lname > 2:
         approved = 1
 
     insert_sql = '''INSERT INTO 

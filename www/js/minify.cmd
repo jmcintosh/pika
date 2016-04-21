@@ -1,1 +1,1 @@
-uglifyjs main.js config.js video.js filters.js piechart.js  pika.js -o pika.min.js --compress --mangle
+uglifyjs config.js main.js video.js filters.js piechart.js  pika.js -o pika.min.js --compress --mangle

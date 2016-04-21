@@ -7,6 +7,7 @@
 
 $(document).ready(readyFn);
 
+var api_url = "http://ec2-54-213-82-29.us-west-2.compute.amazonaws.com:5000";
 
 var location_data = {
     'success': false,
@@ -43,6 +44,40 @@ function readyFn(){
         window.location.reload();
     });
     
+    // question 1
+    $("#question-1-yes").click(function(){
+        submitAnswer(1,'yes');
+        forward();
+    });
+    
+    $("#question-1-no").click(function(){
+        submitAnswer(1,'no');
+        forward();
+    });
+    
+    // question 2
+    $("#question-2-yes").click(function(){
+        submitAnswer(2,'yes');
+        forward();
+    });
+    
+    $("#question-2-no").click(function(){
+        submitAnswer(2,'no');
+        forward();
+    });
+    
+    // question 3
+    $("#question-3-yes").click(function(){
+        submitAnswer(3,'yes');
+        forward();
+    });
+    
+    $("#question-3-no").click(function(){
+        submitAnswer(3,'no');
+        forward();
+    });
+    
+    //question 4
     for(var i = 1; i < 6; i++){
         var id = "#question-4-" + i;
         $(id).click(function(event){
@@ -63,7 +98,6 @@ function readyFn(){
     }
     
     $("#question-4-6").click(function(event){
-        var id = event.currentTarget;
         var cb = $("#question-4-6-checkbox");
         var isChecked = cb.hasClass("glyphicon-check");
         if(isChecked){
@@ -78,24 +112,105 @@ function readyFn(){
                 $("#question-4-"+i+"-checkbox").addClass("glyphicon-unchecked");
             }
         }
+    });
+    
+    $("#question-4-submit").click(function(){
+        //TODO: add logic to get checked boxes and submit answer
+        var data = {
+            id: 4,
+            recycling: 0,
+            carpooling: 0,
+            biking_walking: 0,
+            vegetarian: 0,
+            other: 0,
+            no_response: 0
+        };
         
+        if($("#question-4-1-checkbox").hasClass("glyphicon-check")){
+            data.recycling = 1;
+        }
+        if($("#question-4-2-checkbox").hasClass("glyphicon-check")){
+            data.carpooling = 1;
+        }
+        if($("#question-4-3-checkbox").hasClass("glyphicon-check")){
+            data.biking_walking = 1;
+        }
+        if($("#question-4-4-checkbox").hasClass("glyphicon-check")){
+            data.vegeterian = 1;
+        }
+        if($("#question-4-5-checkbox").hasClass("glyphicon-check")){
+            data.other = 1;
+        }
+        if($("#question-4-6-checkbox").hasClass("glyphicon-check")){
+            data.no_response = 1;
+        }
+        
+        function success(response){
+            console.log(response);
+        }
+        var settings = {
+            type: "GET",
+            url: api_url + "/question",
+            data: data,
+            success: success,
+            dataType: "json"
+        };
+        $.ajax(settings);
+        
+        forward();
+    });
+    
+    $("#comment-submit").click(function(){
+        //TODO: add logic to submit comment
+        
+        var data = {};
+        
+        data.name = $('#comment-name').val();
+        data.content = $('#comment-content').val();
+        
+        function success(response){
+            console.log(response);
+            processComments(response);
+        }
+        var settings = {
+            type: "GET",
+            url: api_url + "/comment",
+            data: data,
+            success: success,
+            dataType: "json"
+        };
+        $.ajax(settings);
+        
+        forward();
+    });
+    
+    $("#comment-no-thanks").click(function(){
+        function success(response){
+            console.log(response);
+            processComments(response);
+        }
+        var settings = {
+            type: "GET",
+            url: api_url + "/comments",
+            success: success,
+            dataType: "json"
+        };
+        $.ajax(settings);
+        forward();
     });
     
     
     $('#background-audio').prop('volume',1.0);
-    
-    //submitAnswer();
 }
 
 function submitAnswer(question_id,answer){
     var data = {id: question_id, answer: answer};
-    var url = 'http://ec2-54-213-82-29.us-west-2.compute.amazonaws.com:5000/question';
     function success(response){
         console.log(response);
     }
     var settings = {
-        type: "POST",
-        url: url,
+        type: "GET",
+        url: api_url + "/question",
         data: data,
         success: success,
         dataType: "json"
@@ -103,6 +218,26 @@ function submitAnswer(question_id,answer){
     $.ajax(settings);
     
 }
+
+function processComments(response){
+    
+    var finalScene = scenes[scenes.length-1];
+    finalScene.string = [];
+    finalScene.textPosition = [];
+    finalScene.textTransition = "replace";
+    finalScene.textIndex = 0;
+    
+    for(var i = 0; i < 9; i++){
+        if(response[i]){
+            var name = response[i].name;
+            var content = response[i].content;
+            finalScene.string[i] = name + " said:\n" + content;
+            finalScene.textPosition[i] = Math.floor(Math.random()*9)+1;
+        }
+    }
+    
+}
+
 
 function getIPGeo(){
     $.getJSON("http://ip-api.com/json",
@@ -120,209 +255,3 @@ function getIPGeo(){
     );
 }
 
-var endangered_by_state = {
-    'AL':{
-        'species': 86,
-        'name': 'Alabama'
-    },
-    'AK':{
-        'species': 7,
-        'name': 'Alaska'
-    },
-    'AZ':{
-        'species': 44,
-        'name': 'Arizona'
-    },
-    'AR':{
-        'species': 25,
-        'name': 'Arkansas'
-    },
-    'CA':{
-        'species': 220,
-        'name': 'California'
-    },
-    'CO':{
-        'species': 15,
-        'name': 'Colorado'
-    },
-    'CT':{
-        'species': 5,
-        'name': 'Connecticut'
-    },
-    'DE':{
-        'species': 3,
-        'name': 'Delaware'
-    },
-    'DC':{
-        'species': 1,
-        'name': 'Washington, DC'
-    },
-    'FL':{
-        'species': 88,
-        'name': 'Florida'
-    },
-    'GA':{
-        'species': 46,
-        'name': 'Georgia'
-    },
-    'HI':{
-        'species': 421,
-        'name': 'Hawaii'
-    },
-    'ID':{
-        'species': 5,
-        'name': 'Idaho'
-    },
-    'IL':{
-        'species': 20,
-        'name': 'Illinois'
-    },
-    'IN':{
-        'species': 18,
-        'name': 'Indiana'
-    },
-    'IA':{
-        'species': 9,
-        'name': 'Iowa'
-    },
-    'KS':{
-        'species': 9,
-        'name': 'Kansas'
-    },
-    'KY':{
-        'species': 33,
-        'name': 'Kentucky'
-    },
-    'LA':{
-        'species': 11,
-        'name': 'Louisiana'
-    },
-    'ME':{
-        'species': 5,
-        'name': 'Maine'
-    },
-    'MD':{
-        'species': 9,
-        'name': 'Maryland'
-    },
-    'MA':{
-        'species': 8,
-        'name': 'Massachusetts'
-    },
-    'MI':{
-        'species': 14,
-        'name': 'Michigan'
-    },
-    'MN':{
-        'species': 10,
-        'name': 'Minnesota'
-    },
-    'MS':{
-        'species': 30,
-        'name': 'Mississippi'
-    },
-    'MO':{
-        'species': 24,
-        'name': 'Missouri'
-    },
-    'MT':{
-        'species': 5,
-        'name': 'Montana'
-    },
-    'NE':{
-        'species': 8,
-        'name': 'Nebraska'
-    },
-    'NV':{
-        'species': 23,
-        'name': 'Nevada'
-    },
-    'NH':{
-        'species': 6,
-        'name': 'New Hampshire'
-    },
-    'NJ':{
-        'species': 6,
-        'name': 'New Jersey'
-    },
-    'NM':{
-        'species': 33,
-        'name': 'New Mexico'
-    },
-    'NY':{
-        'species': 10,
-        'name': 'New York'
-    },
-    'NC':{
-        'species': 42,
-        'name': 'North Carolina'
-    },
-    'ND':{
-        'species': 5,
-        'name': 'North Dakota'
-    },
-    'OH':{
-        'species': 16,
-        'name': 'Ohio'
-    },
-    'OK':{
-        'species': 13,
-        'name': 'Oklahoma'
-    },
-    'OR':{
-        'species': 22,
-        'name': 'Oregon'
-    },
-    'PA':{
-        'species': 10,
-        'name': 'Pennsylvania'
-    },
-    'RI':{
-        'species': 5,
-        'name': 'Rhode Island'
-    },
-    'SC':{
-        'species': 25,
-        'name': 'South Carolina'
-    },
-    'SD':{
-        'species': 9,
-        'name': 'South Dakota'
-    },
-    'TN':{
-        'species': 75,
-        'name': 'Tennessee'
-    },
-    'TX':{
-        'species': 78,
-        'name': 'Texas'
-    },
-    'UT':{
-        'species': 21,
-        'name': 'Utah'
-    },
-    'VT':{
-        'species': 4,
-        'name': 'Vermont'
-    },
-    'VA':{
-        'species': 50,
-        'name': 'Virginia'
-    },
-    'WA':{
-        'species': 14,
-        'name': 'Washington'
-    },
-    'WV':{
-        'species': 13,
-        'name': 'West Virginia'
-    },
-    'WI':{
-        'species': 11,
-        'name': 'Wisconsin'
-    },
-    'PR':{
-        'species': 58,
-        'name': 'Puerto Rico'
-    }
-};
