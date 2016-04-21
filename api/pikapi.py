@@ -13,18 +13,6 @@ QUESTION_IDS = set(['1','2','3','4'])
 ANSWERS = set(['yes','no'])
 ANSWERS_4 = set(['recycling','carpooling','biking_walking','vegetarian','other','no_response'])
 
-@app.route("/")
-def hello():
-    url = request.url
-    endpoint = request.endpoint
-    ip_address = request.remote_addr
-
-    response = "<p>url: " + url + "</p>\n"
-    response = response + "<p>endpoint: " + endpoint + "</p>\n"
-    response = response + "<p>ip_address: " + ip_address + "</p>\n"
-
-    return response
-
 
 ''' /question?id=1&answer=yes '''
 ''' /question?id=4&recycling=1&carpooling=1&biking_walking=1&vegetarian=1&other=1&no_response=0 '''
@@ -49,7 +37,7 @@ def question():
                 answers[a] = '0'
             else:
                 answers[a] = '1'
-                
+
         if(no_response):
             answers['no_response'] = '1'
 
@@ -64,19 +52,23 @@ def question():
 
     return response
 
-''' /question?name=john&content=pikasrule '''
-@app.route("/comment")
+''' /comment?name=john&content=pikasrule '''
+@app.route("/comment",methods=['POST','PUT'])
 def comment():
     # use bleach to sanitize input
     content = bleach.clean(request.args.get('content'))
     name = bleach.clean(request.args.get('name'))
     user_id = buildUserID(request)
 
-    insertComment(user_id,comment,content)
+    insertComment(user_id,name,content)
 
-    response = getComments()
-
+    response = {"user_id":user_id,"name":name,"content":content}
+    response = json.dumps(response)
     return response
+
+@app.route("/comments",methods=['GET'])
+def comments():
+    return getComments()
 
 
 '''TODELETE: for testing purposes, remove before going public'''
@@ -178,6 +170,9 @@ def getAnswers4():
     cur = conn.cursor()
     cur.execute(query_sql)
     row = cur.fetchone()
+    cur.close()
+    conn.close()
+
     response = {}
     response["recycling"] = row[0]
     response["carpooling"] = row[1];
@@ -188,12 +183,43 @@ def getAnswers4():
     response = json.dumps(response)
     return response
 
-def insertComment(user_id,comment,content):
+def insertComment(user_id,name,content):
+    approved = 0
+    if len(content) <= 144 and len(name) <= 32:
+        approved = 1
 
-    return
+    insert_sql = '''INSERT INTO 
+        comment (user_id,name,content,approved) VALUES (?,?,?,?)
+    '''
+    conn = sqlite3.connect(DB_FILE_NAME)
+    cur = conn.cursor()
+    cur.execute(insert_sql,(user_id,name,content,approved))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return 
 
 def getComments():
     response = {}
+
+    query_sql = '''SELECT name, content 
+        FROM comment 
+        WHERE approved = 1
+        ORDER BY comment_id DESC
+        LIMIT 9
+    '''
+    conn = sqlite3.connect(DB_FILE_NAME)
+    cur = conn.cursor()
+    cur.execute(query_sql)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    num = 0
+    for row in rows:
+        response[num] = {"name":row[0],"content":row[1]}
+        num += 1
+
 
     response = json.dumps(response)
     return response
@@ -241,5 +267,5 @@ def initDB():
 
 if __name__ == "__main__":
     initDB()
-    app.debug = True
+    app.debug = False
     app.run(host='0.0.0.0')
