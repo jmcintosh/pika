@@ -177,9 +177,9 @@ function destroyVideo(item){
 }
 
 function forward() {
-    disableControls(fadeTime);
     
     if(state === states.intro){
+        disableControls(fadeTime);
         film.add.tween(introGroup).to( {alpha: 0}, fadeTime, "Linear", true );
         setTimeout(function(){
             introGroup.destroy();
@@ -195,6 +195,7 @@ function forward() {
     }else if (state === states.scenes){
         var curScene = scenes[scene];
         if( !curScene.hasOwnProperty('text') || curScene.changeScene ){
+            disableControls(fadeTime);
             
             if(scene === scenes.length-1){
                 return;
@@ -240,6 +241,7 @@ function forward() {
                             standard(curScene);
                     }
                 }else{
+                    disableControls(fadeTime);
                     fadeInText(curScene.text, fadeTime, film, curScene.textPosition);
                     curScene.changeScene = true;
                     addBlur(curScene.image, fadeTime, film);
@@ -250,6 +252,7 @@ function forward() {
     
     // text transition, text remains visible when new text appears
     function persist(curScene){
+        disableControls(fadeTime);
         var i = curScene.textIndex;
         if(i === 0){
             addBlur(curScene.image, fadeTime, film);
@@ -265,6 +268,7 @@ function forward() {
     
     // text transition, old text is replaced by new text
     function replace(curScene){
+        disableControls(fadeTime);
         var i = curScene.textIndex;
         if(i === 0){
             addBlur(curScene.image, fadeTime, film);
@@ -284,6 +288,7 @@ function forward() {
     function question(curScene){
         var i = curScene.textIndex;
         if(i === 0){
+            disableControls();
             addBlur(curScene.image, fadeTime, film);
         }else{
             // remove old question
@@ -294,6 +299,7 @@ function forward() {
         var question = $("#question-"+(i+1)+"-div");
         fadeInElement(question,fadeTime);
         if(i >= curScene.text.length-1){
+            enableControls();
             curScene.changeScene = true;
             curScene.textIndex = 0;
         }else{
@@ -303,6 +309,7 @@ function forward() {
     
     // text transition, all text appears at once
     function standard(curScene){
+        disableControls(fadeTime);
         addBlur(curScene.image, fadeTime, film);
         for(var i = 0, n = curScene.text.length; i < n; i++){
             fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
@@ -432,8 +439,12 @@ function disableControls(time){
     keys.left.onDown.removeAll();
     keys.right.onDown.removeAll();
     
+    $("#question-parent-div").css("visibility","visibile");
+    
     film.input.mouse.mouseWheelCallback = null;
-    setTimeout(enableControls, time);
+    if(time){
+        setTimeout(enableControls, time);
+    }
 }
 
 function enableControls(){
@@ -443,6 +454,9 @@ function enableControls(){
     keys.down.onDown.add(forward, this);
     keys.left.onDown.add(back, this);
     keys.right.onDown.add(forward, this);
+    
+    
+    $("#question-parent-div").css("visibility","hidden");
     
     enableMousewheel();
 }

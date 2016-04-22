@@ -169,7 +169,6 @@ function readyFn(){
         data.content = $('#comment-content').val();
         
         function success(response){
-            console.log(response);
             processComments(response);
         }
         var settings = {
@@ -186,7 +185,6 @@ function readyFn(){
     
     $("#comment-no-thanks").click(function(){
         function success(response){
-            console.log(response);
             processComments(response);
         }
         var settings = {

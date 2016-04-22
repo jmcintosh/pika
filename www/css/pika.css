@@ -31,11 +31,17 @@ body {
 }
 
 
-.question-parent-div{
+#question-parent-div{
     font-size: 3vh;
     color: white;
     text-shadow: 2px 2px 2px black;
     text-align: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    visibility: hidden;
 }
 
 .question-buttons{
