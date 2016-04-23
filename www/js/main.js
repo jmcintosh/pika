@@ -136,7 +136,7 @@ function readyFn(){
             data.biking_walking = 1;
         }
         if($("#question-4-4-checkbox").hasClass("glyphicon-check")){
-            data.vegeterian = 1;
+            data.vegetarian = 1;
         }
         if($("#question-4-5-checkbox").hasClass("glyphicon-check")){
             data.other = 1;
@@ -146,8 +146,19 @@ function readyFn(){
         }
         
         function success(response){
+            var chartData = [
+                {item: 'Recycling', count: response.recycling},
+                {item: 'Carpooling', count: response.carpooling},
+                {item: 'Biking/Walking', count: response.biking_walking},
+                {item: 'Vegetarianism', count: response.vegetarian},
+                {item: 'Other', count: response.other},
+                {item: 'No Response', count: response.no_response}
+            ];
+
+            graphs[3] = new PieChart(film,width/2,height/2,height/8,chartData);
             console.log(response);
         }
+        
         var settings = {
             type: "GET",
             url: api_url + "/question",
@@ -204,7 +215,13 @@ function readyFn(){
 function submitAnswer(question_id,answer){
     var data = {id: question_id, answer: answer};
     function success(response){
-        console.log(response);
+        var chartData = [
+            {item: 'Yes', count: response.yes},
+            {item: 'No', count: response.no}
+        ];
+        
+        graphs[question_id-1] = new PieChart(film,width/2,height/2,height/8,chartData);
+        //console.log(response);
     }
     var settings = {
         type: "GET",
