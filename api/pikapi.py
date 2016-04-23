@@ -81,7 +81,7 @@ def comments():
 def buildUserID(request):
     ip_address = request.remote_addr
     user_agent = request.headers.get('User-Agent')
-    return ip_address + ':-:' + user_agent
+    return bleach.clean(ip_address + ':-:' + user_agent)
 
 
 def addUserIfNotExists(user_id):
