@@ -189,7 +189,7 @@ var scenes = [
         "audio": "ravennew"
     },
     {
-        "string": ["What if a person’s cultural worldview included the importance of conservation and carbon neutrality?", "What if this was an avenue for self-esteem?", "What if people saw sustainable nature as an immortality project?"],
+        "string": ["What if a person’s cultural worldview included the importance of conservation and carbon neutrality? ", "What if this was an avenue for self-esteem? ", "What if people saw sustainable nature as an immortality project? "],
         "title": "16 WoodSnow",
         "url": "video/WoodSnow.mp4",
         "textPosition": [10, 5, 11],

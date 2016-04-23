@@ -81,7 +81,7 @@ PieChart.prototype.draw = function() {
         //  text with shadow
         ctx.beginPath();
         ctx.fillStyle = "white";
-        ctx.shadowBlur = 3;
+        ctx.shadowBlur = 2;
         ctx.shadowOffsetY = 2;
         ctx.shadowOffsetX = 2;
         ctx.shadowColor = "black";
@@ -149,7 +149,7 @@ var BarChart = function(game,x,y,data) {
     this.width = width/2;
     this.height = height/4;
     // setup canvas to draw the pie chart
-    this.chart = game.make.bitmapData(this.width,this.height);
+    this.chart = game.make.bitmapData(this.width,this.height+20);
     this.chart.addToWorld(this.x,this.y,0.5,0.5,1,1);
     
     var max = Number.NEGATIVE_INFINITY;
@@ -184,7 +184,7 @@ BarChart.prototype.draw = function() {
     ctx.font = barWidth + "px " + font;
     var midpoint = 0.5*this.width;
     var squareX = midpoint;
-    var squareY = 0;
+    var squareY = space;
     var maxLength = this.width/2-space;
     for(var i = 0, n = this.normValues.length; i < n; i++){
         
@@ -197,7 +197,7 @@ BarChart.prototype.draw = function() {
         //  text with shadow
         ctx.beginPath();
         ctx.fillStyle = "white";
-        ctx.shadowBlur = 3;
+        ctx.shadowBlur = 2;
         ctx.shadowOffsetY = 2;
         ctx.shadowOffsetX = 2;
         ctx.shadowColor = "black";
@@ -214,8 +214,8 @@ BarChart.prototype.draw = function() {
     }
     
     ctx.beginPath();
-    ctx.moveTo(midpoint,0);
-    ctx.lineTo(midpoint,squareY-barWidth-space);
+    ctx.moveTo(midpoint,space);
+    ctx.lineTo(midpoint,squareY-barWidth);
     ctx.stroke();
 };
 
