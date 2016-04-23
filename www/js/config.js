@@ -28,6 +28,8 @@ var font = "Roboto";
 
 var filters = {};
 
+var graphs = [];
+
 var textMarginX = 0.04*height;
 var textMarginY = 0.04*height;
 
@@ -214,10 +216,10 @@ var scenes = [
         "audio": null
     },
     {
-        "string": ["","","","","",""],
+        "string": ["","","","","","","","",""],
         "title": "19 BigTruckInSnow",
         "url": "video/BigTruckInSnow.mp4",
-        "textPosition": [1,1,1,1,1,1],
+        "textPosition": [1,1,1,1,1,1,1,1,1],
         "textTransition": "question",
         "textIndex": 0,
         "audio": null

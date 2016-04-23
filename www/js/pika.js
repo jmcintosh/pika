@@ -296,15 +296,31 @@ function forward() {
             fadeOutElement(question,fadeTime);
         }
         // add new questions
-        var question = $("#question-"+(i+1)+"-div");
-        fadeInElement(question,fadeTime);
+        if(i < 5){
+            var question = $("#question-"+(i+1)+"-div");
+            fadeInElement(question,fadeTime);
+        }else if(i >= 5 ){
+            disableControls(fadeTime);
+            var graphIndex = i-5;
+            if(graphIndex>0){
+                var oldGraph = graphs[graphIndex-1];
+                oldGraph.fadeOut(fadeTime);
+            }
+            if(graphIndex<graphs.length){
+                var newGraph = graphs[graphIndex];
+                newGraph.fadeIn(fadeTime);
+            }
+        }
+        
         if(i >= curScene.text.length-1){
-            enableControls();
             curScene.changeScene = true;
             curScene.textIndex = 0;
         }else{
             curScene.textIndex++;
         }
+        
+
+        
     }
     
     // text transition, all text appears at once
@@ -382,6 +398,8 @@ function back() {
         }
     }
 }
+
+
 
 function changeScene(curScene,nextScene){
     

@@ -1,39 +1,39 @@
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
 "use strict";
 var colors = ['red','orange','yellow','green','blue','purple'];
 
-//var data = [
-//        {item: 'Yes', count: 1},
-//        {item: 'No', count: 2},
-//        {item: 'Maybe', count: 3}
-//    ];
-//var piechart = new PieChart(film, width/2, height/2, height/8, data);
-//piechart.draw();
-//piechart.animate();
 
-var PieChart = function(game,x,y,radius,data) {
+
+var BarChart = function(game,x,y,data) {
     this.game = game;
-    this.x = x; // x position of center of circle
-    this.y = y; // y position of center of circle
+    this.x = x; 
+    this.y = y; 
     this.radius = radius;
-    this.dim = radius * 2.2; // the dimensions of the drawing spacing
-    this.center = this.dim /2;
     // setup canvas to draw the pie chart
     this.chart = game.make.bitmapData(this.dim*2.5,this.dim);
     this.chart.addToWorld(this.x,this.y,0.5,0.5,1,1);
     
-    var sum = 0;
+    var max = Math.NEGATIVE_INFINITY;
     this.items = [];
     this.values = [];
     for(var i = 0; i< data.length; i++){
         this.items[i] = data[i].item;
         var value = data[i].count;
         this.values[i] = value;
-        sum += value;
+        if(value > max){
+            max = value;
+        }
     }
     
     this.normValues = [];
     for(var i = 0; i < this.values.length;i++){
-        this.normValues[i]=this.values[i]/sum;
+        this.normValues[i]=this.values[i]/max;
     }
     
     this.tween = 1;
@@ -50,6 +50,8 @@ PieChart.prototype.draw = function() {
     var ctx = this.chart.context;
     ctx.lineWidth = 3;
     ctx.strokeStyle = "black";
+    
+    
     var startAngle = -0.5*Math.PI;
     var squareMargin = 10;
     var squareDim = (this.radius/3)-squareMargin;
