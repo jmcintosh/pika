@@ -219,6 +219,12 @@ function forward() {
             // changeScene
             var nextScene = scenes[scene+1];
             changeScene(curScene,nextScene);
+            
+            if(curScene.textTransition === 'question'){
+                
+                curScene.textIndex = 0;
+                graphs[graphs.length-1].fadeOut();
+            }
 
             scene++;
             if( scene > scenes.length - 1 ) {
@@ -294,30 +300,32 @@ function forward() {
             // remove old question
             var question = $("#question-"+(i)+"-div");
             fadeOutElement(question,fadeTime);
+            fadeOutText(curScene.text[i-1],fadeTime,film);
         }
+        
+        fadeInText(curScene.text[i], fadeTime, film, curScene.textPosition[i]);
         // add new questions
         if(i < 5){
             var question = $("#question-"+(i+1)+"-div");
             fadeInElement(question,fadeTime);
         }else if(i >= 5 ){
-            disableControls(fadeTime);
+            disableControls();
             var graphIndex = i-5;
-            if(graphIndex>0){
+            if(graphIndex>=1){
                 var oldGraph = graphs[graphIndex-1];
                 oldGraph.fadeOut(fadeTime);
             }
             if(graphIndex<graphs.length){
                 var newGraph = graphs[graphIndex];
-                newGraph.fadeIn(fadeTime);
+                newGraph.fadeIn(fadeTime,enableControls);
             }
         }
         
         if(i >= curScene.text.length-1){
             curScene.changeScene = true;
-            curScene.textIndex = 0;
-        }else{
-            curScene.textIndex++;
         }
+        curScene.textIndex++;
+        
         
 
         
@@ -357,6 +365,10 @@ function back() {
                     var question = $("#question-"+(i)+"-div");
                     fadeOutElement(question,fadeTime);
                     
+                    var graphIndex = i - 6;
+                    if(graphIndex >= 0 && graphIndex < 4){
+                        graphs[graphIndex].fadeOut();
+                    }
                 }
                 curScene.textIndex = 0;
                 removeBlur(curScene.image, fadeTime, film);
@@ -438,6 +450,7 @@ function fadeOutCurrentScene(curScene){
         curScene.image.kill();
         curScene.video.stop();
         curScene.changeScene = false;
+        curScene.textIndex = 0;
         removeBlur(curScene.image, fadeTime, film);
     });
     fadeOutVolumeOnVideo(curScene.video, fadeTime, film);
@@ -550,7 +563,7 @@ function onResize(){
         
     }
     var curScene =scenes[scene];
-    if(curScene.changeScene){
+    if(curScene.text){
         if(Array.isArray(curScene.text)){
             for(var i = 0, n = curScene.text.length; i < n; i++){
                 adjustText(curScene.text[i],curScene.textPosition[i]);

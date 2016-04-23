@@ -216,10 +216,10 @@ var scenes = [
         "audio": null
     },
     {
-        "string": ["","","","","","","","",""],
+        "string": ["","","","","","Do you think global climate change is occurring?","Do you think humans contribute to global climate change?","Do you think individuals can make a positive difference concerning global climate change?","What are some ways you have behaviorally responded to global climate change awareness?"],
         "title": "19 BigTruckInSnow",
         "url": "video/BigTruckInSnow.mp4",
-        "textPosition": [1,1,1,1,1,1,1,1,1],
+        "textPosition": [1,1,1,1,1,2,2,2,2],
         "textTransition": "question",
         "textIndex": 0,
         "audio": null
