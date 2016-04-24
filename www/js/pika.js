@@ -686,7 +686,8 @@ function doIntro(){
             align: "left"
         };
         var instructions = [
-            "This interactive web-based documentary reveals the consequences of climate change in relation to the American pika. The website discusses these threats alongside a conversation about human existence and the anxiety that comes with it. After viewing all videos and text, the two separate topics will merge, and you, the viewer, will be able to add your opinions to make this documentary a personal discussion.",
+            "This interactive web-based documentary reveals the consequences of climate change in relation to the American pika. The website discusses these threats alongside a conversation about human existence and the anxiety that comes with it.",
+            "After viewing all videos and text, the two separate topics will merge, and you, the viewer, will be able to add your opinions to make this documentary a personal discussion.",
             "Please press the full-screen icon in the upper right corner of the page and scroll down."
         ];
         var x =0.15*width;

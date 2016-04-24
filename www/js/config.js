@@ -46,7 +46,7 @@ var textStyles = {
     basic_italic: 
         { 
             font: font, 
-            fontStyle: "italic",
+            //fontStyle: "italic",
             fontSize: 0.03*height,
             fill: "white", 
             wordWrap: true, 
@@ -216,12 +216,13 @@ var scenes = [
         "audio": null
     },
     {
-        "string": ["","","","","","Do you think global climate change is occurring?","Do you think humans contribute to global climate change?","Do you think individuals can make a positive difference concerning global climate change?","What are some ways you have behaviorally responded to global climate change awareness?"],
+        "string": ["","","","","","Percent of viewers who think global climate change is occurring.","Percent of viewers who think humans contribute to global climate change.","Percent of viewers who think individuals can make a positive difference concerning global climate change.","How viewers have changed their behavior due to global climate change awareness."],
         "title": "19 BigTruckInSnow",
         "url": "video/BigTruckInSnow.mp4",
         "textPosition": [1,1,1,1,1,2,2,2,2],
         "textTransition": "question",
         "textIndex": 0,
+        "textStyle": textStyles.centered_basic,
         "audio": null
     },
     {

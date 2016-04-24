@@ -159,7 +159,8 @@ def getAnswers4():
         SUM(biking_walking) as biking_walking,
         SUM(vegetarian) as vegetarian,
         SUM(other) as other,
-        SUM(no_response) as no_response
+        SUM(no_response) as no_response,
+        COUNT(*) as count
         FROM answer_4
     '''
     conn = sqlite3.connect(DB_FILE_NAME)
@@ -176,6 +177,7 @@ def getAnswers4():
     response["vegetarian"] = row[3];
     response["other"] = row[4];
     response["no_response"] = row[5];
+    response["count_responses"] = row[6];
     response = json.dumps(response)
     return response
 

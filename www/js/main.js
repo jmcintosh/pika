@@ -7,7 +7,7 @@
 
 $(document).ready(readyFn);
 
-var api_url = "http://ec2-54-213-82-29.us-west-2.compute.amazonaws.com:5000";
+var api_url = "http://pikapuzzlepiece.com:5000";
 
 var location_data = {
     'success': false,
@@ -146,13 +146,14 @@ function readyFn(){
         }
         
         function success(response){
+            var count = response.count_responses;
             var chartData = [
-                {item: 'Recycling', count: response.recycling},
-                {item: 'Carpooling', count: response.carpooling},
-                {item: 'Biking/Walking', count: response.biking_walking},
-                {item: 'Vegetarianism', count: response.vegetarian},
-                {item: 'Other', count: response.other},
-                {item: 'No Response', count: response.no_response}
+                {item: 'Recycling', count: response.recycling/count},
+                {item: 'Carpooling', count: response.carpooling/count},
+                {item: 'Biking/Walking', count: response.biking_walking/count},
+                {item: 'Vegetarianism', count: response.vegetarian/count},
+                {item: 'Other', count: response.other/count},
+                {item: 'No Response', count: response.no_response/count}
             ];
 
             graphs[3] = new BarChart(film,width/2,height/2,chartData);

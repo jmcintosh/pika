@@ -1,5 +1,4 @@
 "use strict";
-var colors = ['red','orange','yellow','green','blue','purple'];
 
 //var data = [
 //        {item: 'Yes', count: 1},
@@ -11,6 +10,7 @@ var colors = ['red','orange','yellow','green','blue','purple'];
 //piechart.animate();
 
 var PieChart = function(game,x,y,radius,data) {
+    this.colors = ['black','white'];
     this.game = game;
     this.x = x; // x position of center of circle
     this.y = y; // y position of center of circle
@@ -33,7 +33,11 @@ var PieChart = function(game,x,y,radius,data) {
     
     this.normValues = [];
     for(var i = 0; i < this.values.length;i++){
-        this.normValues[i]=this.values[i]/sum;
+        var norm = this.values[i]/sum;
+        this.normValues[i]=norm;
+        var percent = Math.round(norm * 100);
+        var label = this.items[i] + " (" + percent + "%)";;
+        this.items[i] = label;
     }
     
     this.tween = 1;
@@ -70,7 +74,7 @@ PieChart.prototype.draw = function() {
             ctx.lineTo(this.center,this.center);
             ctx.closePath();
         }
-        ctx.fillStyle = colors[i%colors.length];
+        ctx.fillStyle = this.colors[i%this.colors.length];
         
         startAngle = toAngle;
         
@@ -143,6 +147,7 @@ PieChart.prototype.fadeOut = function(time){
 
 
 var BarChart = function(game,x,y,data) {
+    this.colors = ['black','#262626','#555555','#808080','#B0B0B0','white'];
     this.game = game;
     this.x = x; 
     this.y = y; 
@@ -156,8 +161,10 @@ var BarChart = function(game,x,y,data) {
     this.items = [];
     this.values = [];
     for(var i = 0; i< data.length; i++){
-        this.items[i] = data[i].item;
         var value = data[i].count;
+        var percent = Math.round(value*100);
+        var label = data[i].item + " (" + percent + "%)";
+        this.items[i] = label;
         this.values[i] = value;
         if(value > max){
             max = value;
@@ -191,7 +198,7 @@ BarChart.prototype.draw = function() {
         var barLength = this.tween*this.normValues[i]*maxLength;
         // add labels
         ctx.rect(squareX,squareY,barLength,barWidth);
-        ctx.fillStyle = colors[i%colors.length];
+        ctx.fillStyle = this.colors[i%this.colors.length];
         ctx.fill();
         ctx.stroke();
         //  text with shadow
